@@ -52,6 +52,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Preparación de base google trends" href="1_1_googleTrends.html" />
+    <link rel="prev" title="Informe técnico - Predicción del precio de ethereum" href="intro.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -88,6 +90,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Proyecto Data Science</h1>
@@ -102,19 +109,34 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome to your Jupyter Book
+                    Informe técnico - Predicción del precio de ethereum
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="markdown.html">
-   Markdown Files
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Preparación dataset
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="markdown-notebooks.html">
-   Notebooks with MyST Markdown
+  <a class="reference internal" href="1_1_googleTrends.html">
+   Preparación de base google trends
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.1_analisis_univariado.html">
+   Variable a predecir: precio diario promedio de ethereum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.2_analisis_bivariado.html">
+   Análisis bivariado de los datos
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.3_analisis_multivariado.html">
+   Análisis multivariado de los datos
   </a>
  </li>
 </ul>
@@ -176,7 +198,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/1_prepara_datos.ipynb"
+        <a href="https://mybinder.org/v2/gh/antobulla/proyectoDS.git/master?urlpath=tree/1_prepara_datos.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -219,7 +241,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book"
+        <a href="https://github.com/antobulla/proyectoDS.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -236,7 +258,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F1_prepara_datos.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/antobulla/proyectoDS.git/issues/new?title=Issue%20on%20page%20%2F1_prepara_datos.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -403,57 +425,32 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting xlrd
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: xlrd in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (2.0.1)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading xlrd-2.0.1-py2.py3-none-any.whl (96 kB)
-?25l     <span class=" -Color -Color-C237">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">0.0/96.5 KB</span> <span class=" -Color -Color-Red">?</span> eta <span class=" -Color -Color-Cyan">-:--:--</span>
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━<span class=" -Color -Color-C237">╺━</span> <span class=" -Color -Color-Green">92.2/96.5 KB</span> <span class=" -Color -Color-Red">4.1 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:01</span>
-     <span class=" -Color -Color-Red">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span> <span class=" -Color -Color-Green">96.5/96.5 KB</span> <span class=" -Color -Color-Red">2.0 MB/s</span> eta <span class=" -Color -Color-Cyan">0:00:00</span>
-?25h
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: xlrd
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed xlrd-2.0.1
-<span class=" -Color -Color-Yellow">WARNING: You are using pip version 22.0.4; however, version 22.2 is available.</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING: You are using pip version 22.0.4; however, version 22.2 is available.</span>
 <span class=" -Color -Color-Yellow">You should consider upgrading via the &#39;/Users/antonellabulla/opt/miniconda3/bin/python -m pip install --upgrade pip&#39; command.</span>
 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting yfinance
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Downloading yfinance-0.1.74-py2.py3-none-any.whl (27 kB)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting multitasking&gt;=0.0.7
-  Downloading multitasking-0.0.11-py3-none-any.whl (8.5 kB)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: yfinance in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (0.1.74)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: lxml&gt;=4.5.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from yfinance) (4.9.1)
-Requirement already satisfied: numpy&gt;=1.15 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from yfinance) (1.22.3)
 Requirement already satisfied: pandas&gt;=0.24.0 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from yfinance) (1.4.1)
+Requirement already satisfied: multitasking&gt;=0.0.7 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from yfinance) (0.0.11)
 Requirement already satisfied: requests&gt;=2.26 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from yfinance) (2.27.1)
-Requirement already satisfied: python-dateutil&gt;=2.8.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.24.0-&gt;yfinance) (2.8.2)
+Requirement already satisfied: numpy&gt;=1.15 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from yfinance) (1.22.3)
 Requirement already satisfied: pytz&gt;=2020.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.24.0-&gt;yfinance) (2021.3)
-Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.26-&gt;yfinance) (1.26.7)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: idna&lt;4,&gt;=2.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.26-&gt;yfinance) (3.3)
+Requirement already satisfied: python-dateutil&gt;=2.8.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.24.0-&gt;yfinance) (2.8.2)
 Requirement already satisfied: charset-normalizer~=2.0.0 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.26-&gt;yfinance) (2.0.4)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.26-&gt;yfinance) (1.26.7)
 Requirement already satisfied: certifi&gt;=2017.4.17 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.26-&gt;yfinance) (2021.10.8)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.26-&gt;yfinance) (3.3)
 Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from python-dateutil&gt;=2.8.1-&gt;pandas&gt;=0.24.0-&gt;yfinance) (1.16.0)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Installing collected packages: multitasking, yfinance
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Successfully installed multitasking-0.0.11 yfinance-0.1.74
-<span class=" -Color -Color-Yellow">WARNING: You are using pip version 22.0.4; however, version 22.2 is available.</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Yellow">WARNING: You are using pip version 22.0.4; however, version 22.2 is available.</span>
 <span class=" -Color -Color-Yellow">You should consider upgrading via the &#39;/Users/antonellabulla/opt/miniconda3/bin/python -m pip install --upgrade pip&#39; command.</span>
 
 </pre></div>
@@ -2047,6 +2044,20 @@ memory usage: 1.0 MB
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="intro.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Informe técnico - Predicción del precio de ethereum</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="1_1_googleTrends.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Preparación de base google trends</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
 </div>
             </footer>
         </div>
