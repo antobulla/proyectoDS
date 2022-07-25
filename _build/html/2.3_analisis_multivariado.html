@@ -52,6 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Análisis bivariado de los datos" href="2.2_analisis_bivariado.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -88,6 +89,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Proyecto Data Science</h1>
@@ -102,19 +108,34 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Welcome to your Jupyter Book
+                    Informe técnico - Predicción del precio de ethereum
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="markdown.html">
-   Markdown Files
+  <a class="reference internal" href="1_prepara_datos.html">
+   Preparación dataset
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="markdown-notebooks.html">
-   Notebooks with MyST Markdown
+  <a class="reference internal" href="1_1_googleTrends.html">
+   Preparación de base google trends
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.1_analisis_univariado.html">
+   Variable a predecir: precio diario promedio de ethereum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.2_analisis_bivariado.html">
+   Análisis bivariado de los datos
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Análisis multivariado de los datos
   </a>
  </li>
 </ul>
@@ -176,7 +197,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/2.3_analisis_multivariado.ipynb"
+        <a href="https://mybinder.org/v2/gh/antobulla/proyectoDS.git/master?urlpath=tree/2.3_analisis_multivariado.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -219,7 +240,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book"
+        <a href="https://github.com/antobulla/proyectoDS.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -236,7 +257,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F2.3_analisis_multivariado.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/antobulla/proyectoDS.git/issues/new?title=Issue%20on%20page%20%2F2.3_analisis_multivariado.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -970,6 +991,13 @@ if (outputEl) {{
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="2.2_analisis_bivariado.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Análisis bivariado de los datos</p>
+        </div>
+    </a>
 </div>
             </footer>
         </div>

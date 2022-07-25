@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Welcome to your Jupyter Book &#8212; Proyecto Data Science</title>
+    <title>Informe técnico - Predicción del precio de ethereum &#8212; Proyecto Data Science</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Markdown Files" href="markdown.html" />
+    <link rel="next" title="Preparación dataset" href="1_prepara_datos.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -89,6 +89,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Proyecto Data Science</h1>
@@ -103,19 +108,34 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    Welcome to your Jupyter Book
+                    Informe técnico - Predicción del precio de ethereum
                 </a>
             </li>
         </ul>
         <ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="markdown.html">
-   Markdown Files
+  <a class="reference internal" href="1_prepara_datos.html">
+   Preparación dataset
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="markdown-notebooks.html">
-   Notebooks with MyST Markdown
+  <a class="reference internal" href="1_1_googleTrends.html">
+   Preparación de base google trends
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.1_analisis_univariado.html">
+   Variable a predecir: precio diario promedio de ethereum
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.2_analisis_bivariado.html">
+   Análisis bivariado de los datos
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2.3_analisis_multivariado.html">
+   Análisis multivariado de los datos
   </a>
  </li>
 </ul>
@@ -191,7 +211,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book"
+        <a href="https://github.com/antobulla/proyectoDS.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -208,7 +228,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/antobulla/proyectoDS.git/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -285,7 +305,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Welcome to your Jupyter Book</h1>
+                <h1>Informe técnico - Predicción del precio de ethereum</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -297,17 +317,19 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-your-jupyter-book">
-<h1>Welcome to your Jupyter Book<a class="headerlink" href="#welcome-to-your-jupyter-book" title="Permalink to this headline">#</a></h1>
-<p>This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out <a class="reference external" href="https://jupyterbook.org">the Jupyter Book documentation</a> for more information.</p>
-<p>Check out the content pages bundled with this sample book to see more.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="informe-tecnico-prediccion-del-precio-de-ethereum">
+<h1>Informe técnico - Predicción del precio de ethereum<a class="headerlink" href="#informe-tecnico-prediccion-del-precio-de-ethereum" title="Permalink to this headline">#</a></h1>
+<p>Este es el informe técnico del proyecto “Predicción del precio de ethereum” para la
+aprobación del curso “Data Scientist” ofrecido por Coderhouse.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="markdown.html">Markdown Files</a></li>
-<li class="toctree-l1"><a class="reference internal" href="markdown-notebooks.html">Notebooks with MyST Markdown</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_prepara_datos.html">Preparación dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_1_googleTrends.html">Preparación de base google trends</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.1_analisis_univariado.html">Variable a predecir: precio diario promedio de ethereum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.1_analisis_univariado.html#graficos-de-linea">Gráficos de línea</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.1_analisis_univariado.html#histogramas-y-densidad">Histogramas y densidad</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.2_analisis_bivariado.html">Análisis bivariado de los datos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2.3_analisis_multivariado.html">Análisis multivariado de los datos</a></li>
 </ul>
 </div>
 </section>
@@ -339,10 +361,10 @@ It does not go in-depth into any particular topic - check out <a class="referenc
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="markdown.html" title="next page">
+    <a class='right-next' id="next-link" href="1_prepara_datos.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Markdown Files</p>
+        <p class="prev-next-title">Preparación dataset</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
