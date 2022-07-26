@@ -7,8 +7,8 @@
 
 
 ### Cargamos librería 
-get_ipython().system('pip install --upgrade xlrd ')
-get_ipython().system('pip install yfinance ')
+get_ipython().system('pip install --upgrade xlrd')
+get_ipython().system('pip install yfinance')
 import pandas as pd 
 import numpy as np # numpy y pandas to data wrangling 
 from datetime import datetime, timedelta # to work w date
@@ -38,7 +38,7 @@ gtrends = gtrends.set_index("Date")
 gtrends = gtrends.loc[:, ['adjusted' in i for i in gtrends.columns]]
 
 
-# In[3]:
+# In[16]:
 
 
 gtrends
@@ -52,7 +52,7 @@ gtrends
 # 
 # [***CryptoDataDownload***](https://www.cryptodatadownload.com/) es una plataforma que brinda, entre otras cosas, información histórica de la cotización de diferentes criptomonedas a partir de la API Poloniex. Entre ellas, se encuentran las cotizaciones de ethereum y bitcoin. Los datos comprenden el precio de apertura y clausura en un momento del tiempo dado (horario, diario, etc.), el precio más alto y bajo, y el volumen de transacciones.
 
-# In[4]:
+# In[17]:
 
 
 # ### Ethereum
@@ -82,7 +82,7 @@ bitcoin.index.names = ['Date']
 bitcoin = bitcoin.rename(columns={col: col+'_btc' for col in bitcoin.columns})
 
 
-# In[5]:
+# In[18]:
 
 
 ## Unión criptomonedas
@@ -92,7 +92,7 @@ crypto_pol = crypto_pol.drop(['symbol_eth','symbol_btc'], axis = 1)
 crypto_pol.index = pd.to_datetime(crypto_pol.index)
 
 
-# In[6]:
+# In[19]:
 
 
 crypto_pol
@@ -100,7 +100,7 @@ crypto_pol
 
 # ### Unión inputs 
 
-# In[7]:
+# In[20]:
 
 
 # unión con merge
@@ -113,7 +113,7 @@ df = df[cols]
 df
 
 
-# In[8]:
+# In[21]:
 
 
 # pasamos todas las variables a numéricas
@@ -121,7 +121,7 @@ df = df.apply(pd.to_numeric)
 df.info()
 
 
-# In[9]:
+# In[22]:
 
 
 # guardar el dataset en carpeta data set del proyecto en google drive
