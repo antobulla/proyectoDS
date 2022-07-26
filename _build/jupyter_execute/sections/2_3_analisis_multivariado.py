@@ -30,7 +30,7 @@ import seaborn as sns
 import scipy as scp
 
 
-# In[ ]:
+# In[2]:
 
 
 # importamos dataset
@@ -48,7 +48,7 @@ train.head()
 
 # ### Variación interdiaria del bitcoin
 
-# In[ ]:
+# In[3]:
 
 
 # creación de dummy de si la variación entre días subió o no
@@ -57,7 +57,7 @@ train.loc[train['var_price_btc'] <= 0,'var_price'] = 'No subió'
 train.loc[train['var_price_btc'] > 0,'var_price'] = 'Subió'
 
 
-# In[ ]:
+# In[4]:
 
 
 # gráfico multivariado var id precio bitcoin versus target
@@ -73,7 +73,7 @@ p.fig.legend(bbox_to_anchor=(1, 1), loc=1);
 
 # ### Período pre pandemia y post pandemia
 
-# In[ ]:
+# In[5]:
 
 
 # creación de dummy pre y post pandemia
@@ -84,7 +84,7 @@ train.loc[train.index < '2017-08-17', 'Binance-Listing'] = 'No-Listado'
 train.loc[train.index >= '2017-08-17', 'Binance-Listing'] = 'Listado'
 
 
-# In[ ]:
+# In[6]:
 
 
 # Comparación precio ethereum real contra precio ethereum predicho 
@@ -100,7 +100,7 @@ p.fig.legend(bbox_to_anchor=(1, 1), loc=1);
 
 # En contraste, la separación de períodos pre y post pandemia no resulta indiferente al evaluar la correlación entre el precio presente de ethereum y su cotización futura. Claramente, la correlación entre variables se da en los tramos de menores precios en contexto de pandemia, lo que indica no sólo que dicho acontecimiento global contrajo los precios de la criptomoneda, sino que la pandemia podría influenciar negativamente el precio corriente de ethereum y afectar así la cotización futura de la misma. Debido a esto, resulta imporante agregar dicha variable binaria al análisis. 
 
-# In[ ]:
+# In[7]:
 
 
 # Comparación precio bitcoin contra precio ethereum predicho 
@@ -116,7 +116,7 @@ p.fig.legend(bbox_to_anchor=(1, 1), loc=1);
 
 # Aún más interesante resulta la influencia que podría darse entre el período pre y post pandemia con la correlación entre el precio más alto del día de bitcoin con la cotización futura de ethereum. El gráfico anterior sugiere un cambio de trayectoria de la correlación entre ambas variables. Dada una cotización del precio más alto de bitcoin se generan dos niveles de precios distintos según qué período se está evaluando, por lo que la categoría *shock-covid* se correlaciona indirectamente con el precio futuro de ethereum, a través de bitcoin. Lo mismo ocurre en el gráfico siguiente, donde en vez de utilizar el primer rezago del target se grafica el rezago 7, es decir, el precio eth del mismo día pero de la siguiente semana.   
 
-# In[ ]:
+# In[8]:
 
 
 # Comparación precio bitcoin contra precio ethereum predicho 
@@ -130,7 +130,7 @@ p.ax_joint.legend_._visible=False
 p.fig.legend(bbox_to_anchor=(1, 1), loc=1);
 
 
-# In[ ]:
+# In[9]:
 
 
 import plotly.express as px
