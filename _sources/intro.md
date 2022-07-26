@@ -1,7 +1,8 @@
-# Informe técnico - Predicción del precio de ethereum
+# Introducción
 
-Este es el informe técnico del proyecto "Predicción del precio de ethereum" para la
-aprobación del curso "Data Scientist" ofrecido por Coderhouse.
+Las monedas digitales han aparecido como un fenómeno disruptivo dentro del mundo financiero. Criptomonedas como bitcoin o ethereum han mostrado un crecimiento de popularidad global sin precedentes, en parte debido a su completa descentralización y su atractivo rendimiento diario. No obstante, las mismas conllevan períodos de cambios abruptos que también lo convierten en activos de inversión muy riesgosos. Por lo que, tratar de anticiparse a estos movimientos constantes resulta una cuestión clave para poder invertir en este tipo de activos digitales, minimizando el riesgo de sufrir pérdidas importantes de capital. 
+Junto con la aparición de las criptomonedas también ha surgido en el último tiempo la sistematización de búsquedas de palabras online, en especial, [**google**](https://trends.google.es/trends/?geo=AR) ha logrado estructurar todas las búsquedas realizadas diariamente en el mundo, en indicadores que permiten observar las tendencias diarias de palabras o tópicos de discusión. Como también, permite la visualización de evoluciones históricas de búsquedas. 
 
-```{tableofcontents}
-```
+La característica descentralización de las criptomonedas las convierten en activos cuya evolución podría estar considerablemente relacionada con el comportamiento de la sociedad, en términos de los movimientos del libre juego de oferta y demanda. Debido a esto, la utilización de las herramientas de google de tendencias de búsquedas podrían reflejar lo que estaría pasando en el mercado de criptomonedas, como también, podrían ser indicadores de la evolución futura de sus cotizaciones. Por lo tanto, utilizando las búsquedas diarias de google este trabajo se propone predecir la cotización futura de la criptomoneda ethereum, la cual se encuentra entre las más importantes y populares del mercado de las monedas digitales. Para ello, se utilizan diferentes algoritmos de machine learning para predecir la cotización futura de la criptomeda, esto es, el precio diario de entre 1 a 7 días posteriores al momento presente. 
+
+El resto del trabajo se estructura de la siguiente manera. En la [**Sección 1**](sections/1_prepara_datos) se desarrolla la preparación del *dataset* utilizado como input para realizar el ejercicio de predicción. En la [**Sección 2**](intro_sec2.md) se desarrolla el análisis exploratorio de los datos, bajo la estructura de análisis univariado, bivariado y multivariado. 
