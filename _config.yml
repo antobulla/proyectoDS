@@ -3,7 +3,7 @@
 
 title: Predicción del precio futuro de ethereum
 author: Diego Bertolin, Antonella Bulla, Juan Manuel Hernandez, Agustin Staudt
-# logo: logo.png
+logo: logo.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
