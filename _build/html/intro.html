@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Informe técnico - Predicción del precio de ethereum &#8212; Proyecto Data Science</title>
+    <title>Introducción &#8212; Predicción del precio futuro de ethereum</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Preparación dataset" href="1_prepara_datos.html" />
+    <link rel="next" title="Preparación dataset" href="sections/1_prepara_datos.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -96,7 +96,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Proyecto Data Science</h1>
+      <h1 class="site-logo" id="site-title">Predicción del precio futuro de ethereum</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
@@ -108,35 +108,78 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    Informe técnico - Predicción del precio de ethereum
+                    Introducción
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preparación de los datos
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="1_prepara_datos.html">
+  <a class="reference internal" href="sections/1_prepara_datos.html">
    Preparación dataset
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="1_1_googleTrends.html">
-   Preparación de base google trends
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Análisis exploratorio
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_sec2.html">
+   Análisis exploratorio
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/2_1_analisis_univariado.html">
+     Análisis univariado de los datos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/2_2_analisis_bivariado.html">
+     Análisis bivariado de los datos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/2_3_analisis_multivariado.html">
+     Análisis multivariado de los datos
+    </a>
+   </li>
+  </ul>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2.1_analisis_univariado.html">
-   Variable a predecir: precio diario promedio de ethereum
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Anexo
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_anexo.html">
+   Anexo
   </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2.2_analisis_bivariado.html">
-   Análisis bivariado de los datos
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2.3_analisis_multivariado.html">
-   Análisis multivariado de los datos
-  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/1_1_googleTrends.html">
+     Preparación de base google trends
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -211,7 +254,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/antobulla/proyectoDS.git"
+        <a href="https://github.com/agusstaudt/eht_prediction.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -228,7 +271,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/antobulla/proyectoDS.git/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/agusstaudt/eht_prediction.git/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -305,7 +348,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Informe técnico - Predicción del precio de ethereum</h1>
+                <h1>Introducción</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -317,20 +360,17 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="informe-tecnico-prediccion-del-precio-de-ethereum">
-<h1>Informe técnico - Predicción del precio de ethereum<a class="headerlink" href="#informe-tecnico-prediccion-del-precio-de-ethereum" title="Permalink to this headline">#</a></h1>
-<p>Este es el informe técnico del proyecto “Predicción del precio de ethereum” para la
-aprobación del curso “Data Scientist” ofrecido por Coderhouse.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
+<h1>Introducción<a class="headerlink" href="#introduccion" title="Permalink to this headline">#</a></h1>
+<p>Las monedas digitales han aparecido como un fenómeno disruptivo dentro del mundo financiero. Criptomonedas como bitcoin o ethereum han mostrado un crecimiento de popularidad global sin precedentes, en parte debido a su completa descentralización y su atractivo rendimiento diario. No obstante, las mismas conllevan períodos de cambios abruptos que también lo convierten en activos de inversión muy riesgosos. Por lo que, tratar de anticiparse a estos movimientos constantes resulta una cuestión clave para poder invertir en este tipo de activos digitales, minimizando el riesgo de sufrir pérdidas importantes de capital.
+Junto con la aparición de las criptomonedas también ha surgido en el último tiempo la sistematización de búsquedas de palabras online, en especial, <a class="reference external" href="https://trends.google.es/trends/?geo=AR"><strong>google</strong></a> ha logrado estructurar todas las búsquedas realizadas diariamente en el mundo, en indicadores que permiten observar las tendencias diarias de palabras o tópicos de discusión. Como también, permite la visualización de evoluciones históricas de búsquedas.</p>
+<p>La característica descentralización de las criptomonedas las convierten en activos cuya evolución podría estar considerablemente relacionada con el comportamiento de la sociedad, en términos de los movimientos del libre juego de oferta y demanda. Debido a esto, la utilización de las herramientas de google de tendencias de búsquedas podrían reflejar lo que estaría pasando en el mercado de criptomonedas, como también, podrían ser indicadores de la evolución futura de sus cotizaciones. Por lo tanto, utilizando las búsquedas diarias de google este trabajo se propone predecir la cotización futura de la criptomoneda ethereum, la cual se encuentra entre las más importantes y populares del mercado de las monedas digitales. Para ello, se utilizan diferentes algoritmos de machine learning para predecir la cotización futura de la criptomeda, esto es, el precio diario de entre 1 a 7 días posteriores al momento presente.</p>
+<p>El resto del trabajo se estructura de la siguiente manera. En la <a class="reference internal" href="sections/1_prepara_datos.html"><span class="doc std std-doc"><strong>Sección 1</strong></span></a> se desarrolla la preparación del <em>dataset</em> utilizado como input para realizar el ejercicio de predicción. En la <a class="reference internal" href="intro_sec2.html"><span class="doc std std-doc"><strong>Sección 2</strong></span></a> se desarrolla el análisis exploratorio de los datos, bajo la estructura de análisis univariado, bivariado y multivariado.</p>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="1_prepara_datos.html">Preparación dataset</a></li>
-<li class="toctree-l1"><a class="reference internal" href="1_1_googleTrends.html">Preparación de base google trends</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2.1_analisis_univariado.html">Variable a predecir: precio diario promedio de ethereum</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2.1_analisis_univariado.html#graficos-de-linea">Gráficos de línea</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2.1_analisis_univariado.html#histogramas-y-densidad">Histogramas y densidad</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2.2_analisis_bivariado.html">Análisis bivariado de los datos</a></li>
-<li class="toctree-l1"><a class="reference internal" href="2.3_analisis_multivariado.html">Análisis multivariado de los datos</a></li>
-</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
 </div>
 </section>
 
@@ -361,7 +401,7 @@ aprobación del curso “Data Scientist” ofrecido por Coderhouse.</p>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="1_prepara_datos.html" title="next page">
+    <a class='right-next' id="next-link" href="sections/1_prepara_datos.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Preparación dataset</p>

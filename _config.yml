@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: Proyecto Data Science
+title: Predicción del precio futuro de ethereum
 author: Diego Bertolin, Antonella Bulla, Juan Manuel Hernandez, Agustin Staudt
 logo: logo.png
 
@@ -13,7 +13,7 @@ execute:
 # Define the name of the latex output file for PDF builds
 latex:
   latex_documents:
-    targetname: book_DS.tex
+    targetname: bookDS.tex
 
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:
@@ -21,7 +21,7 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/antobulla/proyectoDS.git  # Online location of your book
+  url: https://github.com/agusstaudt/eht_prediction.git  # Online location of your book
   #path_to_book: docs  # Optional path to your book, relative to the repository root
   branch: master  # Which branch of the repository should be used when creating links (optional)
 

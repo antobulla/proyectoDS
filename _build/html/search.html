@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Search &#8212; Proyecto Data Science</title>
+    <title>Search &#8212; Predicción del precio futuro de ethereum</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -100,7 +100,7 @@ const thebe_selector_output = ".output, .cell_output"
       <img src="_static/logo.png" class="logo" alt="logo">
       
       
-      <h1 class="site-logo" id="site-title">Proyecto Data Science</h1>
+      <h1 class="site-logo" id="site-title">Predicción del precio futuro de ethereum</h1>
       
     </a>
 </div><form class="bd-search d-flex align-items-center" action="#" method="get">
@@ -112,35 +112,78 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    Informe técnico - Predicción del precio de ethereum
+                    Introducción
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Preparación de los datos
+ </span>
+</p>
+<ul class="nav bd-sidenav">
  <li class="toctree-l1">
-  <a class="reference internal" href="1_prepara_datos.html">
+  <a class="reference internal" href="sections/1_prepara_datos.html">
    Preparación dataset
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="1_1_googleTrends.html">
-   Preparación de base google trends
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Análisis exploratorio
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_sec2.html">
+   Análisis exploratorio
   </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/2_1_analisis_univariado.html">
+     Análisis univariado de los datos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/2_2_analisis_bivariado.html">
+     Análisis bivariado de los datos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/2_3_analisis_multivariado.html">
+     Análisis multivariado de los datos
+    </a>
+   </li>
+  </ul>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2.1_analisis_univariado.html">
-   Variable a predecir: precio diario promedio de ethereum
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Anexo
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_anexo.html">
+   Anexo
   </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2.2_analisis_bivariado.html">
-   Análisis bivariado de los datos
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="2.3_analisis_multivariado.html">
-   Análisis multivariado de los datos
-  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/1_1_googleTrends.html">
+     Preparación de base google trends
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -215,7 +258,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/antobulla/proyectoDS.git"
+        <a href="https://github.com/agusstaudt/eht_prediction.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -232,7 +275,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/antobulla/proyectoDS.git/issues/new?title=Issue%20on%20page%20%2Fsearch.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/agusstaudt/eht_prediction.git/issues/new?title=Issue%20on%20page%20%2Fsearch.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"

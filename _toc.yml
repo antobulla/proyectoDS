@@ -3,9 +3,22 @@
 
 format: jb-book
 root: intro
-chapters:
-- file: 1_prepara_datos.ipynb
-- file: 1_1_googleTrends
-- file: 2.1_analisis_univariado
-- file: 2.2_analisis_bivariado
-- file: 2.3_analisis_multivariado
+
+parts:
+- caption: Preparación de los datos
+  chapters:
+  - file: sections/1_prepara_datos
+
+- caption: Análisis exploratorio
+  chapters:
+  - file: intro_sec2
+    sections:
+    - file: sections/2_1_analisis_univariado
+    - file: sections/2_2_analisis_bivariado
+    - file: sections/2_3_analisis_multivariado
+
+- caption: Anexo
+  chapters:
+  - file: intro_anexo
+    sections:
+    - file: sections/1_1_googleTrends
