@@ -89,6 +89,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="../index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Predicción del precio futuro de ethereum</h1>
@@ -109,25 +114,18 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Preparación de los datos
+  Secciones
  </span>
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="1_prepara_datos.html">
-   Preparación dataset
+   1. Preparación dataset
   </a>
  </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Análisis exploratorio
- </span>
-</p>
-<ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../intro_sec2.html">
-   Análisis exploratorio
+  <a class="reference internal" href="../intro_anExp.html">
+   2. Análisis exploratorio
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -137,17 +135,56 @@ const thebe_selector_output = ".output, .cell_output"
   <ul>
    <li class="toctree-l2">
     <a class="reference internal" href="2_1_analisis_univariado.html">
-     Análisis univariado de los datos
+     2.1. Análisis univariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="2_2_analisis_bivariado.html">
-     Análisis bivariado de los datos
+     2.2. Análisis bivariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="2_3_analisis_multivariado.html">
-     Análisis multivariado de los datos
+     2.3. Análisis multivariado
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_ingAtr_enfVal.html">
+   3. Ingeniería de Atributos
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3_ingenieria_atributos.html">
+     3.1. Ingeniería de atributos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_enfoque_validacion.html">
+     3.2. Enfoque de validación
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_modelos.html">
+   4. Modelos de predicción
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="5_prediccion.html">
+     4.1. Predicción del precio futuro de ethereum
     </a>
    </li>
   </ul>
@@ -163,8 +200,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../intro_anexo.html">
    Anexo
   </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -394,35 +431,21 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pytrends
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Using cached pytrends-4.8.0.tar.gz (19 kB)
-  Preparing metadata (setup.py): started
-  Preparing metadata (setup.py): finished with status &#39;done&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pytrends in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (4.8.0)
 Requirement already satisfied: requests&gt;=2.0 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from pytrends) (2.28.1)
+Requirement already satisfied: lxml in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from pytrends) (4.9.1)
 Requirement already satisfied: pandas&gt;=0.25 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pytrends) (1.4.3)
-Collecting lxml
-  Downloading lxml-4.9.1-cp310-cp310-win_amd64.whl (3.6 MB)
-     ---------------------------------------- 3.6/3.6 MB 6.2 MB/s eta 0:00:00
-Requirement already satisfied: pytz&gt;=2020.1 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2022.1)
 Requirement already satisfied: numpy&gt;=1.21.0 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pandas&gt;=0.25-&gt;pytrends) (1.23.1)
+Requirement already satisfied: pytz&gt;=2020.1 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2022.1)
 Requirement already satisfied: python-dateutil&gt;=2.8.1 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2.8.2)
-Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (1.26.10)
 Requirement already satisfied: idna&lt;4,&gt;=2.5 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (3.3)
 Requirement already satisfied: charset-normalizer&lt;3,&gt;=2 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (2.1.0)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (1.26.10)
 Requirement already satisfied: certifi&gt;=2017.4.17 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (2022.6.15)
 Requirement already satisfied: six&gt;=1.5 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from python-dateutil&gt;=2.8.1-&gt;pandas&gt;=0.25-&gt;pytrends) (1.16.0)
-Building wheels for collected packages: pytrends
-  Building wheel for pytrends (setup.py): started
-  Building wheel for pytrends (setup.py): finished with status &#39;done&#39;
-  Created wheel for pytrends: filename=pytrends-4.8.0-py3-none-any.whl size=16126 sha256=8d04b405f9bcf213a0d3cb96cb603a401a83a5d3aaef252ba161898d1ca64a28
-  Stored in directory: c:\users\usuario\appdata\local\pip\cache\wheels\a1\49\af\d5afa28da8206d2e1867aa9e1682157e6c665b20c38bc7e6f1
-Successfully built pytrends
-Installing collected packages: lxml, pytrends
-Successfully installed lxml-4.9.1 pytrends-4.8.0
-
-[notice] A new release of pip available: 22.1.2 -&gt; 22.2
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[notice] A new release of pip available: 22.2.1 -&gt; 22.2.2
 [notice] To update, run: python.exe -m pip install --upgrade pip
 </pre></div>
 </div>
@@ -599,53 +622,242 @@ Successfully installed lxml-4.9.1 pytrends-4.8.0
 Iteration from 2015-08-01 to 2015-11-01
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2015-11-02 to 2016-02-02
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-02-03 to 2016-05-05
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-05-06 to 2016-08-06
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-08-07 to 2016-11-07
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-11-08 to 2017-02-08
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2017-02-09 to 2017-05-12
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_12872\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2017-05-13 to 2017-08-13
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_5188\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+  dataset = dataset.append(data)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2017-08-14 to 2017-11-14
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">Input In [5],</span> in <span class="ni">&lt;cell line: 3&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;2015-08-01&#39;</span> <span class="c1"># parece ser el límite inferior de precios de bitcoin en yahoo finance</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;2022-06-15&#39;</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">var_dict</span> <span class="o">=</span> <span class="n">daily_gt</span><span class="p">(</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">kw_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="p">,</span> <span class="n">inputCategories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span> <span class="n">inputCategoriesNames</span><span class="o">=</span><span class="n">categoriesNames</span><span class="p">)</span>
+
+<span class="nn">Input In [3],</span> in <span class="ni">daily_gt</span><span class="nt">(keyword, start, end, inputCategories, inputCategoriesNames, hl, tz)</span>
+<span class="g g-Whitespace">     </span><span class="mi">53</span>   <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;&#39;</span><span class="p">:</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">catName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">56</span>   <span class="n">pytrends</span><span class="o">.</span><span class="n">build_payload</span><span class="p">(</span><span class="n">kw_list</span><span class="o">=</span><span class="p">[</span><span class="n">varName</span><span class="p">],</span> <span class="n">cat</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">startNew</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> 
+<span class="g g-Whitespace">     </span><span class="mi">57</span>   <span class="n">data</span> <span class="o">=</span> <span class="n">pytrends</span><span class="o">.</span><span class="n">interest_over_time</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span> <span class="c1"># chequear que la base importada no esté vacía antes de trabajarla, sino pasar a la prox palabra</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pytrends\request.py:183,</span> in <span class="ni">TrendReq.build_payload</span><span class="nt">(self, kw_list, cat, timeframe, geo, gprop)</span>
+<span class="g g-Whitespace">    </span><span class="mi">181</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_payload</span><span class="p">[</span><span class="s1">&#39;req&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_payload</span><span class="p">[</span><span class="s1">&#39;req&#39;</span><span class="p">])</span>
+<span class="g g-Whitespace">    </span><span class="mi">182</span> <span class="c1"># get tokens</span>
+<span class="ne">--&gt; </span><span class="mi">183</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">184</span> <span class="k">return</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pytrends\request.py:189,</span> in <span class="ni">TrendReq._tokens</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">187</span> <span class="sd">&quot;&quot;&quot;Makes request to Google to get API tokens for interest over time, interest by region and related queries&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">188</span> <span class="c1"># make the request and parse the returned json</span>
+<span class="ne">--&gt; </span><span class="mi">189</span> <span class="n">widget_dicts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">190</span>     <span class="n">url</span><span class="o">=</span><span class="n">TrendReq</span><span class="o">.</span><span class="n">GENERAL_URL</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">191</span>     <span class="n">method</span><span class="o">=</span><span class="n">TrendReq</span><span class="o">.</span><span class="n">GET_METHOD</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">192</span>     <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">token_payload</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">193</span>     <span class="n">trim_chars</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="p">)[</span><span class="s1">&#39;widgets&#39;</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">195</span> <span class="c1"># order of the json matters...</span>
+<span class="g g-Whitespace">    </span><span class="mi">196</span> <span class="n">first_region_token</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pytrends\request.py:138,</span> in <span class="ni">TrendReq._get_data</span><span class="nt">(self, url, method, trim_chars, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">134</span>     <span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">135</span>                       <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">136</span>                       <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">requests_args</span><span class="p">)</span>  <span class="c1"># DO NOT USE retries or backoff_factor here</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">138</span>     <span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">139</span>                      <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">requests_args</span><span class="p">)</span>  <span class="c1"># DO NOT USE retries or backoff_factor here</span>
+<span class="g g-Whitespace">    </span><span class="mi">140</span> <span class="c1"># check if the response contains json and throw an exception otherwise</span>
+<span class="g g-Whitespace">    </span><span class="mi">141</span> <span class="c1"># Google mostly sends &#39;application/json&#39; in the Content-Type header,</span>
+<span class="g g-Whitespace">    </span><span class="mi">142</span> <span class="c1"># but occasionally it sends &#39;application/javascript</span>
+<span class="g g-Whitespace">    </span><span class="mi">143</span> <span class="c1"># and sometimes even &#39;text/javascript</span>
+<span class="g g-Whitespace">    </span><span class="mi">144</span> <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span> <span class="ow">and</span> <span class="s1">&#39;application/json&#39;</span> <span class="ow">in</span> \
+<span class="g g-Whitespace">    </span><span class="mi">145</span>         <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="ow">or</span> \
+<span class="g g-Whitespace">    </span><span class="mi">146</span>         <span class="s1">&#39;application/javascript&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="ow">or</span> \
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">149</span>     <span class="c1"># some responses start with garbage characters, like &quot;)]}&#39;,&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">150</span>     <span class="c1"># these have to be cleaned before being passed to the json parser</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py:600,</span> in <span class="ni">Session.get</span><span class="nt">(self, url, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">592</span> <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sends a GET request. Returns :class:`Response` object.</span>
+<span class="g g-Whitespace">    </span><span class="mi">593</span><span class="sd"> </span>
+<span class="g g-Whitespace">    </span><span class="mi">594</span><span class="sd"> :param url: URL for the new :class:`Request` object.</span>
+<span class="g g-Whitespace">    </span><span class="mi">595</span><span class="sd"> :param \*\*kwargs: Optional arguments that ``request`` takes.</span>
+<span class="g g-Whitespace">    </span><span class="mi">596</span><span class="sd"> :rtype: requests.Response</span>
+<span class="g g-Whitespace">    </span><span class="mi">597</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">599</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;allow_redirects&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">600</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py:587,</span> in <span class="ni">Session.request</span><span class="nt">(self, method, url, params, data, headers, cookies, files, auth, timeout, allow_redirects, proxies, hooks, stream, verify, cert, json)</span>
+<span class="g g-Whitespace">    </span><span class="mi">582</span> <span class="n">send_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+<span class="g g-Whitespace">    </span><span class="mi">583</span>     <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">584</span>     <span class="s2">&quot;allow_redirects&quot;</span><span class="p">:</span> <span class="n">allow_redirects</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">585</span> <span class="p">}</span>
+<span class="g g-Whitespace">    </span><span class="mi">586</span> <span class="n">send_kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">587</span> <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">prep</span><span class="p">,</span> <span class="o">**</span><span class="n">send_kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">589</span> <span class="k">return</span> <span class="n">resp</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\sessions.py:701,</span> in <span class="ni">Session.send</span><span class="nt">(self, request, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">698</span> <span class="n">start</span> <span class="o">=</span> <span class="n">preferred_clock</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">700</span> <span class="c1"># Send the request</span>
+<span class="ne">--&gt; </span><span class="mi">701</span> <span class="n">r</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">703</span> <span class="c1"># Total elapsed time of the request (approximately)</span>
+<span class="g g-Whitespace">    </span><span class="mi">704</span> <span class="n">elapsed</span> <span class="o">=</span> <span class="n">preferred_clock</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\requests\adapters.py:489,</span> in <span class="ni">HTTPAdapter.send</span><span class="nt">(self, request, stream, timeout, verify, cert, proxies)</span>
+<span class="g g-Whitespace">    </span><span class="mi">487</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">488</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">chunked</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">489</span>         <span class="n">resp</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">490</span>             <span class="n">method</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">491</span>             <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">492</span>             <span class="n">body</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">493</span>             <span class="n">headers</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">494</span>             <span class="n">redirect</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">495</span>             <span class="n">assert_same_host</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">496</span>             <span class="n">preload_content</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">497</span>             <span class="n">decode_content</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">498</span>             <span class="n">retries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_retries</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">499</span>             <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">500</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">502</span>     <span class="c1"># Send the request.</span>
+<span class="g g-Whitespace">    </span><span class="mi">503</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">504</span>         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="s2">&quot;proxy_pool&quot;</span><span class="p">):</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py:703,</span> in <span class="ni">HTTPConnectionPool.urlopen</span><span class="nt">(self, method, url, body, headers, retries, redirect, assert_same_host, timeout, pool_timeout, release_conn, chunked, body_pos, **response_kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">700</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_proxy</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">702</span> <span class="c1"># Make the request on the httplib connection object.</span>
+<span class="ne">--&gt; </span><span class="mi">703</span> <span class="n">httplib_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_request</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">704</span>     <span class="n">conn</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">705</span>     <span class="n">method</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">706</span>     <span class="n">url</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">707</span>     <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_obj</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">708</span>     <span class="n">body</span><span class="o">=</span><span class="n">body</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">709</span>     <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">710</span>     <span class="n">chunked</span><span class="o">=</span><span class="n">chunked</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">711</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">713</span> <span class="c1"># If we&#39;re going to release the connection in ``finally:``, then</span>
+<span class="g g-Whitespace">    </span><span class="mi">714</span> <span class="c1"># the response doesn&#39;t need to know about the connection. Otherwise</span>
+<span class="g g-Whitespace">    </span><span class="mi">715</span> <span class="c1"># it will also try to release it and we&#39;ll have a double-release</span>
+<span class="g g-Whitespace">    </span><span class="mi">716</span> <span class="c1"># mess.</span>
+<span class="g g-Whitespace">    </span><span class="mi">717</span> <span class="n">response_conn</span> <span class="o">=</span> <span class="n">conn</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">release_conn</span> <span class="k">else</span> <span class="kc">None</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py:449,</span> in <span class="ni">HTTPConnectionPool._make_request</span><span class="nt">(self, conn, method, url, timeout, chunked, **httplib_request_kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">444</span>             <span class="n">httplib_response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">445</span>         <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">446</span>             <span class="c1"># Remove the TypeError from the exception chain in</span>
+<span class="g g-Whitespace">    </span><span class="mi">447</span>             <span class="c1"># Python 3 (including for exceptions like SystemExit).</span>
+<span class="g g-Whitespace">    </span><span class="mi">448</span>             <span class="c1"># Otherwise it looks like a bug in the code.</span>
+<span class="ne">--&gt; </span><span class="mi">449</span>             <span class="n">six</span><span class="o">.</span><span class="n">raise_from</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">450</span> <span class="k">except</span> <span class="p">(</span><span class="n">SocketTimeout</span><span class="p">,</span> <span class="n">BaseSSLError</span><span class="p">,</span> <span class="n">SocketError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">451</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_raise_timeout</span><span class="p">(</span><span class="n">err</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout_value</span><span class="o">=</span><span class="n">read_timeout</span><span class="p">)</span>
+
+<span class="nn">File &lt;string&gt;:3,</span> in <span class="ni">raise_from</span><span class="nt">(value, from_value)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\urllib3\connectionpool.py:444,</span> in <span class="ni">HTTPConnectionPool._make_request</span><span class="nt">(self, conn, method, url, timeout, chunked, **httplib_request_kw)</span>
+<span class="g g-Whitespace">    </span><span class="mi">441</span> <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">442</span>     <span class="c1"># Python 3</span>
+<span class="g g-Whitespace">    </span><span class="mi">443</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">444</span>         <span class="n">httplib_response</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">getresponse</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">445</span>     <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">446</span>         <span class="c1"># Remove the TypeError from the exception chain in</span>
+<span class="g g-Whitespace">    </span><span class="mi">447</span>         <span class="c1"># Python 3 (including for exceptions like SystemExit).</span>
+<span class="g g-Whitespace">    </span><span class="mi">448</span>         <span class="c1"># Otherwise it looks like a bug in the code.</span>
+<span class="g g-Whitespace">    </span><span class="mi">449</span>         <span class="n">six</span><span class="o">.</span><span class="n">raise_from</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\http\client.py:1374,</span> in <span class="ni">HTTPConnection.getresponse</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1372</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1373</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1374</span>         <span class="n">response</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1375</span>     <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1376</span>         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\http\client.py:318,</span> in <span class="ni">HTTPResponse.begin</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">316</span> <span class="c1"># read until we get a non-100 response</span>
+<span class="g g-Whitespace">    </span><span class="mi">317</span> <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">318</span>     <span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_status</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">319</span>     <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">CONTINUE</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">320</span>         <span class="k">break</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\http\client.py:279,</span> in <span class="ni">HTTPResponse._read_status</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">278</span> <span class="k">def</span> <span class="nf">_read_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">279</span>     <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="n">_MAXLINE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">280</span>     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAXLINE</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">281</span>         <span class="k">raise</span> <span class="n">LineTooLong</span><span class="p">(</span><span class="s2">&quot;status line&quot;</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\socket.py:705,</span> in <span class="ni">SocketIO.readinto</span><span class="nt">(self, b)</span>
+<span class="g g-Whitespace">    </span><span class="mi">703</span> <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">704</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">705</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">706</span>     <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">707</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\ssl.py:1273,</span> in <span class="ni">SSLSocket.recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1269</span>     <span class="k">if</span> <span class="n">flags</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1270</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+<span class="g g-Whitespace">   </span><span class="mi">1271</span>           <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
+<span class="g g-Whitespace">   </span><span class="mi">1272</span>           <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+<span class="ne">-&gt; </span><span class="mi">1273</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1274</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1275</span>     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\ssl.py:1129,</span> in <span class="ni">SSLSocket.read</span><span class="nt">(self, len, buffer)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1127</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1128</span>     <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1129</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1130</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1131</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>

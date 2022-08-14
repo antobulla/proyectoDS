@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Análisis univariado de los datos
+# ## Análisis univariado
 # En esta sección se realiza el análisis univariado de los datos, a partir de herramientas de visualización y tablas que nos sugieran ciertos patrones entre el target y los predictores.
 
 # In[1]:

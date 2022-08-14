@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Análisis multivariado de los datos
+# ## Análisis multivariado
 # 
 # En esta sección se realiza el análisis multivariado del proyecto, la idea detrás de dicho apartado es identificar efectos simultáneos que diferentes variables predictoras podrían tener sobre el target. Por un lado, el estudio multivariante permitiría determinar posibles efectos indirectos que una predictora puede tener sobre el target, a partir de un tercer *feature*. Por otro lado, ayudaría a encontrar posibles correlaciones no despreciables entre variables independientes que sugerirían la eliminación de alguna de ellas en pos de reducir la complejidad del modelo. 
 # 

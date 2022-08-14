@@ -5,20 +5,41 @@ format: jb-book
 root: intro
 
 parts:
-- caption: Preparación de los datos
+- caption: Secciones
+  numbered: true
   chapters:
   - file: sections/1_prepara_datos
-
-- caption: Análisis exploratorio
-  chapters:
-  - file: intro_sec2
+  - file: intro_anExp
     sections:
     - file: sections/2_1_analisis_univariado
     - file: sections/2_2_analisis_bivariado
     - file: sections/2_3_analisis_multivariado
+  - file: intro_ingAtr_enfVal
+    sections:
+    - file: sections/3_ingenieria_atributos
+    - file: sections/4_enfoque_validacion
+  - file: intro_modelos
+    sections:
+    - file: sections/5_prediccion
 
 - caption: Anexo
   chapters:
   - file: intro_anexo
     sections:
     - file: sections/1_1_googleTrends
+
+# - caption: Análisis exploratorio
+#   numbered: true
+#   chapters:
+
+
+# - caption: Ingeniería de atributos y enfoque de validación
+#   numbered: true
+#   chapters:
+
+
+# - caption: Modelos de predicción
+#   numbered: true
+#   chapters:
+
+

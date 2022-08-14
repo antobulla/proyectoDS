@@ -26,7 +26,7 @@ from functools import partial, reduce # to transform variable dic in a dataframe
 # 
 # Por lo tanto, las regiones que registran el mismo interés de búsqueda de un término no siempre tienen los mismos volúmenes de búsquedas totales.
 # 
-# La forma en que se construyen los indicadores, y algunas cuestiones relacionadas a las diferentes frecuencias de tiempo, lleva a considerar algunas cuestiones particulares en los datos a la hora de importar las series para todo el período de interés. En [***1_1_googleTrends***](https://colab.research.google.com/drive/16EsslAqhCxdLE7faten7jimdueDAYsXB#scrollTo=N5B37d9opaMa) se explican esos detalles para construir el *dataframe* **gtrends**. No obstante, en esta sección importamos directamente la base previamente creada. 
+# Si bien la plataforma brinda datos de diferente unidad de tiempo, la misma presenta una limitación en la longitud de tiempo a importar. Pedidos para los últimos 7 días importará frecuencias de búsqueda horarias; pedidos con rangos menores a 9 meses importa series diarias; entre 9 meses y 5 años importa series semanales, y posterior a esto construye datos mensuales. Adicionalmente, google trends construye un indicador cuya frecuencia relativa se realiza utilizando el máximo (desconocido para el usuario) del período solicitado como denominador, por lo que la frecuencia se interpreta en relación a un máximo local, que puede cambiar según cambie el rango de tiempo solicitado. Ambas consideraciones generan una complicación al querer importar datos diarios para un período superior a los 5 años. Para solucionar esto, se crea la función `daily_gt()` que importa datos por períodos menores a 9 meses y los normaliza para ajustar las frecuencias a su valor histórico, siguiendo el método en [***medium***](https://medium.com/@bewerunge.franz/google-trends-how-to-acquire-daily-data-for-broad-time-frames-b6c6dfe200e6). En [***1_1_googleTrends***](https://colab.research.google.com/drive/16EsslAqhCxdLE7faten7jimdueDAYsXB#scrollTo=N5B37d9opaMa) se corre la función y se importan los datos diarios para el período *08/2015-06/2022*, estos es, desde el inicio de ethereum hasta la actualidad. En esta sección importamos directamente la base previamente creada.  
 
 # In[2]:
 
@@ -48,9 +48,9 @@ gtrends
 
 # ### Criptomonedas 
 # 
-# El siguiente paso es construir la base de criptomonedas. Por un lado, importamos información de ethereum, nuestro target. Por otro lado, también obtenemos información de bitcoin, los cambios relacionados a la cotización de esta pueden estar correlacionados con los cambios en ethereum, por lo que también la incluimos a la lista de predictores. 
+# El siguiente paso es construir la base de criptomonedas. Por un lado, importamos información de ethereum, nuestro target. Por otro lado, también obtenemos información de bitcoin, debido a que los cambios en la cotización de esta pueden estar correlacionados con los cambios en ethereum, por lo que también la incluimos a la lista de predictores. 
 # 
-# [***CryptoDataDownload***](https://www.cryptodatadownload.com/) es una plataforma que brinda, entre otras cosas, información histórica de la cotización de diferentes criptomonedas a partir de la API Poloniex. Entre ellas, se encuentran las cotizaciones de ethereum y bitcoin. Los datos comprenden el precio de apertura y clausura en un momento del tiempo dado (horario, diario, etc.), el precio más alto y bajo, y el volumen de transacciones.
+# [***CryptoDataDownload***](https://www.cryptodatadownload.com/) es una plataforma que brinda, entre otras cosas, información histórica de la cotización de diferentes criptomonedas a partir de la **API Poloniex**. Entre ellas, se encuentran las cotizaciones de ethereum y bitcoin. Los datos comprenden el precio de apertura y clausura en un momento del tiempo dado (horario, diario, etc.), el precio más alto y bajo, y el volumen de transacciones. Para ambas criptomonedas, importamos para el período 08/2015-06/2022. En el caso de ethereum, también promediamos el precio de cierre y apertura diario, nuestra variable a predecir y computamos los primeros 7 rezagos del promedio. Con los rezagos estaríamos teniendo columnas de precios diarios futuros, desde el día siguiente al actual hasta el mismo día de la siguiente semana al día corriente. 
 
 # In[4]:
 
@@ -58,7 +58,6 @@ gtrends
 # ### Ethereum
 # variable importada de Poloniex Data (incluye valores anteriores a 2017)
 ethereum1 = pd.read_csv('https://www.cryptodatadownload.com/cdd/Poloniex_ETHUSDT_d.csv', skiprows=1)
-# ethereum1.rename(columns = 'Volume')
 ethereum1 = ethereum1.set_index('date')
 ethereum1 = ethereum1.sort_index()
 ethereum1.index
@@ -68,7 +67,7 @@ ethereum1.index.names = ['Date']
 ethereum1 = ethereum1.rename(columns={col: col+'_eth' for col in ethereum1.columns})
 # promedio cierre y apertura precio ethereum
 ethereum1['eth_close_open_mean'] = ethereum1.loc[:,['close_eth',	'open_eth']].mean(axis=1)
-# agregamos a la variable el rezago de un día de la variable a predecir  
+# agregamos a la variable los rezagos de los 7 días de la variable a predecir  
 for i in range(1, 8):
   ethereum1[f'y_lag{i}'] = ethereum1['eth_close_open_mean'].shift(-i)
 
@@ -81,6 +80,8 @@ bitcoin.index = [d.date() for d in bitcoin.index]
 bitcoin.index.names = ['Date']
 bitcoin = bitcoin.rename(columns={col: col+'_btc' for col in bitcoin.columns})
 
+
+# Al tener ambas bases de datos pasamos a unirlas según el índice que sería en este caso la fecha.
 
 # In[5]:
 
@@ -95,10 +96,13 @@ crypto_pol.index = pd.to_datetime(crypto_pol.index)
 # In[6]:
 
 
+## visualizamos
 crypto_pol
 
 
 # ### Unión inputs 
+# 
+# Ya con ambas bases cargadas pasamos a unirlos. Por lo que nos quedaría un *dataframe* con información de las dos criptomonedas utilizadas, ethereum y bitcoin (siendo la primera la moneda a predecir), y las frecuencias de tópicos y términos de búsqueda históricas ajustadas de frecuencia temporal diaria. Debido a que todas las variables en el *dataset* deben ser numéricas, pasamos también a transformar todas las columnas en series numéricas, para evitar cualquier problema relacionado al *type*. 
 
 # In[7]:
 
@@ -109,17 +113,19 @@ df = pd.merge(gtrends, crypto_pol, left_index=True, right_index=True)
 cols = df.columns.tolist()
 cols = cols[-1:] + cols[:-1]
 df = df[cols]
-# visualización
-df
+# pasamos todas las variables a numéricas
+df = df.apply(pd.to_numeric)
+df.info()
 
 
 # In[8]:
 
 
-# pasamos todas las variables a numéricas
-df = df.apply(pd.to_numeric)
-df.info()
+# visualización
+df
 
+
+# Ya con la base construida se pasa a guardar el dataset en formato *.csv* con el nombre de *input*. 
 
 # In[9]:
 

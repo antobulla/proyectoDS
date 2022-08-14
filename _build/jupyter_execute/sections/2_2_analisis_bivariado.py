@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ## Análisis bivariado de los datos
+# ## Análisis bivariado
 # 
 # En esta sección se realiza el análisis bivariado de los datos, a partir de herramientas de visualización y tablas que nos sugieran ciertos patrones entre el *target* y los predictores. 
 

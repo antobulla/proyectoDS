@@ -90,6 +90,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="bd-sidebar__top"><div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Predicción del precio futuro de ethereum</h1>
@@ -110,25 +115,18 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Preparación de los datos
+  Secciones
  </span>
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="sections/1_prepara_datos.html">
-   Preparación dataset
+   1. Preparación dataset
   </a>
  </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Análisis exploratorio
- </span>
-</p>
-<ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="intro_sec2.html">
-   Análisis exploratorio
+  <a class="reference internal" href="intro_anExp.html">
+   2. Análisis exploratorio
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -138,17 +136,56 @@ const thebe_selector_output = ".output, .cell_output"
   <ul>
    <li class="toctree-l2">
     <a class="reference internal" href="sections/2_1_analisis_univariado.html">
-     Análisis univariado de los datos
+     2.1. Análisis univariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="sections/2_2_analisis_bivariado.html">
-     Análisis bivariado de los datos
+     2.2. Análisis bivariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="sections/2_3_analisis_multivariado.html">
-     Análisis multivariado de los datos
+     2.3. Análisis multivariado
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_ingAtr_enfVal.html">
+   3. Ingeniería de Atributos
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/3_ingenieria_atributos.html">
+     3.1. Ingeniería de atributos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/4_enfoque_validacion.html">
+     3.2. Enfoque de validación
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_modelos.html">
+   4. Modelos de predicción
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/5_prediccion.html">
+     4.1. Predicción del precio futuro de ethereum
     </a>
    </li>
   </ul>
@@ -164,8 +201,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="intro_anexo.html">
    Anexo
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -485,7 +522,7 @@ For example, here’s some sample Matplotlib code:</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.pyplot._IonContext at 0x284cbcf7c40&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.pyplot._IonContext at 0x156380df970&gt;
 </pre></div>
 </div>
 </div>
