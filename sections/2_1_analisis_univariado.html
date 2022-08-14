@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Análisis univariado de los datos &#8212; Predicción del precio futuro de ethereum</title>
+    <title>2.1. Análisis univariado &#8212; Predicción del precio futuro de ethereum</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,8 +52,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Análisis bivariado de los datos" href="2_2_analisis_bivariado.html" />
-    <link rel="prev" title="Análisis exploratorio" href="../intro_sec2.html" />
+    <link rel="next" title="2.2. Análisis bivariado" href="2_2_analisis_bivariado.html" />
+    <link rel="prev" title="2. Análisis exploratorio" href="../intro_anExp.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -115,25 +115,18 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Preparación de los datos
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="1_prepara_datos.html">
-   Preparación dataset
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Análisis exploratorio
+  Secciones
  </span>
 </p>
 <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_prepara_datos.html">
+   1. Preparación dataset
+  </a>
+ </li>
  <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="../intro_sec2.html">
-   Análisis exploratorio
+  <a class="reference internal" href="../intro_anExp.html">
+   2. Análisis exploratorio
   </a>
   <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -143,17 +136,56 @@ const thebe_selector_output = ".output, .cell_output"
   <ul class="current">
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     Análisis univariado de los datos
+     2.1. Análisis univariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="2_2_analisis_bivariado.html">
-     Análisis bivariado de los datos
+     2.2. Análisis bivariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="2_3_analisis_multivariado.html">
-     Análisis multivariado de los datos
+     2.3. Análisis multivariado
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_ingAtr_enfVal.html">
+   3. Ingeniería de Atributos
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3_ingenieria_atributos.html">
+     3.1. Ingeniería de atributos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_enfoque_validacion.html">
+     3.2. Enfoque de validación
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_modelos.html">
+   4. Modelos de predicción
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="5_prediccion.html">
+     4.1. Predicción del precio futuro de ethereum
     </a>
    </li>
   </ul>
@@ -169,8 +201,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../intro_anexo.html">
    Anexo
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -390,22 +422,22 @@ title="Print to PDF"
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
-   Variable a predecir: precio diario promedio de ethereum
+   2.1.1. Variable a predecir: precio diario promedio de ethereum
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#analisis-por-variable">
-   Análisis por variable
+   2.1.2. Análisis por variable
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#graficos-de-linea">
-   Gráficos de línea
+   2.1.3. Gráficos de línea
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#histogramas-y-densidad">
-   Histogramas y densidad
+   2.1.4. Histogramas y densidad
   </a>
  </li>
 </ul>
@@ -417,7 +449,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Análisis univariado de los datos</h1>
+                <h1>Análisis univariado</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -429,22 +461,22 @@ title="Print to PDF"
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
-   Variable a predecir: precio diario promedio de ethereum
+   2.1.1. Variable a predecir: precio diario promedio de ethereum
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#analisis-por-variable">
-   Análisis por variable
+   2.1.2. Análisis por variable
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#graficos-de-linea">
-   Gráficos de línea
+   2.1.3. Gráficos de línea
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#histogramas-y-densidad">
-   Histogramas y densidad
+   2.1.4. Histogramas y densidad
   </a>
  </li>
 </ul>
@@ -457,8 +489,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="analisis-univariado-de-los-datos">
-<h1>Análisis univariado de los datos<a class="headerlink" href="#analisis-univariado-de-los-datos" title="Permalink to this headline">#</a></h1>
+  <section id="analisis-univariado">
+<h1><span class="section-number">2.1. </span>Análisis univariado<a class="headerlink" href="#analisis-univariado" title="Permalink to this headline">#</a></h1>
 <p>En esta sección se realiza el análisis univariado de los datos, a partir de herramientas de visualización y tablas que nos sugieran ciertos patrones entre el target y los predictores.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1155,7 +1187,7 @@ memory usage: 1.1+ MB
 </div></div></div>
 </div>
 <section id="variable-a-predecir-precio-diario-promedio-de-ethereum">
-<h2>Variable a predecir: precio diario promedio de ethereum<a class="headerlink" href="#variable-a-predecir-precio-diario-promedio-de-ethereum" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.1.1. </span>Variable a predecir: precio diario promedio de ethereum<a class="headerlink" href="#variable-a-predecir-precio-diario-promedio-de-ethereum" title="Permalink to this headline">#</a></h2>
 <p>En primer lugar, observamos la serie del precio diario promedio de ethereum, nuestra variable a predecir. Como se puede ver en la primera figura, la serie presenta un componente irregular no despreciable, la serie comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando un diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, donde la misma comienza a subir. Dicha irregularidad presenta una alta volatilidad o varianza, por lo que sería deseable poder aplicar alguna transformación a la serie antes de predecir.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1195,13 +1227,13 @@ memory usage: 1.1+ MB
 <p>Así, luego de aplicar el logaritmo, se logra mayor suavidad en el gráfico en comparación con los valores iniciales de la cotización.</p>
 </section>
 <section id="analisis-por-variable">
-<h2>Análisis por variable<a class="headerlink" href="#analisis-por-variable" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.1.2. </span>Análisis por variable<a class="headerlink" href="#analisis-por-variable" title="Permalink to this headline">#</a></h2>
 <p>Seleccionaremos las variables que consideramos más significativas para realizar su análisis univariado.</p>
 <p>Por un lado, elegimos como primera variable el precio de bitcoin, considerando que es muy común leer o escuchar dentro de comunidades crypto y en Internet en general que las altcoins (criptomonedas alternativas, ethereum es una de ellas) siguen la tendencia de bitcoin.</p>
 <p>Por otro lado, a partir de la tabla de estadísticas descriptivas mostrado antes, seleccionamos dos de las primeras variables y dos de las últimas que allí aparecen, es decir, dos de las que presentan el mayor promedio de búsquedas diario y dos de los de menor, respectivamente. Repasando la idea de los indicadores de palabras, las mismas se calculan asignando el número 100 al valor máximo de toda la serie, a partir de este se calcula la tasa de búsqueda de los demás días respecto a ese valor máximo. Por lo que la interpretación de la proporción de búsqueda se realiza en base a ese valor pico.</p>
 </section>
 <section id="graficos-de-linea">
-<h2>Gráficos de línea<a class="headerlink" href="#graficos-de-linea" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.1.3. </span>Gráficos de línea<a class="headerlink" href="#graficos-de-linea" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span> <span class="c1"># set tamaño de ticks</span>
@@ -1231,7 +1263,7 @@ memory usage: 1.1+ MB
 <p>Como puede verse, la serie de la palabra <em>bitcoin</em> sigue muy de cerca la evolución del precio de ethereum, con un primer pico en 2018 y una tendencia positiva durante el 2020. Por otra parte, variables constantes como <em>banking</em> e <em>investment</em> no parecen tener cambios agudos que puedan tener una asociación con las fluctuaciones de ethereum, mientras que la búsqueda de <em>covid_19</em> lógicamente comienza a aparecer masivamente recién en 2020. En el caso de <em>elon musk</em>, la misma también aparece con mayor frecuencia durante el año 2020, aunque también tiene picos de menor nivel durante el 2018.</p>
 </section>
 <section id="histogramas-y-densidad">
-<h2>Histogramas y densidad<a class="headerlink" href="#histogramas-y-densidad" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.1.4. </span>Histogramas y densidad<a class="headerlink" href="#histogramas-y-densidad" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">high_btc</span><span class="p">);</span>
@@ -1345,17 +1377,17 @@ memory usage: 1.1+ MB
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../intro_sec2.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="../intro_anExp.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Análisis exploratorio</p>
+            <p class="prev-next-title"><span class="section-number">2. </span>Análisis exploratorio</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="2_2_analisis_bivariado.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Análisis bivariado de los datos</p>
+        <p class="prev-next-title"><span class="section-number">2.2. </span>Análisis bivariado</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

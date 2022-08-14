@@ -1,2 +1,2 @@
 # Anexo
-La utilización de los indicadores de google trends implican un trabajo de procesamiento previo para poder apilar todas las series históricas. La presente sección realiza el desarrollo adicional de la puesta a punto de la base google trends utilizada para el trabajo. 
+La utilización de los indicadores de google trends implican un trabajo de procesamiento previo para poder obtener las series diarias históricas, lo cual ha sido mencionado antes en [***1_1_googleTrends***](https://colab.research.google.com/drive/16EsslAqhCxdLE7faten7jimdueDAYsXB#scrollTo=N5B37d9opaMa). La presente sección realiza el desarrollo adicional de la puesta a punto de dichos indicadores para utilizar como predictores del precio de ethereum. 

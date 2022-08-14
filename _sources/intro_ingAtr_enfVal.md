@@ -1,0 +1,3 @@
+# Ingeniería de Atributos
+
+Una vez realizada la exploración de los datos a través de diferentes herramientas de visualización, es momento de realizar la ingeniería de atributos. En este apartado realizamos las transformaciones de variables necesarias para mejorar el poder predictivo de los modelos utilizados. A su vez, para poder replicar un entorno de predicción realizamos el enfoque de validación, dividiendo el conjunto de datos en dos subconjuntos: uno de entrenamiento, que es utilizado para ajustar los modelos; otro de validación, donde se evalúa el desempeño de predicción de cada uno.   
