@@ -1,0 +1,2 @@
+# Análisis exploratorio 
+En este apartado se realiza el análisis descriptivo de los datos. El mismo permite por un lado encontrar patrones que podrían anticipar posibles influencias entre las variables predictoras y el target. A su vez, el comportamiento de los *features* utilizados en el análisis echaría luz acerca de la forma de utilizar los datos crudos, es decir, si convendría realizar en estos algún tipo de transformación o no que se ajuste mejor a los modelos de predicción estimados.

@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Preparación dataset" href="sections/1_prepara_datos.html" />
+    <link rel="next" title="1. Preparación dataset" href="sections/1_prepara_datos.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -114,25 +114,18 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Preparación de los datos
+  Secciones
  </span>
 </p>
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="sections/1_prepara_datos.html">
-   Preparación dataset
+   1. Preparación dataset
   </a>
  </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Análisis exploratorio
- </span>
-</p>
-<ul class="nav bd-sidenav">
  <li class="toctree-l1 has-children">
-  <a class="reference internal" href="intro_sec2.html">
-   Análisis exploratorio
+  <a class="reference internal" href="intro_anExp.html">
+   2. Análisis exploratorio
   </a>
   <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -142,17 +135,56 @@ const thebe_selector_output = ".output, .cell_output"
   <ul>
    <li class="toctree-l2">
     <a class="reference internal" href="sections/2_1_analisis_univariado.html">
-     Análisis univariado de los datos
+     2.1. Análisis univariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="sections/2_2_analisis_bivariado.html">
-     Análisis bivariado de los datos
+     2.2. Análisis bivariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="sections/2_3_analisis_multivariado.html">
-     Análisis multivariado de los datos
+     2.3. Análisis multivariado
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_ingAtr_enfVal.html">
+   3. Ingeniería de atributos y enfoque de validación
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/3_ingenieria_atributos.html">
+     3.1. Ingeniería de atributos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/4_enfoque_validacion.html">
+     3.2. Enfoque de validación
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="intro_modelos.html">
+   4. Modelos de predicción
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="sections/5_prediccion.html">
+     4.1. Predicción del precio futuro de ethereum
     </a>
    </li>
   </ul>
@@ -168,8 +200,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="intro_anexo.html">
    Anexo
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -254,7 +286,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/antobulla/proyectoDS"
+        <a href="https://github.com/agusstaudt/eht_prediction.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -271,7 +303,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/antobulla/proyectoDS/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/agusstaudt/eht_prediction.git/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -362,12 +394,11 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="introduccion">
 <h1>Introducción<a class="headerlink" href="#introduccion" title="Permalink to this headline">#</a></h1>
-<p>Las monedas digitales han aparecido como un fenómeno disruptivo dentro del mundo financiero. Criptomonedas como bitcoin o ethereum han mostrado un crecimiento de popularidad global sin precedentes, en parte debido a su completa descentralización y su atractivo rendimiento diario. No obstante, las mismas conllevan períodos de cambios abruptos que también lo convierten en activos de inversión muy riesgosos. Por lo que, tratar de anticiparse a estos movimientos constantes resulta una cuestión clave para poder invertir en este tipo de activos digitales, minimizando el riesgo de sufrir pérdidas importantes de capital.
-Junto con la aparición de las criptomonedas también ha surgido en el último tiempo la sistematización de búsquedas de palabras online, en especial, <a class="reference external" href="https://trends.google.es/trends/?geo=AR"><strong>google</strong></a> ha logrado estructurar todas las búsquedas realizadas diariamente en el mundo, en indicadores que permiten observar las tendencias diarias de palabras o tópicos de discusión. Como también, permite la visualización de evoluciones históricas de búsquedas.</p>
-<p>La característica descentralización de las criptomonedas las convierten en activos cuya evolución podría estar considerablemente relacionada con el comportamiento de la sociedad, en términos de los movimientos del libre juego de oferta y demanda. Debido a esto, la utilización de las herramientas de google de tendencias de búsquedas podrían reflejar lo que estaría pasando en el mercado de criptomonedas, como también, podrían ser indicadores de la evolución futura de sus cotizaciones. Por lo tanto, utilizando las búsquedas diarias de google este trabajo se propone predecir la cotización futura de la criptomoneda ethereum, la cual se encuentra entre las más importantes y populares del mercado de las monedas digitales. Para ello, se utilizan diferentes algoritmos de machine learning para predecir la cotización futura de la criptomeda, esto es, el precio diario de entre 1 a 7 días posteriores al momento presente.</p>
-<p>El resto del trabajo se estructura de la siguiente manera. En la <a class="reference internal" href="sections/1_prepara_datos.html"><span class="doc std std-doc"><strong>Sección 1</strong></span></a> se desarrolla la preparación del <em>dataset</em> utilizado como input para realizar el ejercicio de predicción. En la <a class="reference internal" href="intro_sec2.html"><span class="doc std std-doc"><strong>Sección 2</strong></span></a> se desarrolla el análisis exploratorio de los datos, bajo la estructura de análisis univariado, bivariado y multivariado.</p>
-<div class="toctree-wrapper compound">
-</div>
+<p>Las monedas digitales han aparecido como un fenómeno disruptivo dentro del mundo financiero. Criptomonedas como bitcoin o ethereum han mostrado un crecimiento de popularidad global sin precedentes, en parte debido a su completa descentralización y su atractivo rendimiento diario. No obstante, las mismas conllevan períodos cortos de cambios abruptos que también lo convierten en activos de inversión muy riesgosos. Por lo que, tratar de anticiparse a estos cambios de tendencia resulta una cuestión clave para poder invertir en este tipo de activos digitales, minimizando el riesgo de sufrir pérdidas importantes de capital.</p>
+<p>El hecho de que el mercado de criptomonedas no tenga una autoridad central que gestione sus transacciones haría suponer que se trata de un mercado cuya performance de precios se encuentra altamente correlacionada con el libre juego de oferta y demanda, es decir, la evolución de precios se encuentra asociada a señales que se van formando a partir de decisiones en masa de compradores y vendedores. Debido a esto, la información acerca del comportamiento de la oferta y demanda en intervalos cortos de tiempo se vuelve esencial para poder predecir precios de las criptomonedas.</p>
+<p>Junto con la aparición de las criptomonedas también ha surgido en el último tiempo la sistematización de búsquedas de palabras online, en especial, <a class="reference external" href="https://trends.google.es/trends/?geo=AR"><strong>google</strong></a> ha logrado estructurar todas las búsquedas realizadas diariamente en el mundo, en indicadores que permiten observar las tendencias diarias de palabras o tópicos de discusión. Como también, permite la visualización de evoluciones históricas de búsquedas. Estos indicadores podrían ser buenos <em>proxies</em> del comportamiento de la oferta y demanda del mercado de criptomonedas, debido a que una alta propensión a vender y comprar criptomonedas se veria reflejado en una mayor freuencia de búsqueda de palabras relacionadas al mercado, lo cual derivaría en un aumento de la cotización en el mercado, y viceversa con una baja propensión de compra y venta.</p>
+<p>En este marco, el trabajo se propone a predecir el precio futuro de las criptomonedas, específicamente de la criptomoneda ethereum, una de las más populares del mercado. Para ello, se utilizan como inputs indicadores de <em>google trends</em> e información de precios y volúmenes, tanto de ethereum como de bitcoin, la principal criptomoneda del mercado y cuya evolución podría ser un predictor importante de las demás monedas digitales. A su vez, los precios futuros se estiman a partir de diferentes modelos de aprendizaje automático, que han demostrado ser algoritmos de alta competitividad, debido a que los mismos fueron construídos para optimizar problemas de predicción.</p>
+<p>El resto del trabajo se estructura de la siguiente manera. En la <a class="reference internal" href="sections/1_prepara_datos.html"><span class="doc std std-doc"><strong>Sección 1</strong></span></a> se desarrolla la preparación del <em>dataset</em> utilizado como input para realizar el ejercicio de predicción. En la <a class="reference internal" href="intro_anExp.html"><span class="doc std std-doc"><strong>Sección 2</strong></span></a> se desarrolla el análisis exploratorio de los datos, bajo la estructura de análisis univariado, bivariado y multivariado. En la <a class="reference internal" href="intro_ingAtr_enfVal.html"><span class="doc std std-doc"><strong>Sección 3</strong></span></a> se lleva a cabo la ingeniería de atributos y la creación de los subconjuntos de validación. Mientras que en la <a class="reference internal" href="intro_modelos.html"><span class="doc std std-doc"><strong>Sección 4</strong></span></a> se realizan las estimaciones de los modelos de predicción.</p>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -404,7 +435,7 @@ Junto con la aparición de las criptomonedas también ha surgido en el último t
     <a class='right-next' id="next-link" href="sections/1_prepara_datos.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Preparación dataset</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Preparación dataset</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

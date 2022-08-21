@@ -1,0 +1,27 @@
+% Encoding: UTF-8
+
+@Article{Kristoufek2013,
+  author    = {Ladislav Kristoufek},
+  journal   = {Scientific Reports},
+  title     = {{BitCoin} meets Google Trends and Wikipedia: Quantifying the relationship between phenomena of the Internet era},
+  year      = {2013},
+  month     = {dec},
+  number    = {1},
+  volume    = {3},
+  doi       = {10.1038/srep03415},
+  publisher = {Springer Science and Business Media {LLC}},
+}
+
+@Article{Sebastiao2021,
+  author    = {Helder Sebasti{\~{a}}o and Pedro Godinho},
+  journal   = {Financial Innovation},
+  title     = {Forecasting and trading cryptocurrencies with machine learning under changing market conditions},
+  year      = {2021},
+  month     = {jan},
+  number    = {1},
+  volume    = {7},
+  doi       = {10.1186/s40854-020-00217-x},
+  publisher = {Springer Science and Business Media {LLC}},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

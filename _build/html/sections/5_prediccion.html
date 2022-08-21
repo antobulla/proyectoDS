@@ -1,0 +1,2683 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>4.1. Predicción del precio futuro de ethereum &#8212; Predicción del precio futuro de ethereum</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Anexo" href="../intro_anexo.html" />
+    <link rel="prev" title="4. Modelos de predicción" href="../intro_modelos.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Predicción del precio futuro de ethereum</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introducción
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Secciones
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_prepara_datos.html">
+   1. Preparación dataset
+  </a>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_anExp.html">
+   2. Análisis exploratorio
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="2_1_analisis_univariado.html">
+     2.1. Análisis univariado
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="2_2_analisis_bivariado.html">
+     2.2. Análisis bivariado
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="2_3_analisis_multivariado.html">
+     2.3. Análisis multivariado
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_ingAtr_enfVal.html">
+   3. Ingeniería de atributos y enfoque de validación
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3_ingenieria_atributos.html">
+     3.1. Ingeniería de atributos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_enfoque_validacion.html">
+     3.2. Enfoque de validación
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../intro_modelos.html">
+   4. Modelos de predicción
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     4.1. Predicción del precio futuro de ethereum
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Anexo
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_anexo.html">
+   Anexo
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="1_1_googleTrends.html">
+     Preparación de base google trends
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/agusstaudt/eht_prediction.git/master?urlpath=tree/sections/5_prediccion.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/agusstaudt/eht_prediction.git"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/agusstaudt/eht_prediction.git/issues/new?title=Issue%20on%20page%20%2Fsections/5_prediccion.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/sections/5_prediccion.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#regresion-lineal">
+   4.1.1. Regresión lineal
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#entrenamiento-del-modelo">
+     4.1.1.1. Entrenamiento del modelo
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evaluacion-performance-en-el-grupo-de-entrenamiento">
+     4.1.1.2. Evaluación performance en el grupo de entrenamiento
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evaluacion-performance-en-el-grupo-de-test">
+     4.1.1.3. Evaluación performance en el grupo de test
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#forward-stepwise-selection">
+     4.1.1.4. Forward stepwise selection
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#k-folds-cross-validation">
+     4.1.1.5. K-folds-cross-validation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#time-series-split-cross-validation">
+       4.1.1.5.1. Time Series Split Cross-Validation
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#blocked-cross-validation">
+       4.1.1.5.2. Blocked Cross-Validation
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Predicción del precio futuro de ethereum</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#regresion-lineal">
+   4.1.1. Regresión lineal
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#entrenamiento-del-modelo">
+     4.1.1.1. Entrenamiento del modelo
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evaluacion-performance-en-el-grupo-de-entrenamiento">
+     4.1.1.2. Evaluación performance en el grupo de entrenamiento
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#evaluacion-performance-en-el-grupo-de-test">
+     4.1.1.3. Evaluación performance en el grupo de test
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#forward-stepwise-selection">
+     4.1.1.4. Forward stepwise selection
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#k-folds-cross-validation">
+     4.1.1.5. K-folds-cross-validation
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#time-series-split-cross-validation">
+       4.1.1.5.1. Time Series Split Cross-Validation
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#blocked-cross-validation">
+       4.1.1.5.2. Blocked Cross-Validation
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="prediccion-del-precio-futuro-de-ethereum">
+<h1><span class="section-number">4.1. </span>Predicción del precio futuro de ethereum<a class="headerlink" href="#prediccion-del-precio-futuro-de-ethereum" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="kn">import</span> <span class="nn">math</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 7&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="ne">----&gt; </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="kn">import</span> <span class="nn">math</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;sklearn&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="regresion-lineal">
+<h2><span class="section-number">4.1.1. </span>Regresión lineal<a class="headerlink" href="#regresion-lineal" title="Permalink to this headline">#</a></h2>
+<p>En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS).</p>
+<p>Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados.</p>
+<p>La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como <em>forward stepwise selection</em>, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin <em>features</em> y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de <em>k-folds-cross validation</em> bajo dos formas: la primera, conocida como <em>Time Series Split Cross-Validation</em> parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como <em>Blocked Cross-Validation</em>, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de <em>train</em> como de validación.</p>
+<p>Por último, el análisis se enfocara en predecir la misma variable <em>target</em> pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Importamos bases</span>
+<span class="c1"># train</span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1JgC5z_ed0YfAjuiYxl9SqqPvgxX3-cZs/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+
+<span class="c1"># test</span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1GqALyVt4jKpkUoR2IbQJBvek4Y5rkEg-/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="c1"># target en train </span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1qWQobNkMKTZah0hKhMWiiI1rDy89NaN6/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="c1"># target en test</span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1PhiVLaNQ3k7-XifEepwD4LoymDAmixix/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="entrenamiento-del-modelo">
+<h3><span class="section-number">4.1.1.1. </span>Entrenamiento del modelo<a class="headerlink" href="#entrenamiento-del-modelo" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#agregar constante</span>
+<span class="n">x_train</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/statsmodels/tools/_testing.py:19: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
+  import pandas.util.testing as tm
+/usr/local/lib/python3.7/dist-packages/statsmodels/tsa/tsatools.py:117: FutureWarning: In a future version of pandas all arguments of concat except for the argument &#39;objs&#39; will be keyword-only
+  x = pd.concat(x[::order], 1)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ajuste lineal</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+ 
+<span class="c1"># view model summary</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:             log_y_lag1   R-squared:                       1.000
+Model:                            OLS   Adj. R-squared:                  1.000
+Method:                 Least Squares   F-statistic:                 1.759e+05
+Date:                Tue, 02 Aug 2022   Prob (F-statistic):               0.00
+Time:                        01:04:02   Log-Likelihood:                 5852.8
+No. Observations:                1956   AIC:                        -1.162e+04
+Df Residuals:                    1911   BIC:                        -1.136e+04
+Df Model:                          44                                         
+Covariance Type:            nonrobust                                         
+===================================================================================================
+                                      coef    std err          t      P&gt;|t|      [0.025      0.975]
+---------------------------------------------------------------------------------------------------
+const                              -0.0009      0.014     -0.064      0.949      -0.028       0.026
+log_price_eth                       0.9912      0.003    332.336      0.000       0.985       0.997
+log_price_btc                      -0.8098      0.225     -3.595      0.000      -1.252      -0.368
+log_price_btc_lag1                  0.8430      0.227      3.717      0.000       0.398       1.288
+log_price_btc_lag2                 -0.0320      0.022     -1.471      0.141      -0.075       0.011
+log_price_btc_lag3                  0.0105      0.022      0.481      0.630      -0.032       0.053
+log_price_btc_lag4                  0.0241      0.022      1.110      0.267      -0.019       0.067
+log_price_btc_lag5                 -0.0142      0.022     -0.655      0.513      -0.057       0.028
+log_price_btc_lag6                 -0.0140      0.016     -0.872      0.383      -0.045       0.017
+log_volume_btc-usd                  0.0004      0.001      0.307      0.759      -0.002       0.003
+log_volume_eth-usd                  0.0008      0.001      0.871      0.384      -0.001       0.003
+var_price_eth                      -0.0094      0.005     -1.933      0.053      -0.019       0.000
+var_price_btc                       0.3506      0.099      3.552      0.000       0.157       0.544
+cryptocurrency_adjusted_log         0.0138      0.006      2.473      0.013       0.003       0.025
+crypto_adjusted_log                 0.0046      0.008      0.594      0.553      -0.010       0.020
+bitcoin_adjusted_log               -0.0154      0.007     -2.119      0.034      -0.030      -0.001
+bitcoin price_adjusted_log          0.0087      0.005      1.669      0.095      -0.002       0.019
+ethereum_adjusted_log              -0.0041      0.010     -0.424      0.672      -0.023       0.015
+ethereum price_adjusted_log         0.0178      0.005      3.658      0.000       0.008       0.027
+stock market_adjusted_log          -0.0023      0.007     -0.302      0.762      -0.017       0.012
+wall street_adjusted_log           -0.0034      0.005     -0.729      0.466      -0.012       0.006
+interest rate_adjusted_log          0.0060      0.004      1.547      0.122      -0.002       0.014
+fed_adjusted_log                -6.387e-05      0.003     -0.024      0.981      -0.005       0.005
+bankruptcy_adjusted_log             0.0070      0.003      2.146      0.032       0.001       0.013
+china_adjusted_log                 -0.0041      0.004     -1.034      0.301      -0.012       0.004
+united states_adjusted_log          0.0019      0.001      1.461      0.144      -0.001       0.004
+war_adjusted_log                    0.0057      0.002      2.394      0.017       0.001       0.010
+russia_adjusted_log                 0.0011      0.002      0.501      0.616      -0.003       0.005
+cryptocurrency_top_adjusted_log    -0.0189      0.010     -1.880      0.060      -0.039       0.001
+bitcoin_top_adjusted_log           -0.0003      0.003     -0.129      0.898      -0.005       0.005
+investment_top_adjusted_log        -0.0028      0.008     -0.353      0.724      -0.018       0.013
+ethereum_top_adjusted_log          -0.0123      0.010     -1.192      0.233      -0.033       0.008
+exchange_top_adjusted_log           0.0044      0.003      1.630      0.103      -0.001       0.010
+bankrup_top_adjusted_log            0.0049      0.002      2.153      0.031       0.000       0.009
+stock_market_top_adjusted_log       0.0040      0.007      0.534      0.593      -0.011       0.019
+inflation_adjusted_log             -0.0020      0.004     -0.485      0.628      -0.010       0.006
+taxes_adjusted_log                  0.0005      0.004      0.123      0.902      -0.007       0.008
+digital_wallet_top_adjusted_log    -0.0011      0.002     -0.460      0.646      -0.006       0.004
+covid19_adjusted_log                0.0072      0.003      2.573      0.010       0.002       0.013
+pandemic_adjusted_log              -0.0109      0.004     -3.049      0.002      -0.018      -0.004
+elon musk_adjusted_log              0.0003      0.001      0.228      0.820      -0.002       0.003
+do kwon_adjusted_log               -0.0010      0.003     -0.352      0.725      -0.007       0.005
+future_commodities_adjusted_log     0.0045      0.006      0.741      0.459      -0.007       0.016
+banking_adjusted_log               -0.0154      0.005     -3.048      0.002      -0.025      -0.005
+foreign_currency_adjusted_log      -0.0018      0.004     -0.455      0.649      -0.010       0.006
+==============================================================================
+Omnibus:                      248.217   Durbin-Watson:                   1.977
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2236.488
+Skew:                          -0.243   Prob(JB):                         0.00
+Kurtosis:                       8.216   Cond. No.                     1.50e+04
+==============================================================================
+
+Warnings:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+[2] The condition number is large, 1.5e+04. This might indicate that there are
+strong multicollinearity or other numerical problems.
+</pre></div>
+</div>
+</div>
+</div>
+<p>En primer lugar estimamos una regresión lineal entre las predictoras de interés y el precio de ethereum rezagado 1 día, es decir, la cotización del siguiente día. En la salida de regresión se observan variables significativas esperables, como el precio de ethereum y de bitcoin del día corriente y anterior al corriente. En el caso de ethereum, la correlación parcial es positva, interpretándose que un aumento del 1% del precio actual de ethereum se correlaciona, ceteris paribus, con un aumento del 0.99% del precio de ethereum del día siguiente. Mientras que en caso del bitcoin existen dos efectos significativos: el del día corriente y del día anterior al actual. Un aumento del 1% del precio corriente de bitcoin se asocia con una caída del 0.8% del precio de ethereum del día siguiente. No obstante, un aumento del 1% del precio de bitcoin del día anterior al actual se correlaciona con un aumento del 0.84% del valor de ethereum. Resulta interesante como se contraponen ambos efectos. Si lo analizaramos en sentido estático y dejando todo lo demás constante, un aumento del precio de bitcoin en el día actual, seguido de un aumento de la misma criptomoneda en el día anterior, ambas de la misma variación porcentual, se correlacionaría con un leve aumento del precio de ethereum. Ambos efectos jugarían como un rol de sustituto (bitcoin en el día actual) por un lado y complementario (bitcoin del día anterior al actual), por el otro, del valor del siguiente día de ethereum.</p>
+<p>Resulta también interesante que el ajuste sea de 1, tanto observando el R2 como el R2 ajustado. En base a esto surge la pregunta de si dicho ajuste se mantendría al estimar valores de ethereum más lejanos en el tiempo.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+  <span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="n">r_squaredAdj</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_squaredAdj</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0.9998, 0.9988, 0.9979, 0.997, 0.9961, 0.9951, 0.9942]
+</pre></div>
+</div>
+</div>
+</div>
+<p>El bucle anterior extrae de cada regresión entre el valor de ethreum de difentes momentos en el tiempo el R2 ajustado, partiendo desde el primer rezago hasta el séptimo. El ajuste, si bien disminuye al ajustar un modelo que estima momentos más lejanos en el tiempo, sigue siendo considerablemente alto en todas las instancias.</p>
+</section>
+<section id="evaluacion-performance-en-el-grupo-de-entrenamiento">
+<h3><span class="section-number">4.1.1.2. </span>Evaluación performance en el grupo de entrenamiento<a class="headerlink" href="#evaluacion-performance-en-el-grupo-de-entrenamiento" title="Permalink to this headline">#</a></h3>
+<p>Primero evaluamos la performance predictiva en el grupo de entrenamiento, siendo conscientes del probable sobreajuste que esta evaluación genere. Para realizar la evluación de desempeño del modelo utilizamos como métrica la raíz del error cuadrático medio como proporción de la media del target. Esto último para poder tener mayor claridad a la hora de interpretar los resultados.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># computamos el predicho para cada uno de los rezagos de la dependiente</span>
+<span class="n">predictions_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+  <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+  <span class="n">predictions_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;pred_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+  <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> 
+                           <span class="n">predictions_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;pred_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+  <span class="n">rmse</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+  <span class="n">mean_target_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raíz del error cuadrático medio para log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;El error de predicción en el grupo de entrenamiento es equivalente al </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="o">/</span><span class="n">mean_target_train</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s1">% del promedio de la variable dependiente</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Raíz del error cuadrático medio para log_y_lag1:
+El error de predicción en el grupo de entrenamiento es equivalente al 1% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag2:
+El error de predicción en el grupo de entrenamiento es equivalente al 1% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag3:
+El error de predicción en el grupo de entrenamiento es equivalente al 2% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag4:
+El error de predicción en el grupo de entrenamiento es equivalente al 2% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag5:
+El error de predicción en el grupo de entrenamiento es equivalente al 2% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag6:
+El error de predicción en el grupo de entrenamiento es equivalente al 3% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag7:
+El error de predicción en el grupo de entrenamiento es equivalente al 3% del promedio de la variable dependiente
+</pre></div>
+</div>
+</div>
+</div>
+<p>Como es esperable, el ajuste es considerablemente alto, por lo que la predicción también lo es. Aunque la performance disminuye a medida que predecimos valores más lejanos.</p>
+</section>
+<section id="evaluacion-performance-en-el-grupo-de-test">
+<h3><span class="section-number">4.1.1.3. </span>Evaluación performance en el grupo de test<a class="headerlink" href="#evaluacion-performance-en-el-grupo-de-test" title="Permalink to this headline">#</a></h3>
+<p>Pasamos a evaluar la performance en el grupo test.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">predictions_test_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+  <span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">)</span>
+  <span class="n">predictions_test_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;pred_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+  <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> 
+                           <span class="n">predictions_test_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;pred_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+  <span class="n">rmse</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+  <span class="n">mean_target_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raíz del error cuadrático medio para log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> en test:&quot;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;El error de predicción es equivalente al </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="o">/</span><span class="n">mean_target_test</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s1">% del promedio de la variable dependiente</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Raíz del error cuadrático medio para log_y_lag1 en test:
+El error de predicción es equivalente al 0% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag2 en test:
+El error de predicción es equivalente al 1% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag3 en test:
+El error de predicción es equivalente al 1% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag4 en test:
+El error de predicción es equivalente al 2% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag5 en test:
+El error de predicción es equivalente al 2% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag6 en test:
+El error de predicción es equivalente al 2% del promedio de la variable dependiente
+
+Raíz del error cuadrático medio para log_y_lag7 en test:
+El error de predicción es equivalente al 2% del promedio de la variable dependiente
+</pre></div>
+</div>
+</div>
+</div>
+<p>Curiosamente, la performance predictiva tiene mejoras en el grupo test respecto a la evaluación en el grupo de entrenamiento. A continuación, pasamos a graficar el observado versus el predicho para cada target estimado.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> 
+               <span class="n">predictions_test_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;pred_y_lag</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> 
+               <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sample data&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;valor predicho&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;observado&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5_prediccion_19_0.png" src="../_images/5_prediccion_19_0.png" />
+</div>
+</div>
+<p>Como se puede ver, la dispersión entre el valor real y el estimado aumenta a medida que tratamos de predecir ventanas de tiempo más lejanas al período actual. No obstante, la performance se mantiene alta inclusive a la hora de predecir el valor de ethereum del mismo día de la semana siguiente al actual.</p>
+</section>
+<section id="forward-stepwise-selection">
+<h3><span class="section-number">4.1.1.4. </span>Forward stepwise selection<a class="headerlink" href="#forward-stepwise-selection" title="Permalink to this headline">#</a></h3>
+<p>Por simplicidad, para el caso de selección y validación cruzada se utilizará solamente el precio de ethereum rezagado siete días.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># x_test_step = sm.add_constant(test)</span>
+<span class="n">candidates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">seleccionado</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># output_df = pd.DataFrame(d)</span>
+<span class="n">train_step</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<span class="n">test_step</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+
+<span class="c1"># baseline</span>
+<span class="n">model_baseline</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> <span class="n">train_step</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;const&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="c1"># predicción</span>
+<span class="n">predictions_test_baseline</span> <span class="o">=</span> <span class="n">model_baseline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_step</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;const&#39;</span><span class="p">])</span>
+<span class="c1"># métrica</span>
+<span class="n">mse_test_baseline</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> <span class="n">predictions_test_baseline</span><span class="p">)</span>
+<span class="n">rmse_test_baseline</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse_test_baseline</span><span class="p">)</span><span class="o">/</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="c1"># df</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;constant&quot;</span><span class="p">],</span> <span class="s1">&#39;rmse&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">rmse_test_baseline</span><span class="p">]}</span>
+<span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+<span class="c1"># selección</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">candidates</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+  <span class="n">max_rmse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span> 
+  <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+    <span class="c1"># agregar constante</span>
+    <span class="n">l</span> <span class="o">=</span>  <span class="n">seleccionado</span> <span class="o">+</span> <span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;const&#39;</span><span class="p">]</span>
+    <span class="c1"># subset</span>
+    <span class="n">x_train_step</span> <span class="o">=</span> <span class="n">train_step</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">l</span><span class="p">]</span>
+    <span class="n">x_test_step</span> <span class="o">=</span> <span class="n">test_step</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">l</span><span class="p">]</span>
+    
+    <span class="c1"># ajuste lineal</span>
+    <span class="n">model_step</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> <span class="n">x_train_step</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="c1"># predicción</span>
+    <span class="n">predictions_test_step</span> <span class="o">=</span> <span class="n">model_step</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test_step</span><span class="p">)</span>
+    <span class="c1"># métrica</span>
+    <span class="n">mse_test_step</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> <span class="n">predictions_test_step</span><span class="p">)</span>
+    <span class="n">rmse_test_step</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse_test_step</span><span class="p">)</span><span class="o">/</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">rmse_test_step</span> <span class="o">&lt;</span> <span class="n">max_rmse</span><span class="p">:</span>
+      <span class="n">max_rmse</span> <span class="o">=</span> <span class="n">rmse_test_step</span>
+      <span class="n">to_add</span> <span class="o">=</span> <span class="n">v</span>
+  <span class="n">candidates</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">to_add</span><span class="p">)</span>
+  <span class="n">seleccionado</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to_add</span><span class="p">)</span>
+  <span class="n">output_df</span> <span class="o">=</span> <span class="n">output_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;var&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">to_add</span><span class="p">],</span> <span class="s1">&#39;rmse&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">max_rmse</span><span class="p">]}),</span> <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">output_df</span><span class="p">)</span>
+  <span class="n">c</span> <span class="o">=</span> <span class="n">c</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/statsmodels/tsa/tsatools.py:117: FutureWarning: In a future version of pandas all arguments of concat except for the argument &#39;objs&#39; will be keyword-only
+  x = pd.concat(x[::order], 1)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>             var      rmse
+0       constant  0.428433
+1  log_price_eth  0.016584
+                        var      rmse
+0                  constant  0.428433
+1             log_price_eth  0.016584
+2  bitcoin_top_adjusted_log  0.016368
+                        var      rmse
+0                  constant  0.428433
+1             log_price_eth  0.016584
+2  bitcoin_top_adjusted_log  0.016368
+3     pandemic_adjusted_log  0.016269
+                        var      rmse
+0                  constant  0.428433
+1             log_price_eth  0.016584
+2  bitcoin_top_adjusted_log  0.016368
+3     pandemic_adjusted_log  0.016269
+4        china_adjusted_log  0.016137
+                          var      rmse
+0                    constant  0.428433
+1               log_price_eth  0.016584
+2    bitcoin_top_adjusted_log  0.016368
+3       pandemic_adjusted_log  0.016269
+4          china_adjusted_log  0.016137
+5  united states_adjusted_log  0.016080
+                          var      rmse
+0                    constant  0.428433
+1               log_price_eth  0.016584
+2    bitcoin_top_adjusted_log  0.016368
+3       pandemic_adjusted_log  0.016269
+4          china_adjusted_log  0.016137
+5  united states_adjusted_log  0.016080
+6         russia_adjusted_log  0.016039
+                          var      rmse
+0                    constant  0.428433
+1               log_price_eth  0.016584
+2    bitcoin_top_adjusted_log  0.016368
+3       pandemic_adjusted_log  0.016269
+4          china_adjusted_log  0.016137
+5  united states_adjusted_log  0.016080
+6         russia_adjusted_log  0.016039
+7               log_price_btc  0.016018
+                          var      rmse
+0                    constant  0.428433
+1               log_price_eth  0.016584
+2    bitcoin_top_adjusted_log  0.016368
+3       pandemic_adjusted_log  0.016269
+4          china_adjusted_log  0.016137
+5  united states_adjusted_log  0.016080
+6         russia_adjusted_log  0.016039
+7               log_price_btc  0.016018
+8            fed_adjusted_log  0.015992
+                           var      rmse
+0                     constant  0.428433
+1                log_price_eth  0.016584
+2     bitcoin_top_adjusted_log  0.016368
+3        pandemic_adjusted_log  0.016269
+4           china_adjusted_log  0.016137
+5   united states_adjusted_log  0.016080
+6          russia_adjusted_log  0.016039
+7                log_price_btc  0.016018
+8             fed_adjusted_log  0.015992
+9  investment_top_adjusted_log  0.015970
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+11    exchange_top_adjusted_log  0.015906
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+11    exchange_top_adjusted_log  0.015906
+12                var_price_eth  0.015895
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+11    exchange_top_adjusted_log  0.015906
+12                var_price_eth  0.015895
+13         covid19_adjusted_log  0.015892
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+11    exchange_top_adjusted_log  0.015906
+12                var_price_eth  0.015895
+13         covid19_adjusted_log  0.015892
+14           log_price_btc_lag1  0.015895
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+11    exchange_top_adjusted_log  0.015906
+12                var_price_eth  0.015895
+13         covid19_adjusted_log  0.015892
+14           log_price_btc_lag1  0.015895
+15       elon musk_adjusted_log  0.015898
+                            var      rmse
+0                      constant  0.428433
+1                 log_price_eth  0.016584
+2      bitcoin_top_adjusted_log  0.016368
+3         pandemic_adjusted_log  0.016269
+4            china_adjusted_log  0.016137
+5    united states_adjusted_log  0.016080
+6           russia_adjusted_log  0.016039
+7                 log_price_btc  0.016018
+8              fed_adjusted_log  0.015992
+9   investment_top_adjusted_log  0.015970
+10           taxes_adjusted_log  0.015944
+11    exchange_top_adjusted_log  0.015906
+12                var_price_eth  0.015895
+13         covid19_adjusted_log  0.015892
+14           log_price_btc_lag1  0.015895
+15       elon musk_adjusted_log  0.015898
+16    stock market_adjusted_log  0.015903
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+39               log_volume_eth-usd  0.016944
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+39               log_volume_eth-usd  0.016944
+40               log_volume_btc-usd  0.017276
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+39               log_volume_eth-usd  0.016944
+40               log_volume_btc-usd  0.017276
+41        ethereum_top_adjusted_log  0.017363
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+39               log_volume_eth-usd  0.016944
+40               log_volume_btc-usd  0.017276
+41        ethereum_top_adjusted_log  0.017363
+42             banking_adjusted_log  0.018132
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+39               log_volume_eth-usd  0.016944
+40               log_volume_btc-usd  0.017276
+41        ethereum_top_adjusted_log  0.017363
+42             banking_adjusted_log  0.018132
+43  cryptocurrency_top_adjusted_log  0.021362
+                                var      rmse
+0                          constant  0.428433
+1                     log_price_eth  0.016584
+2          bitcoin_top_adjusted_log  0.016368
+3             pandemic_adjusted_log  0.016269
+4                china_adjusted_log  0.016137
+5        united states_adjusted_log  0.016080
+6               russia_adjusted_log  0.016039
+7                     log_price_btc  0.016018
+8                  fed_adjusted_log  0.015992
+9       investment_top_adjusted_log  0.015970
+10               taxes_adjusted_log  0.015944
+11        exchange_top_adjusted_log  0.015906
+12                    var_price_eth  0.015895
+13             covid19_adjusted_log  0.015892
+14               log_price_btc_lag1  0.015895
+15           elon musk_adjusted_log  0.015898
+16        stock market_adjusted_log  0.015903
+17  future_commodities_adjusted_log  0.015902
+18            ethereum_adjusted_log  0.015909
+19  digital_wallet_top_adjusted_log  0.015921
+20                    var_price_btc  0.015945
+21               log_price_btc_lag3  0.015981
+22               log_price_btc_lag4  0.015988
+23               log_price_btc_lag2  0.015994
+24               log_price_btc_lag5  0.016009
+25               log_price_btc_lag6  0.016025
+26    stock_market_top_adjusted_log  0.016071
+27             do kwon_adjusted_log  0.016113
+28          bankruptcy_adjusted_log  0.016204
+29       interest rate_adjusted_log  0.016273
+30      cryptocurrency_adjusted_log  0.016280
+31    foreign_currency_adjusted_log  0.016224
+32         bankrup_top_adjusted_log  0.016295
+33             bitcoin_adjusted_log  0.016453
+34       bitcoin price_adjusted_log  0.016461
+35           inflation_adjusted_log  0.016786
+36                 war_adjusted_log  0.016915
+37         wall street_adjusted_log  0.017227
+38      ethereum price_adjusted_log  0.017552
+39               log_volume_eth-usd  0.016944
+40               log_volume_btc-usd  0.017276
+41        ethereum_top_adjusted_log  0.017363
+42             banking_adjusted_log  0.018132
+43  cryptocurrency_top_adjusted_log  0.021362
+44              crypto_adjusted_log  0.022650
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+  <div id="df-354ea8af-eab1-49a0-a93f-0272e46411da">
+    <div class="colab-df-container">
+      <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>var</th>
+      <th>rmse</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>constant</td>
+      <td>0.428433</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>log_price_eth</td>
+      <td>0.016584</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>bitcoin_top_adjusted_log</td>
+      <td>0.016368</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>pandemic_adjusted_log</td>
+      <td>0.016269</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>china_adjusted_log</td>
+      <td>0.016137</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>united states_adjusted_log</td>
+      <td>0.016080</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>russia_adjusted_log</td>
+      <td>0.016039</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>log_price_btc</td>
+      <td>0.016018</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>fed_adjusted_log</td>
+      <td>0.015992</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>investment_top_adjusted_log</td>
+      <td>0.015970</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>taxes_adjusted_log</td>
+      <td>0.015944</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>exchange_top_adjusted_log</td>
+      <td>0.015906</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>var_price_eth</td>
+      <td>0.015895</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>covid19_adjusted_log</td>
+      <td>0.015892</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>log_price_btc_lag1</td>
+      <td>0.015895</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>elon musk_adjusted_log</td>
+      <td>0.015898</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>stock market_adjusted_log</td>
+      <td>0.015903</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>future_commodities_adjusted_log</td>
+      <td>0.015902</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>ethereum_adjusted_log</td>
+      <td>0.015909</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>digital_wallet_top_adjusted_log</td>
+      <td>0.015921</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>var_price_btc</td>
+      <td>0.015945</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>log_price_btc_lag3</td>
+      <td>0.015981</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>log_price_btc_lag4</td>
+      <td>0.015988</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>log_price_btc_lag2</td>
+      <td>0.015994</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>log_price_btc_lag5</td>
+      <td>0.016009</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>log_price_btc_lag6</td>
+      <td>0.016025</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>stock_market_top_adjusted_log</td>
+      <td>0.016071</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>do kwon_adjusted_log</td>
+      <td>0.016113</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>bankruptcy_adjusted_log</td>
+      <td>0.016204</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>interest rate_adjusted_log</td>
+      <td>0.016273</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>cryptocurrency_adjusted_log</td>
+      <td>0.016280</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>foreign_currency_adjusted_log</td>
+      <td>0.016224</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>bankrup_top_adjusted_log</td>
+      <td>0.016295</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>bitcoin_adjusted_log</td>
+      <td>0.016453</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>bitcoin price_adjusted_log</td>
+      <td>0.016461</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>inflation_adjusted_log</td>
+      <td>0.016786</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>war_adjusted_log</td>
+      <td>0.016915</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>wall street_adjusted_log</td>
+      <td>0.017227</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>ethereum price_adjusted_log</td>
+      <td>0.017552</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>log_volume_eth-usd</td>
+      <td>0.016944</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>log_volume_btc-usd</td>
+      <td>0.017276</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>ethereum_top_adjusted_log</td>
+      <td>0.017363</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>banking_adjusted_log</td>
+      <td>0.018132</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>cryptocurrency_top_adjusted_log</td>
+      <td>0.021362</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>crypto_adjusted_log</td>
+      <td>0.022650</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+      <button class="colab-df-convert" onclick="convertToInteractive('df-354ea8af-eab1-49a0-a93f-0272e46411da')"
+              title="Convert this dataframe to an interactive table."
+              style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M0 0h24v24H0V0z" fill="none"/>
+    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
+  </svg>
+      </button>
+
+  <style>
+    .colab-df-container {
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+
+      <script>
+        const buttonEl =
+          document.querySelector('#df-354ea8af-eab1-49a0-a93f-0272e46411da button.colab-df-convert');
+        buttonEl.style.display =
+          google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+        async function convertToInteractive(key) {
+          const element = document.querySelector('#df-354ea8af-eab1-49a0-a93f-0272e46411da');
+          const dataTable =
+            await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                     [key], {});
+          if (!dataTable) return;
+
+          const docLinkHtml = 'Like what you see? Visit the ' +
+            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+            + ' to learn more about interactive tables.';
+          element.innerHTML = '';
+          dataTable['output_type'] = 'display_data';
+          await google.colab.output.renderOutput(dataTable, element);
+          const docLink = document.createElement('div');
+          docLink.innerHTML = docLinkHtml;
+          element.appendChild(docLink);
+        }
+      </script>
+    </div>
+  </div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span> <span class="c1"># set tamaño de ticks</span>
+<span class="c1"># graficamos la base ethereum completa</span>
+<span class="c1"># train.index = pd.to_datetime(train.index)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">output_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="s1">&#39;var&#39;</span><span class="p">],</span> <span class="n">output_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span><span class="s1">&#39;rmse&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#993404&#39;</span><span class="p">)</span> <span class="c1"># sacamos la constante para mejorar la visibilidad</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;RMSE/media(y)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Predictoras&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">)</span> <span class="c1"># Rotates X-Axis Ticks by 45-degrees</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Performance del modelo bajo selección&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5_prediccion_24_0.png" src="../_images/5_prediccion_24_0.png" />
+</div>
+</div>
+</section>
+<section id="k-folds-cross-validation">
+<h3><span class="section-number">4.1.1.5. </span>K-folds-cross-validation<a class="headerlink" href="#k-folds-cross-validation" title="Permalink to this headline">#</a></h3>
+<p><em>cross-validation</em> representa una técnica para validar el modelo separando el conjunto de datos en K grupos, donde para todos estos se realiza entrenamiento y validación. El entrenamiento con todos los datos excepto los pertenecientes a un grupo en cuestión, y se valida la predicción con ese subconjunto dejado afuera. El proceso se repite la cantidad de veces según cantidad de grupos exista.</p>
+<p>El ejericio se realiza utilizando el subconjunto entrenamiento para la formación de grupos.</p>
+<section id="time-series-split-cross-validation">
+<h4><span class="section-number">4.1.1.5.1. </span>Time Series Split Cross-Validation<a class="headerlink" href="#time-series-split-cross-validation" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">date_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">intv</span><span class="p">):</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span>  <span class="o">-</span> <span class="n">start</span> <span class="p">)</span> <span class="o">/</span> <span class="n">intv</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">intv</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span><span class="o">.</span><span class="n">index</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;2015-08-17&#39;, &#39;2015-08-18&#39;, &#39;2015-08-19&#39;, &#39;2015-08-20&#39;, &#39;2015-08-21&#39;,
+       &#39;2015-08-22&#39;, &#39;2015-08-23&#39;, &#39;2015-08-24&#39;, &#39;2015-08-25&#39;, &#39;2015-08-26&#39;,
+       ...
+       &#39;2020-12-22&#39;, &#39;2020-12-23&#39;, &#39;2020-12-24&#39;, &#39;2020-12-25&#39;, &#39;2020-12-26&#39;,
+       &#39;2020-12-27&#39;, &#39;2020-12-28&#39;, &#39;2020-12-29&#39;, &#39;2020-12-30&#39;, &#39;2020-12-31&#39;],
+      dtype=&#39;object&#39;, name=&#39;Date&#39;, length=1956)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lower</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">upper</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">timelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">date_range</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">timelist</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;2015-08-17&#39;,
+ &#39;2016-02-29&#39;,
+ &#39;2016-09-12&#39;,
+ &#39;2017-03-27&#39;,
+ &#39;2017-10-10&#39;,
+ &#39;2018-04-24&#39;,
+ &#39;2018-11-06&#39;,
+ &#39;2019-05-22&#39;,
+ &#39;2019-12-04&#39;,
+ &#39;2020-06-17&#39;,
+ &#39;2020-12-31&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmse_matrix_train</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rmse_matrix_valid</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">timelist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+  <span class="n">first</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="n">last</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">aux</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">last</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">first_valid</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">last_valid</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> working on range of date </span><span class="si">{</span><span class="n">first</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">last</span><span class="si">}</span><span class="s1"> (training) to predict range </span><span class="si">{</span><span class="n">first_valid</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">last_valid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">x_train_cv</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+  <span class="n">x_valid_cv</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+  <span class="n">y_train_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+  <span class="n">y_valid_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">][</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+  <span class="n">model_cv</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train_cv</span><span class="p">,</span> <span class="n">x_train_cv</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+  <span class="c1"># Prueba en observaciones usadas para ajustar</span>
+  <span class="n">predictions_train_cv</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train_cv</span><span class="p">)</span>
+  <span class="n">mse_train_cv</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_train_cv</span><span class="p">,</span> <span class="n">predictions_train_cv</span><span class="p">)</span>
+  <span class="n">rmse_train_cv</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse_train_cv</span><span class="p">)</span>
+  <span class="n">mean_target_cv_train</span> <span class="o">=</span> <span class="n">y_train_cv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">metric_error_train</span> <span class="o">=</span> <span class="n">rmse_train_cv</span><span class="o">/</span><span class="n">mean_target_cv_train</span><span class="o">*</span><span class="mi">100</span>
+  <span class="n">rmse_matrix_train</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_error_train</span><span class="p">)</span>
+  <span class="c1"># prueba en observaciones del grupo dejado afuera</span>
+  <span class="n">predictions_valid_cv</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_valid_cv</span><span class="p">)</span>
+  <span class="n">mse_valid_cv</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_valid_cv</span><span class="p">,</span> <span class="n">predictions_valid_cv</span><span class="p">)</span>
+  <span class="n">rmse_valid_cv</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse_valid_cv</span><span class="p">)</span>
+  <span class="n">mean_target_cv</span> <span class="o">=</span> <span class="n">y_valid_cv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">metric_error_valid</span> <span class="o">=</span> <span class="n">rmse_valid_cv</span><span class="o">/</span><span class="n">mean_target_cv</span><span class="o">*</span><span class="mi">100</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  El error de predicción representa el </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metric_error_train</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% de la media en entrenamiento y el </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metric_error_valid</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% en validación</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">rmse_matrix_valid</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_error_valid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration 1 working on range of date 2015-08-17 to 2016-02-29 (training) to predict range 2016-03-01 to 2016-09-12
+  El error de predicción representa el 16.27% de la media en entrenamiento y el 5.35% en validación
+
+Iteration 2 working on range of date 2015-08-17 to 2016-09-12 (training) to predict range 2016-09-13 to 2017-03-27
+  El error de predicción representa el 8.15% de la media en entrenamiento y el 5.18% en validación
+
+Iteration 3 working on range of date 2015-08-17 to 2017-03-27 (training) to predict range 2017-03-28 to 2017-10-10
+  El error de predicción representa el 6.85% de la media en entrenamiento y el 3.26% en validación
+
+Iteration 4 working on range of date 2015-08-17 to 2017-10-10 (training) to predict range 2017-10-11 to 2018-04-24
+  El error de predicción representa el 5.2% de la media en entrenamiento y el 2.23% en validación
+
+Iteration 5 working on range of date 2015-08-17 to 2018-04-24 (training) to predict range 2018-04-25 to 2018-11-06
+  El error de predicción representa el 4.12% de la media en entrenamiento y el 1.92% en validación
+
+Iteration 6 working on range of date 2015-08-17 to 2018-11-06 (training) to predict range 2018-11-07 to 2019-05-22
+  El error de predicción representa el 3.59% de la media en entrenamiento y el 2.6% en validación
+
+Iteration 7 working on range of date 2015-08-17 to 2019-05-22 (training) to predict range 2019-05-23 to 2019-12-04
+  El error de predicción representa el 3.42% de la media en entrenamiento y el 1.95% en validación
+
+Iteration 8 working on range of date 2015-08-17 to 2019-12-04 (training) to predict range 2019-12-05 to 2020-06-17
+  El error de predicción representa el 3.2% de la media en entrenamiento y el 2.87% en validación
+
+Iteration 9 working on range of date 2015-08-17 to 2020-06-17 (training) to predict range 2020-06-18 to 2020-12-31
+  El error de predicción representa el 3.16% de la media en entrenamiento y el 1.85% en validación
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># vemos los resultados en validación para cada iteración</span>
+<span class="n">rmse_matrix_valid</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[5.348293300025361,
+ 5.178798186233119,
+ 3.2553243936745835,
+ 2.227741385567562,
+ 1.921154279024017,
+ 2.604855683827148,
+ 1.9527665258923081,
+ 2.8716572526397135,
+ 1.8477717427437357]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># promediamos los errores en validación de cada iteración</span>
+<span class="k">def</span> <span class="nf">Average</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+
+<span class="n">mean_error_cv_valid</span> <span class="o">=</span> <span class="n">Average</span><span class="p">(</span><span class="n">rmse_matrix_valid</span><span class="p">)</span>
+<span class="n">mean_error_cv_train</span> <span class="o">=</span> <span class="n">Average</span><span class="p">(</span><span class="n">rmse_matrix_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;En promedio, la predicción arroja un error del </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_error_cv_train</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% de la media en entrenamiento y el </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_error_cv_valid</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% en validación&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>En promedio, la predicción arroja un error del 5.99% de la media en entrenamiento y el 3.02% en validación
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="blocked-cross-validation">
+<h4><span class="section-number">4.1.1.5.2. </span>Blocked Cross-Validation<a class="headerlink" href="#blocked-cross-validation" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rmse_matrix_train_blocked</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rmse_matrix_valid_blocked</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">timelist</span><span class="p">)</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span>
+  <span class="n">first</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">last</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">aux</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">last</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">first_valid</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">last_valid</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> working on range of date </span><span class="si">{</span><span class="n">first</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">last</span><span class="si">}</span><span class="s1"> (training) to predict range </span><span class="si">{</span><span class="n">first_valid</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">last_valid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">x_train_cv</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+  <span class="n">x_valid_cv</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+  <span class="n">y_train_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+  <span class="n">y_valid_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">][</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+  <span class="n">model_cv</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train_cv</span><span class="p">,</span> <span class="n">x_train_cv</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+  <span class="c1"># Prueba en observaciones usadas para ajustar</span>
+  <span class="n">predictions_train_cv</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train_cv</span><span class="p">)</span>
+  <span class="n">mse_train_cv</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_train_cv</span><span class="p">,</span> <span class="n">predictions_train_cv</span><span class="p">)</span>
+  <span class="n">rmse_train_cv</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse_train_cv</span><span class="p">)</span>
+  <span class="n">mean_target_cv_train</span> <span class="o">=</span> <span class="n">y_train_cv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">metric_error_train</span> <span class="o">=</span> <span class="n">rmse_train_cv</span><span class="o">/</span><span class="n">mean_target_cv_train</span><span class="o">*</span><span class="mi">100</span>
+  <span class="n">rmse_matrix_train_blocked</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_error_train</span><span class="p">)</span>
+  <span class="c1"># prueba en observaciones del grupo dejado afuera</span>
+  <span class="n">predictions_valid_cv</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_valid_cv</span><span class="p">)</span>
+  <span class="n">mse_valid_cv</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_valid_cv</span><span class="p">,</span> <span class="n">predictions_valid_cv</span><span class="p">)</span>
+  <span class="n">rmse_valid_cv</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse_valid_cv</span><span class="p">)</span>
+  <span class="n">mean_target_cv</span> <span class="o">=</span> <span class="n">y_valid_cv</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+  <span class="n">metric_error_valid</span> <span class="o">=</span> <span class="n">rmse_valid_cv</span><span class="o">/</span><span class="n">mean_target_cv</span><span class="o">*</span><span class="mi">100</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  El error de predicción representa el </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metric_error_train</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% de la media en entrenamiento y el </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">metric_error_valid</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% en validación</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="n">rmse_matrix_valid_blocked</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metric_error_valid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration 0 working on range of date 2015-08-17 to 2016-02-29 (training) to predict range 2016-03-01 to 2016-09-12
+  El error de predicción representa el 16.27% de la media en entrenamiento y el 5.35% en validación
+
+Iteration 1 working on range of date 2016-02-29 to 2016-09-12 (training) to predict range 2016-09-13 to 2017-03-27
+  El error de predicción representa el 5.48% de la media en entrenamiento y el 5.18% en validación
+
+Iteration 2 working on range of date 2016-09-12 to 2017-03-27 (training) to predict range 2017-03-28 to 2017-10-10
+  El error de predicción representa el 5.17% de la media en entrenamiento y el 3.26% en validación
+
+Iteration 3 working on range of date 2017-03-27 to 2017-10-10 (training) to predict range 2017-10-11 to 2018-04-24
+  El error de predicción representa el 3.26% de la media en entrenamiento y el 2.23% en validación
+
+Iteration 4 working on range of date 2017-10-10 to 2018-04-24 (training) to predict range 2018-04-25 to 2018-11-06
+  El error de predicción representa el 2.23% de la media en entrenamiento y el 1.92% en validación
+
+Iteration 5 working on range of date 2018-04-24 to 2018-11-06 (training) to predict range 2018-11-07 to 2019-05-22
+  El error de predicción representa el 1.92% de la media en entrenamiento y el 2.6% en validación
+
+Iteration 6 working on range of date 2018-11-06 to 2019-05-22 (training) to predict range 2019-05-23 to 2019-12-04
+  El error de predicción representa el 2.6% de la media en entrenamiento y el 1.95% en validación
+
+Iteration 7 working on range of date 2019-05-22 to 2019-12-04 (training) to predict range 2019-12-05 to 2020-06-17
+  El error de predicción representa el 1.95% de la media en entrenamiento y el 2.87% en validación
+
+Iteration 8 working on range of date 2019-12-04 to 2020-06-17 (training) to predict range 2020-06-18 to 2020-12-31
+  El error de predicción representa el 2.87% de la media en entrenamiento y el 1.85% en validación
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># promediamos los errores en validación de cada iteración</span>
+<span class="k">def</span> <span class="nf">Average</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+
+<span class="n">mean_error_cv_valid_blocked</span> <span class="o">=</span> <span class="n">Average</span><span class="p">(</span><span class="n">rmse_matrix_valid_blocked</span><span class="p">)</span>
+<span class="n">mean_error_cv_train_blocked</span> <span class="o">=</span> <span class="n">Average</span><span class="p">(</span><span class="n">rmse_matrix_train_blocked</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;En promedio, la predicción arroja un error del </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_error_cv_train_blocked</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% de la media en entrenamiento y el </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_error_cv_valid_blocked</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% en validación&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>En promedio, la predicción arroja un error del 4.64% de la media en entrenamiento y el 3.02% en validación
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./sections"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../intro_modelos.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title"><span class="section-number">4. </span>Modelos de predicción</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../intro_anexo.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Anexo</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Diego Bertolin, Antonella Bulla, Juan Manuel Hernandez, Agustin Staudt<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

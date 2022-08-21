@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Análisis bivariado de los datos &#8212; Predicción del precio futuro de ethereum</title>
+    <title>2.2. Análisis bivariado &#8212; Predicción del precio futuro de ethereum</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,8 +52,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="../_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Análisis multivariado de los datos" href="2_3_analisis_multivariado.html" />
-    <link rel="prev" title="Análisis univariado de los datos" href="2_1_analisis_univariado.html" />
+    <link rel="next" title="2.3. Análisis multivariado" href="2_3_analisis_multivariado.html" />
+    <link rel="prev" title="2.1. Análisis univariado" href="2_1_analisis_univariado.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -115,25 +115,18 @@ const thebe_selector_output = ".output, .cell_output"
         </ul>
         <p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
-  Preparación de los datos
- </span>
-</p>
-<ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="1_prepara_datos.html">
-   Preparación dataset
-  </a>
- </li>
-</ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Análisis exploratorio
+  Secciones
  </span>
 </p>
 <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_prepara_datos.html">
+   1. Preparación dataset
+  </a>
+ </li>
  <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="../intro_sec2.html">
-   Análisis exploratorio
+  <a class="reference internal" href="../intro_anExp.html">
+   2. Análisis exploratorio
   </a>
   <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
   <label for="toctree-checkbox-1">
@@ -143,17 +136,56 @@ const thebe_selector_output = ".output, .cell_output"
   <ul class="current">
    <li class="toctree-l2">
     <a class="reference internal" href="2_1_analisis_univariado.html">
-     Análisis univariado de los datos
+     2.1. Análisis univariado
     </a>
    </li>
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
-     Análisis bivariado de los datos
+     2.2. Análisis bivariado
     </a>
    </li>
    <li class="toctree-l2">
     <a class="reference internal" href="2_3_analisis_multivariado.html">
-     Análisis multivariado de los datos
+     2.3. Análisis multivariado
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_ingAtr_enfVal.html">
+   3. Ingeniería de atributos y enfoque de validación
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="3_ingenieria_atributos.html">
+     3.1. Ingeniería de atributos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="4_enfoque_validacion.html">
+     3.2. Enfoque de validación
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../intro_modelos.html">
+   4. Modelos de predicción
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="5_prediccion.html">
+     4.1. Predicción del precio futuro de ethereum
     </a>
    </li>
   </ul>
@@ -169,8 +201,8 @@ const thebe_selector_output = ".output, .cell_output"
   <a class="reference internal" href="../intro_anexo.html">
    Anexo
   </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
    <i class="fas fa-chevron-down">
    </i>
   </label>
@@ -241,7 +273,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/antobulla/proyectoDS/master?urlpath=tree/sections/2_2_analisis_bivariado.ipynb"
+        <a href="https://mybinder.org/v2/gh/agusstaudt/eht_prediction.git/master?urlpath=tree/sections/2_2_analisis_bivariado.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -284,7 +316,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/antobulla/proyectoDS"
+        <a href="https://github.com/agusstaudt/eht_prediction.git"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -301,7 +333,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/antobulla/proyectoDS/issues/new?title=Issue%20on%20page%20%2Fsections/2_2_analisis_bivariado.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/agusstaudt/eht_prediction.git/issues/new?title=Issue%20on%20page%20%2Fsections/2_2_analisis_bivariado.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -390,12 +422,12 @@ title="Print to PDF"
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
-   Variable a predecir: precio diario promedio de ethereum
+   2.2.1. Variable a predecir: precio diario promedio de ethereum
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#graficos-de-dispersion-y-distribucion">
-   Gráficos de dispersión y distribución
+   2.2.2. Gráficos de dispersión y distribución
   </a>
  </li>
 </ul>
@@ -407,7 +439,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Análisis bivariado de los datos</h1>
+                <h1>Análisis bivariado</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -419,12 +451,12 @@ title="Print to PDF"
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
-   Variable a predecir: precio diario promedio de ethereum
+   2.2.1. Variable a predecir: precio diario promedio de ethereum
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#graficos-de-dispersion-y-distribucion">
-   Gráficos de dispersión y distribución
+   2.2.2. Gráficos de dispersión y distribución
   </a>
  </li>
 </ul>
@@ -437,8 +469,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section id="analisis-bivariado-de-los-datos">
-<h1>Análisis bivariado de los datos<a class="headerlink" href="#analisis-bivariado-de-los-datos" title="Permalink to this headline">#</a></h1>
+  <section id="analisis-bivariado">
+<h1><span class="section-number">2.2. </span>Análisis bivariado<a class="headerlink" href="#analisis-bivariado" title="Permalink to this headline">#</a></h1>
 <p>En esta sección se realiza el análisis bivariado de los datos, a partir de herramientas de visualización y tablas que nos sugieran ciertos patrones entre el <em>target</em> y los predictores.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -450,20 +482,6 @@ title="Print to PDF"
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">scp</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
 </pre></div>
 </div>
 </div>
@@ -487,10 +505,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d">
-    <div class="colab-df-container">
-      <div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -679,86 +694,10 @@ title="Print to PDF"
   </tbody>
 </table>
 <p>5 rows × 54 columns</p>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
+</div></div></div>
 </div>
 <section id="variable-a-predecir-precio-diario-promedio-de-ethereum">
-<h2>Variable a predecir: precio diario promedio de ethereum<a class="headerlink" href="#variable-a-predecir-precio-diario-promedio-de-ethereum" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.2.1. </span>Variable a predecir: precio diario promedio de ethereum<a class="headerlink" href="#variable-a-predecir-precio-diario-promedio-de-ethereum" title="Permalink to this headline">#</a></h2>
 <p>En primer lugar, observamos la serie del precio diario promedio de ethereum, nuestra variable a predecir. Como se puede ver en la primera figura, la serie presenta un componente irregular no despreciable, la serie comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando un diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, donde la misma comienza a subir. Dicha irregularidad presenta una alta volatilidad o varianza, por lo que sería deseable poder aplicar alguna transformación a la serie antes de predecir.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -836,321 +775,321 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;y_lag1&#39;: {&#39;Volume ETH_eth&#39;: 0.5047894957651703,
-  &#39;Volume USDT_eth&#39;: 0.042605993417765275,
-  &#39;banking_adjusted&#39;: 0.1340934345929869,
-  &#39;bankrup_top_adjusted&#39;: 0.3457913981257425,
-  &#39;bankruptcy_adjusted&#39;: -0.12240569775127902,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;y_lag1&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.7524065193051734,
+  &#39;crypto_adjusted&#39;: 0.8095000718304803,
+  &#39;bitcoin_adjusted&#39;: 0.5573525934228191,
   &#39;bitcoin price_adjusted&#39;: 0.5854354400621145,
-  &#39;bitcoin_adjusted&#39;: 0.557352593422819,
-  &#39;bitcoin_top_adjusted&#39;: 0.5257793217203065,
-  &#39;china_adjusted&#39;: 0.07139017562677887,
-  &#39;close_btc&#39;: 0.7425504895231956,
-  &#39;close_eth&#39;: 0.9991104208475167,
-  &#39;covid19_adjusted&#39;: 0.0759468397954692,
-  &#39;crypto_adjusted&#39;: 0.8095000718304808,
-  &#39;cryptocurrency_adjusted&#39;: 0.7524065193051735,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.792022205308306,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5243813400307391,
-  &#39;do kwon_adjusted&#39;: -0.17534229099265766,
-  &#39;elon musk_adjusted&#39;: 0.13476136121574397,
-  &#39;eth_close_open_mean&#39;: 0.9981563113028787,
-  &#39;ethereum price_adjusted&#39;: 0.6082259118076733,
-  &#39;ethereum_adjusted&#39;: 0.6252474412436655,
-  &#39;ethereum_top_adjusted&#39;: 0.6786030073330245,
-  &#39;exchange_top_adjusted&#39;: 0.6579713280901952,
-  &#39;fed_adjusted&#39;: 0.18887741017290474,
-  &#39;foreign_currency_adjusted&#39;: 0.22438026637483677,
-  &#39;future_commodities_adjusted&#39;: 0.23276935540109062,
-  &#39;high_btc&#39;: 0.7492468414666101,
-  &#39;high_eth&#39;: 0.9975923074297725,
-  &#39;inflation_adjusted&#39;: -0.0916532090525816,
-  &#39;interest rate_adjusted&#39;: 0.33102253599877735,
-  &#39;investment_top_adjusted&#39;: 0.2106125765340297,
-  &#39;low_btc&#39;: 0.734638006500386,
-  &#39;low_eth&#39;: 0.9967769236397481,
-  &#39;open_btc&#39;: 0.7448095665094774,
-  &#39;open_eth&#39;: 0.9954282657298356,
-  &#39;pandemic_adjusted&#39;: 0.17578914846857355,
-  &#39;russia_adjusted&#39;: -0.023613949389873413,
-  &#39;stock market_adjusted&#39;: 0.09352484276004548,
-  &#39;stock_market_top_adjusted&#39;: 0.09152275784916802,
-  &#39;taxes_adjusted&#39;: 0.08962597830771614,
-  &#39;united states_adjusted&#39;: 0.09297368472834536,
-  &#39;unix_btc&#39;: 0.41307568638084663,
-  &#39;unix_eth&#39;: 0.41307568638084663,
+  &#39;ethereum_adjusted&#39;: 0.6252474412436662,
+  &#39;ethereum price_adjusted&#39;: 0.6082259118076727,
+  &#39;stock market_adjusted&#39;: 0.0935248427600455,
   &#39;wall street_adjusted&#39;: -0.28041767149680297,
-  &#39;war_adjusted&#39;: -0.22422240611532318},
- &#39;y_lag2&#39;: {&#39;Volume ETH_eth&#39;: 0.5098175105420226,
-  &#39;Volume USDT_eth&#39;: 0.04703560257985455,
-  &#39;banking_adjusted&#39;: 0.13255417010237217,
-  &#39;bankrup_top_adjusted&#39;: 0.34545513640200076,
-  &#39;bankruptcy_adjusted&#39;: -0.12367964147719557,
+  &#39;interest rate_adjusted&#39;: 0.33102253599877746,
+  &#39;fed_adjusted&#39;: 0.1888774101729047,
+  &#39;bankruptcy_adjusted&#39;: -0.12240569775127902,
+  &#39;china_adjusted&#39;: 0.0713901756267789,
+  &#39;united states_adjusted&#39;: 0.09297368472834538,
+  &#39;war_adjusted&#39;: -0.22422240611532332,
+  &#39;russia_adjusted&#39;: -0.023613949389873427,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.7920222053083069,
+  &#39;bitcoin_top_adjusted&#39;: 0.5257793217203066,
+  &#39;investment_top_adjusted&#39;: 0.21061257653402982,
+  &#39;ethereum_top_adjusted&#39;: 0.6786030073330246,
+  &#39;exchange_top_adjusted&#39;: 0.6579713280901952,
+  &#39;bankrup_top_adjusted&#39;: 0.3457913981257426,
+  &#39;stock_market_top_adjusted&#39;: 0.09152275784916804,
+  &#39;inflation_adjusted&#39;: -0.09165320905258162,
+  &#39;taxes_adjusted&#39;: 0.08962597830771614,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5243813400307391,
+  &#39;covid19_adjusted&#39;: 0.0759468397954692,
+  &#39;pandemic_adjusted&#39;: 0.17578914846857358,
+  &#39;elon musk_adjusted&#39;: 0.134761361215744,
+  &#39;do kwon_adjusted&#39;: -0.1753422909926577,
+  &#39;future_commodities_adjusted&#39;: 0.23276935540109076,
+  &#39;banking_adjusted&#39;: 0.13409343459298684,
+  &#39;foreign_currency_adjusted&#39;: 0.2243802663748368,
+  &#39;unix_eth&#39;: 0.4130756863808467,
+  &#39;open_eth&#39;: 0.9954282657298358,
+  &#39;high_eth&#39;: 0.9975923074297725,
+  &#39;low_eth&#39;: 0.9967769236397486,
+  &#39;close_eth&#39;: 0.9991104208475164,
+  &#39;Volume ETH_eth&#39;: 0.5047894957651706,
+  &#39;Volume USDT_eth&#39;: 0.04260599341776526,
+  &#39;eth_close_open_mean&#39;: 0.9981563113028793,
+  &#39;unix_btc&#39;: 0.4130756863808467,
+  &#39;open_btc&#39;: 0.7448095665094775,
+  &#39;high_btc&#39;: 0.7492468414666105,
+  &#39;low_btc&#39;: 0.7346380065003862,
+  &#39;close_btc&#39;: 0.7425504895231958},
+ &#39;y_lag2&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.7558394286985135,
+  &#39;crypto_adjusted&#39;: 0.8107531275996026,
+  &#39;bitcoin_adjusted&#39;: 0.5614778855822763,
   &#39;bitcoin price_adjusted&#39;: 0.5887912399030106,
-  &#39;bitcoin_adjusted&#39;: 0.5614778855822762,
+  &#39;ethereum_adjusted&#39;: 0.6280643014987287,
+  &#39;ethereum price_adjusted&#39;: 0.6127145191344887,
+  &#39;stock market_adjusted&#39;: 0.0905267936895373,
+  &#39;wall street_adjusted&#39;: -0.2842960624209438,
+  &#39;interest rate_adjusted&#39;: 0.3313219164043862,
+  &#39;fed_adjusted&#39;: 0.1889591271011375,
+  &#39;bankruptcy_adjusted&#39;: -0.12367964147719555,
+  &#39;china_adjusted&#39;: 0.07086230230514852,
+  &#39;united states_adjusted&#39;: 0.09257925991674869,
+  &#39;war_adjusted&#39;: -0.22226303053501592,
+  &#39;russia_adjusted&#39;: -0.02281730754914361,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.7950636614065709,
   &#39;bitcoin_top_adjusted&#39;: 0.5297908208746194,
-  &#39;china_adjusted&#39;: 0.0708623023051485,
-  &#39;close_btc&#39;: 0.744879754890828,
-  &#39;close_eth&#39;: 0.9954339981503175,
-  &#39;covid19_adjusted&#39;: 0.07723791211307496,
-  &#39;crypto_adjusted&#39;: 0.8107531275996034,
-  &#39;cryptocurrency_adjusted&#39;: 0.7558394286985137,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7950636614065703,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5242414322328502,
-  &#39;do kwon_adjusted&#39;: -0.1782901336845545,
-  &#39;elon musk_adjusted&#39;: 0.13488704050985498,
-  &#39;eth_close_open_mean&#39;: 0.9944021091904864,
-  &#39;ethereum price_adjusted&#39;: 0.6127145191344894,
-  &#39;ethereum_adjusted&#39;: 0.6280643014987283,
+  &#39;investment_top_adjusted&#39;: 0.2108805881401724,
   &#39;ethereum_top_adjusted&#39;: 0.6809778410565125,
   &#39;exchange_top_adjusted&#39;: 0.6643142074217633,
-  &#39;fed_adjusted&#39;: 0.18895912710113755,
-  &#39;foreign_currency_adjusted&#39;: 0.22560986825804114,
-  &#39;future_commodities_adjusted&#39;: 0.2330538894024741,
-  &#39;high_btc&#39;: 0.7516681039816443,
-  &#39;high_eth&#39;: 0.9941506628419825,
-  &#39;inflation_adjusted&#39;: -0.09128469341055252,
-  &#39;interest rate_adjusted&#39;: 0.33132191640438613,
-  &#39;investment_top_adjusted&#39;: 0.2108805881401723,
-  &#39;low_btc&#39;: 0.7366299163573142,
-  &#39;low_eth&#39;: 0.9929717530272132,
-  &#39;open_btc&#39;: 0.7470063364730584,
-  &#39;open_eth&#39;: 0.9916028714784715,
-  &#39;pandemic_adjusted&#39;: 0.17690599337562185,
-  &#39;russia_adjusted&#39;: -0.022817307549143604,
-  &#39;stock market_adjusted&#39;: 0.0905267936895373,
+  &#39;bankrup_top_adjusted&#39;: 0.34545513640200076,
   &#39;stock_market_top_adjusted&#39;: 0.08871451259034371,
-  &#39;taxes_adjusted&#39;: 0.08612216331274436,
-  &#39;united states_adjusted&#39;: 0.09257925991674869,
-  &#39;unix_btc&#39;: 0.41379185300738913,
+  &#39;inflation_adjusted&#39;: -0.09128469341055252,
+  &#39;taxes_adjusted&#39;: 0.08612216331274435,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5242414322328502,
+  &#39;covid19_adjusted&#39;: 0.07723791211307494,
+  &#39;pandemic_adjusted&#39;: 0.17690599337562185,
+  &#39;elon musk_adjusted&#39;: 0.13488704050985498,
+  &#39;do kwon_adjusted&#39;: -0.1782901336845545,
+  &#39;future_commodities_adjusted&#39;: 0.23305388940247418,
+  &#39;banking_adjusted&#39;: 0.13255417010237214,
+  &#39;foreign_currency_adjusted&#39;: 0.22560986825804116,
   &#39;unix_eth&#39;: 0.41379185300738913,
-  &#39;wall street_adjusted&#39;: -0.28429606242094385,
-  &#39;war_adjusted&#39;: -0.2222630305350158},
- &#39;y_lag3&#39;: {&#39;Volume ETH_eth&#39;: 0.5132931617613827,
-  &#39;Volume USDT_eth&#39;: 0.05025165580858447,
-  &#39;banking_adjusted&#39;: 0.13250728915125143,
-  &#39;bankrup_top_adjusted&#39;: 0.3449408737503947,
-  &#39;bankruptcy_adjusted&#39;: -0.12445980701449073,
-  &#39;bitcoin price_adjusted&#39;: 0.5927792986948873,
-  &#39;bitcoin_adjusted&#39;: 0.5662982438171936,
-  &#39;bitcoin_top_adjusted&#39;: 0.5341628633974513,
-  &#39;china_adjusted&#39;: 0.07068552735796399,
-  &#39;close_btc&#39;: 0.7478646853263495,
-  &#39;close_eth&#39;: 0.991532505388788,
-  &#39;covid19_adjusted&#39;: 0.07901367924408388,
-  &#39;crypto_adjusted&#39;: 0.8113784450560854,
-  &#39;cryptocurrency_adjusted&#39;: 0.7593520253706272,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7975384758160562,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5248019299921041,
-  &#39;do kwon_adjusted&#39;: -0.18141124130830796,
-  &#39;elon musk_adjusted&#39;: 0.13401322741576072,
-  &#39;eth_close_open_mean&#39;: 0.9904756815528437,
-  &#39;ethereum price_adjusted&#39;: 0.6167551305332982,
-  &#39;ethereum_adjusted&#39;: 0.6302015880075106,
-  &#39;ethereum_top_adjusted&#39;: 0.6824601830154458,
-  &#39;exchange_top_adjusted&#39;: 0.6704418059656446,
-  &#39;fed_adjusted&#39;: 0.19015721624062243,
-  &#39;foreign_currency_adjusted&#39;: 0.2272906073106678,
-  &#39;future_commodities_adjusted&#39;: 0.234032526426632,
-  &#39;high_btc&#39;: 0.7546490240133141,
-  &#39;high_eth&#39;: 0.9903644153056596,
-  &#39;inflation_adjusted&#39;: -0.08958506506236183,
-  &#39;interest rate_adjusted&#39;: 0.3325822456823116,
-  &#39;investment_top_adjusted&#39;: 0.21187069671727124,
-  &#39;low_btc&#39;: 0.7391763279009258,
-  &#39;low_eth&#39;: 0.9891043399301113,
-  &#39;open_btc&#39;: 0.7496731936059524,
-  &#39;open_eth&#39;: 0.9876584571849298,
-  &#39;pandemic_adjusted&#39;: 0.1795217510688503,
-  &#39;russia_adjusted&#39;: -0.02220316619052648,
+  &#39;open_eth&#39;: 0.9916028714784715,
+  &#39;high_eth&#39;: 0.9941506628419823,
+  &#39;low_eth&#39;: 0.9929717530272134,
+  &#39;close_eth&#39;: 0.9954339981503172,
+  &#39;Volume ETH_eth&#39;: 0.5098175105420228,
+  &#39;Volume USDT_eth&#39;: 0.047035602579854514,
+  &#39;eth_close_open_mean&#39;: 0.9944021091904869,
+  &#39;unix_btc&#39;: 0.41379185300738913,
+  &#39;open_btc&#39;: 0.7470063364730583,
+  &#39;high_btc&#39;: 0.7516681039816443,
+  &#39;low_btc&#39;: 0.7366299163573142,
+  &#39;close_btc&#39;: 0.744879754890828},
+ &#39;y_lag3&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.7593520253706268,
+  &#39;crypto_adjusted&#39;: 0.8113784450560845,
+  &#39;bitcoin_adjusted&#39;: 0.5662982438171934,
+  &#39;bitcoin price_adjusted&#39;: 0.5927792986948872,
+  &#39;ethereum_adjusted&#39;: 0.630201588007511,
+  &#39;ethereum price_adjusted&#39;: 0.6167551305332976,
   &#39;stock market_adjusted&#39;: 0.08852628196405747,
-  &#39;stock_market_top_adjusted&#39;: 0.08723706766358381,
-  &#39;taxes_adjusted&#39;: 0.08384098713778236,
+  &#39;wall street_adjusted&#39;: -0.28857903424005593,
+  &#39;interest rate_adjusted&#39;: 0.33258224568231154,
+  &#39;fed_adjusted&#39;: 0.19015721624062232,
+  &#39;bankruptcy_adjusted&#39;: -0.12445980701449069,
+  &#39;china_adjusted&#39;: 0.070685527357964,
   &#39;united states_adjusted&#39;: 0.09159253954819879,
-  &#39;unix_btc&#39;: 0.41468898465359244,
-  &#39;unix_eth&#39;: 0.41468898465359244,
-  &#39;wall street_adjusted&#39;: -0.28857903424005604,
-  &#39;war_adjusted&#39;: -0.21951947526912513},
- &#39;y_lag4&#39;: {&#39;Volume ETH_eth&#39;: 0.5173735187115006,
-  &#39;Volume USDT_eth&#39;: 0.05311408032110115,
-  &#39;banking_adjusted&#39;: 0.13434325039668246,
-  &#39;bankrup_top_adjusted&#39;: 0.34390886394993253,
-  &#39;bankruptcy_adjusted&#39;: -0.12439112942671489,
-  &#39;bitcoin price_adjusted&#39;: 0.598031335504529,
-  &#39;bitcoin_adjusted&#39;: 0.5724328353805046,
-  &#39;bitcoin_top_adjusted&#39;: 0.5394762012534986,
-  &#39;china_adjusted&#39;: 0.071391956766588,
-  &#39;close_btc&#39;: 0.7512472411887037,
-  &#39;close_eth&#39;: 0.9873532873577002,
-  &#39;covid19_adjusted&#39;: 0.08138092162935344,
-  &#39;crypto_adjusted&#39;: 0.8112362203678023,
-  &#39;cryptocurrency_adjusted&#39;: 0.7623077682138625,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7990002572197388,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5256173216758027,
-  &#39;do kwon_adjusted&#39;: -0.1843828919451821,
-  &#39;elon musk_adjusted&#39;: 0.1325488359120907,
-  &#39;eth_close_open_mean&#39;: 0.9864219711948979,
-  &#39;ethereum price_adjusted&#39;: 0.6213498973787431,
-  &#39;ethereum_adjusted&#39;: 0.6320474850683934,
-  &#39;ethereum_top_adjusted&#39;: 0.683866968058047,
-  &#39;exchange_top_adjusted&#39;: 0.6762271752888671,
-  &#39;fed_adjusted&#39;: 0.19191950050760354,
-  &#39;foreign_currency_adjusted&#39;: 0.2296676634127432,
-  &#39;future_commodities_adjusted&#39;: 0.23578520778359324,
-  &#39;high_btc&#39;: 0.7581520215169101,
-  &#39;high_eth&#39;: 0.986331379439219,
-  &#39;inflation_adjusted&#39;: -0.08699846311120916,
-  &#39;interest rate_adjusted&#39;: 0.334378309133556,
-  &#39;investment_top_adjusted&#39;: 0.2138441445445322,
-  &#39;low_btc&#39;: 0.7422099497937578,
-  &#39;low_eth&#39;: 0.9848786707767501,
-  &#39;open_btc&#39;: 0.7529983342181337,
-  &#39;open_eth&#39;: 0.9837375854779531,
-  &#39;pandemic_adjusted&#39;: 0.18248285221735785,
-  &#39;russia_adjusted&#39;: -0.02063204266316944,
-  &#39;stock market_adjusted&#39;: 0.08800340789522323,
-  &#39;stock_market_top_adjusted&#39;: 0.08729509322078495,
-  &#39;taxes_adjusted&#39;: 0.08279676822277239,
-  &#39;united states_adjusted&#39;: 0.09052935151139231,
-  &#39;unix_btc&#39;: 0.4157128014021251,
-  &#39;unix_eth&#39;: 0.4157128014021251,
-  &#39;wall street_adjusted&#39;: -0.2932675950429717,
-  &#39;war_adjusted&#39;: -0.21545253290648397},
- &#39;y_lag5&#39;: {&#39;Volume ETH_eth&#39;: 0.5199336450739674,
-  &#39;Volume USDT_eth&#39;: 0.05555198959984352,
-  &#39;banking_adjusted&#39;: 0.13568782199763008,
-  &#39;bankrup_top_adjusted&#39;: 0.34247233095318574,
+  &#39;war_adjusted&#39;: -0.2195194752691252,
+  &#39;russia_adjusted&#39;: -0.02220316619052648,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.7975384758160567,
+  &#39;bitcoin_top_adjusted&#39;: 0.5341628633974512,
+  &#39;investment_top_adjusted&#39;: 0.21187069671727127,
+  &#39;ethereum_top_adjusted&#39;: 0.6824601830154455,
+  &#39;exchange_top_adjusted&#39;: 0.6704418059656444,
+  &#39;bankrup_top_adjusted&#39;: 0.34494087375039467,
+  &#39;stock_market_top_adjusted&#39;: 0.08723706766358377,
+  &#39;inflation_adjusted&#39;: -0.0895850650623618,
+  &#39;taxes_adjusted&#39;: 0.08384098713778232,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5248019299921038,
+  &#39;covid19_adjusted&#39;: 0.07901367924408384,
+  &#39;pandemic_adjusted&#39;: 0.1795217510688503,
+  &#39;elon musk_adjusted&#39;: 0.13401322741576072,
+  &#39;do kwon_adjusted&#39;: -0.1814112413083079,
+  &#39;future_commodities_adjusted&#39;: 0.234032526426632,
+  &#39;banking_adjusted&#39;: 0.1325072891512514,
+  &#39;foreign_currency_adjusted&#39;: 0.2272906073106678,
+  &#39;unix_eth&#39;: 0.4146889846535924,
+  &#39;open_eth&#39;: 0.9876584571849298,
+  &#39;high_eth&#39;: 0.9903644153056591,
+  &#39;low_eth&#39;: 0.9891043399301113,
+  &#39;close_eth&#39;: 0.9915325053887875,
+  &#39;Volume ETH_eth&#39;: 0.5132931617613827,
+  &#39;Volume USDT_eth&#39;: 0.050251655808584435,
+  &#39;eth_close_open_mean&#39;: 0.9904756815528439,
+  &#39;unix_btc&#39;: 0.4146889846535924,
+  &#39;open_btc&#39;: 0.7496731936059522,
+  &#39;high_btc&#39;: 0.7546490240133141,
+  &#39;low_btc&#39;: 0.7391763279009258,
+  &#39;close_btc&#39;: 0.7478646853263493},
+ &#39;y_lag4&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.762307768213862,
+  &#39;crypto_adjusted&#39;: 0.8112362203678012,
+  &#39;bitcoin_adjusted&#39;: 0.5724328353805044,
+  &#39;bitcoin price_adjusted&#39;: 0.5980313355045286,
+  &#39;ethereum_adjusted&#39;: 0.6320474850683936,
+  &#39;ethereum price_adjusted&#39;: 0.6213498973787421,
+  &#39;stock market_adjusted&#39;: 0.08800340789522318,
+  &#39;wall street_adjusted&#39;: -0.29326759504297145,
+  &#39;interest rate_adjusted&#39;: 0.33437830913355593,
+  &#39;fed_adjusted&#39;: 0.19191950050760334,
+  &#39;bankruptcy_adjusted&#39;: -0.12439112942671479,
+  &#39;china_adjusted&#39;: 0.07139195676658797,
+  &#39;united states_adjusted&#39;: 0.09052935151139226,
+  &#39;war_adjusted&#39;: -0.21545253290648397,
+  &#39;russia_adjusted&#39;: -0.020632042663169432,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.799000257219739,
+  &#39;bitcoin_top_adjusted&#39;: 0.5394762012534983,
+  &#39;investment_top_adjusted&#39;: 0.21384414454453218,
+  &#39;ethereum_top_adjusted&#39;: 0.6838669680580465,
+  &#39;exchange_top_adjusted&#39;: 0.6762271752888664,
+  &#39;bankrup_top_adjusted&#39;: 0.3439088639499324,
+  &#39;stock_market_top_adjusted&#39;: 0.0872950932207849,
+  &#39;inflation_adjusted&#39;: -0.0869984631112091,
+  &#39;taxes_adjusted&#39;: 0.08279676822277234,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5256173216758022,
+  &#39;covid19_adjusted&#39;: 0.08138092162935337,
+  &#39;pandemic_adjusted&#39;: 0.18248285221735774,
+  &#39;elon musk_adjusted&#39;: 0.13254883591209063,
+  &#39;do kwon_adjusted&#39;: -0.18438289194518204,
+  &#39;future_commodities_adjusted&#39;: 0.2357852077835932,
+  &#39;banking_adjusted&#39;: 0.13434325039668235,
+  &#39;foreign_currency_adjusted&#39;: 0.22966766341274314,
+  &#39;unix_eth&#39;: 0.41571280140212485,
+  &#39;open_eth&#39;: 0.9837375854779526,
+  &#39;high_eth&#39;: 0.9863313794392182,
+  &#39;low_eth&#39;: 0.9848786707767497,
+  &#39;close_eth&#39;: 0.9873532873576993,
+  &#39;Volume ETH_eth&#39;: 0.5173735187115006,
+  &#39;Volume USDT_eth&#39;: 0.05311408032110111,
+  &#39;eth_close_open_mean&#39;: 0.9864219711948978,
+  &#39;unix_btc&#39;: 0.41571280140212485,
+  &#39;open_btc&#39;: 0.7529983342181331,
+  &#39;high_btc&#39;: 0.7581520215169099,
+  &#39;low_btc&#39;: 0.7422099497937574,
+  &#39;close_btc&#39;: 0.7512472411887033},
+ &#39;y_lag5&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.7620216966881195,
+  &#39;crypto_adjusted&#39;: 0.8081502135679872,
+  &#39;bitcoin_adjusted&#39;: 0.5781155379512655,
+  &#39;bitcoin price_adjusted&#39;: 0.6028066939058341,
+  &#39;ethereum_adjusted&#39;: 0.6335410826182785,
+  &#39;ethereum price_adjusted&#39;: 0.6252486118666731,
+  &#39;stock market_adjusted&#39;: 0.08699920979408209,
+  &#39;wall street_adjusted&#39;: -0.29803125384364776,
+  &#39;interest rate_adjusted&#39;: 0.3357858091508068,
+  &#39;fed_adjusted&#39;: 0.19283640555198922,
   &#39;bankruptcy_adjusted&#39;: -0.12509090585704652,
-  &#39;bitcoin price_adjusted&#39;: 0.602806693905834,
-  &#39;bitcoin_adjusted&#39;: 0.5781155379512652,
-  &#39;bitcoin_top_adjusted&#39;: 0.5443137235145368,
-  &#39;china_adjusted&#39;: 0.07230256158174235,
-  &#39;close_btc&#39;: 0.7548230331984804,
-  &#39;close_eth&#39;: 0.9832889015309322,
-  &#39;covid19_adjusted&#39;: 0.08403460958652789,
-  &#39;crypto_adjusted&#39;: 0.8081502135679878,
-  &#39;cryptocurrency_adjusted&#39;: 0.7620216966881196,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7975385963223086,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5261058503877135,
-  &#39;do kwon_adjusted&#39;: -0.18756525051788292,
-  &#39;elon musk_adjusted&#39;: 0.13226502525678313,
-  &#39;eth_close_open_mean&#39;: 0.982369481758837,
-  &#39;ethereum price_adjusted&#39;: 0.6252486118666736,
-  &#39;ethereum_adjusted&#39;: 0.6335410826182778,
+  &#39;china_adjusted&#39;: 0.07230256158174236,
+  &#39;united states_adjusted&#39;: 0.08945331023712794,
+  &#39;war_adjusted&#39;: -0.2109143842008909,
+  &#39;russia_adjusted&#39;: -0.01832175597946824,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.7975385963223094,
+  &#39;bitcoin_top_adjusted&#39;: 0.544313723514537,
+  &#39;investment_top_adjusted&#39;: 0.21538924920539287,
   &#39;ethereum_top_adjusted&#39;: 0.6844392299648033,
   &#39;exchange_top_adjusted&#39;: 0.6810003374971338,
-  &#39;fed_adjusted&#39;: 0.19283640555198925,
-  &#39;foreign_currency_adjusted&#39;: 0.23188132584203797,
-  &#39;future_commodities_adjusted&#39;: 0.237221851314888,
-  &#39;high_btc&#39;: 0.7617775533577384,
-  &#39;high_eth&#39;: 0.9822551715830758,
-  &#39;inflation_adjusted&#39;: -0.0856226208525874,
-  &#39;interest rate_adjusted&#39;: 0.33578580915080675,
-  &#39;investment_top_adjusted&#39;: 0.2153892492053928,
-  &#39;low_btc&#39;: 0.7454394675113436,
-  &#39;low_eth&#39;: 0.9807196652725984,
-  &#39;open_btc&#39;: 0.7563885972986701,
-  &#39;open_eth&#39;: 0.9797042029232472,
-  &#39;pandemic_adjusted&#39;: 0.18559980105134802,
-  &#39;russia_adjusted&#39;: -0.018321755979468238,
-  &#39;stock market_adjusted&#39;: 0.08699920979408209,
-  &#39;stock_market_top_adjusted&#39;: 0.08687675123517545,
+  &#39;bankrup_top_adjusted&#39;: 0.3424723309531858,
+  &#39;stock_market_top_adjusted&#39;: 0.08687675123517546,
+  &#39;inflation_adjusted&#39;: -0.08562262085258744,
   &#39;taxes_adjusted&#39;: 0.08161435220606217,
-  &#39;united states_adjusted&#39;: 0.08945331023712792,
-  &#39;unix_btc&#39;: 0.416768057033375,
-  &#39;unix_eth&#39;: 0.416768057033375,
-  &#39;wall street_adjusted&#39;: -0.29803125384364776,
-  &#39;war_adjusted&#39;: -0.2109143842008907},
- &#39;y_lag6&#39;: {&#39;Volume ETH_eth&#39;: 0.5192791174220068,
-  &#39;Volume USDT_eth&#39;: 0.05726025523007969,
-  &#39;banking_adjusted&#39;: 0.1333765401257615,
-  &#39;bankrup_top_adjusted&#39;: 0.338642584478012,
-  &#39;bankruptcy_adjusted&#39;: -0.12823889550337508,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5261058503877135,
+  &#39;covid19_adjusted&#39;: 0.08403460958652789,
+  &#39;pandemic_adjusted&#39;: 0.18559980105134805,
+  &#39;elon musk_adjusted&#39;: 0.1322650252567832,
+  &#39;do kwon_adjusted&#39;: -0.18756525051788295,
+  &#39;future_commodities_adjusted&#39;: 0.2372218513148881,
+  &#39;banking_adjusted&#39;: 0.13568782199763005,
+  &#39;foreign_currency_adjusted&#39;: 0.23188132584203802,
+  &#39;unix_eth&#39;: 0.4167680570333751,
+  &#39;open_eth&#39;: 0.9797042029232474,
+  &#39;high_eth&#39;: 0.9822551715830758,
+  &#39;low_eth&#39;: 0.9807196652725987,
+  &#39;close_eth&#39;: 0.9832889015309322,
+  &#39;Volume ETH_eth&#39;: 0.5199336450739677,
+  &#39;Volume USDT_eth&#39;: 0.055551989599843504,
+  &#39;eth_close_open_mean&#39;: 0.9823694817588376,
+  &#39;unix_btc&#39;: 0.4167680570333751,
+  &#39;open_btc&#39;: 0.7563885972986701,
+  &#39;high_btc&#39;: 0.7617775533577387,
+  &#39;low_btc&#39;: 0.7454394675113438,
+  &#39;close_btc&#39;: 0.7548230331984808},
+ &#39;y_lag6&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.7596594011715991,
+  &#39;crypto_adjusted&#39;: 0.8031851551468306,
+  &#39;bitcoin_adjusted&#39;: 0.5832274305872188,
   &#39;bitcoin price_adjusted&#39;: 0.6070345599476237,
-  &#39;bitcoin_adjusted&#39;: 0.5832274305872186,
-  &#39;bitcoin_top_adjusted&#39;: 0.5485848954166713,
-  &#39;china_adjusted&#39;: 0.07340230816032704,
-  &#39;close_btc&#39;: 0.7585292951125476,
-  &#39;close_eth&#39;: 0.9789975279008452,
-  &#39;covid19_adjusted&#39;: 0.08689942806943803,
-  &#39;crypto_adjusted&#39;: 0.8031851551468312,
-  &#39;cryptocurrency_adjusted&#39;: 0.7596594011715994,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7940247231032327,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5262645658039513,
-  &#39;do kwon_adjusted&#39;: -0.19081361811942002,
-  &#39;elon musk_adjusted&#39;: 0.13317472930860003,
-  &#39;eth_close_open_mean&#39;: 0.9777579277063377,
-  &#39;ethereum price_adjusted&#39;: 0.6276378807952327,
-  &#39;ethereum_adjusted&#39;: 0.6339009548035703,
-  &#39;ethereum_top_adjusted&#39;: 0.6829012796724956,
-  &#39;exchange_top_adjusted&#39;: 0.6841940128708488,
-  &#39;fed_adjusted&#39;: 0.19211261953655126,
-  &#39;foreign_currency_adjusted&#39;: 0.23250387409189843,
-  &#39;future_commodities_adjusted&#39;: 0.2365644393376233,
-  &#39;high_btc&#39;: 0.765391434606981,
-  &#39;high_eth&#39;: 0.9774614180881437,
-  &#39;inflation_adjusted&#39;: -0.08660259731818439,
-  &#39;interest rate_adjusted&#39;: 0.3359986108780281,
-  &#39;investment_top_adjusted&#39;: 0.21371032578098914,
-  &#39;low_btc&#39;: 0.7489738500937306,
-  &#39;low_eth&#39;: 0.9760271647776567,
-  &#39;open_btc&#39;: 0.7598396472648221,
-  &#39;open_eth&#39;: 0.9747803261233563,
-  &#39;pandemic_adjusted&#39;: 0.18909693167923514,
-  &#39;russia_adjusted&#39;: -0.016029828967275755,
-  &#39;stock market_adjusted&#39;: 0.08526189634622545,
-  &#39;stock_market_top_adjusted&#39;: 0.08568270383629813,
-  &#39;taxes_adjusted&#39;: 0.07846232486035415,
-  &#39;united states_adjusted&#39;: 0.08724681193095514,
-  &#39;unix_btc&#39;: 0.4178427604200867,
-  &#39;unix_eth&#39;: 0.4178427604200867,
+  &#39;ethereum_adjusted&#39;: 0.633900954803571,
+  &#39;ethereum price_adjusted&#39;: 0.6276378807952322,
+  &#39;stock market_adjusted&#39;: 0.08526189634622547,
   &#39;wall street_adjusted&#39;: -0.3027249047771266,
-  &#39;war_adjusted&#39;: -0.20605150714057255},
- &#39;y_lag7&#39;: {&#39;Volume ETH_eth&#39;: 0.5193259883856843,
-  &#39;Volume USDT_eth&#39;: 0.05954277396323893,
-  &#39;banking_adjusted&#39;: 0.129481662987993,
-  &#39;bankrup_top_adjusted&#39;: 0.33379592043190076,
-  &#39;bankruptcy_adjusted&#39;: -0.13223560705225454,
-  &#39;bitcoin price_adjusted&#39;: 0.6109710201770587,
+  &#39;interest rate_adjusted&#39;: 0.3359986108780283,
+  &#39;fed_adjusted&#39;: 0.19211261953655123,
+  &#39;bankruptcy_adjusted&#39;: -0.12823889550337508,
+  &#39;china_adjusted&#39;: 0.0734023081603271,
+  &#39;united states_adjusted&#39;: 0.08724681193095515,
+  &#39;war_adjusted&#39;: -0.20605150714057271,
+  &#39;russia_adjusted&#39;: -0.016029828967275773,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.7940247231032335,
+  &#39;bitcoin_top_adjusted&#39;: 0.5485848954166713,
+  &#39;investment_top_adjusted&#39;: 0.21371032578098925,
+  &#39;ethereum_top_adjusted&#39;: 0.6829012796724957,
+  &#39;exchange_top_adjusted&#39;: 0.6841940128708487,
+  &#39;bankrup_top_adjusted&#39;: 0.3386425844780121,
+  &#39;stock_market_top_adjusted&#39;: 0.08568270383629811,
+  &#39;inflation_adjusted&#39;: -0.0866025973181844,
+  &#39;taxes_adjusted&#39;: 0.07846232486035415,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5262645658039513,
+  &#39;covid19_adjusted&#39;: 0.08689942806943803,
+  &#39;pandemic_adjusted&#39;: 0.18909693167923514,
+  &#39;elon musk_adjusted&#39;: 0.13317472930860005,
+  &#39;do kwon_adjusted&#39;: -0.19081361811942002,
+  &#39;future_commodities_adjusted&#39;: 0.23656443933762342,
+  &#39;banking_adjusted&#39;: 0.13337654012576147,
+  &#39;foreign_currency_adjusted&#39;: 0.23250387409189846,
+  &#39;unix_eth&#39;: 0.4178427604200868,
+  &#39;open_eth&#39;: 0.9747803261233565,
+  &#39;high_eth&#39;: 0.9774614180881437,
+  &#39;low_eth&#39;: 0.9760271647776572,
+  &#39;close_eth&#39;: 0.978997527900845,
+  &#39;Volume ETH_eth&#39;: 0.519279117422007,
+  &#39;Volume USDT_eth&#39;: 0.05726025523007967,
+  &#39;eth_close_open_mean&#39;: 0.9777579277063382,
+  &#39;unix_btc&#39;: 0.4178427604200868,
+  &#39;open_btc&#39;: 0.7598396472648221,
+  &#39;high_btc&#39;: 0.7653914346069813,
+  &#39;low_btc&#39;: 0.7489738500937309,
+  &#39;close_btc&#39;: 0.7585292951125477},
+ &#39;y_lag7&#39;: {&#39;cryptocurrency_adjusted&#39;: 0.7572986907424755,
+  &#39;crypto_adjusted&#39;: 0.7980886579124384,
   &#39;bitcoin_adjusted&#39;: 0.5880900396680514,
-  &#39;bitcoin_top_adjusted&#39;: 0.5527180800517099,
-  &#39;china_adjusted&#39;: 0.0739901717941714,
-  &#39;close_btc&#39;: 0.7621686165959353,
-  &#39;close_eth&#39;: 0.9738598888235394,
-  &#39;covid19_adjusted&#39;: 0.08991612029527597,
-  &#39;crypto_adjusted&#39;: 0.7980886579124391,
-  &#39;cryptocurrency_adjusted&#39;: 0.7572986907424757,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7900427572710557,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5263807730433215,
-  &#39;do kwon_adjusted&#39;: -0.19356820450554751,
-  &#39;elon musk_adjusted&#39;: 0.13418832434167877,
-  &#39;eth_close_open_mean&#39;: 0.9723917937709374,
-  &#39;ethereum price_adjusted&#39;: 0.6289437244359917,
-  &#39;ethereum_adjusted&#39;: 0.6330626930232552,
-  &#39;ethereum_top_adjusted&#39;: 0.679828628200845,
-  &#39;exchange_top_adjusted&#39;: 0.6855698448370274,
-  &#39;fed_adjusted&#39;: 0.18975670304177897,
-  &#39;foreign_currency_adjusted&#39;: 0.2321771579747054,
-  &#39;future_commodities_adjusted&#39;: 0.2346849572298694,
-  &#39;high_btc&#39;: 0.7689915323427914,
-  &#39;high_eth&#39;: 0.9720915685342273,
-  &#39;inflation_adjusted&#39;: -0.08933412473073292,
-  &#39;interest rate_adjusted&#39;: 0.33492703322364487,
-  &#39;investment_top_adjusted&#39;: 0.20971344007616016,
-  &#39;low_btc&#39;: 0.752399267806514,
-  &#39;low_eth&#39;: 0.9704650417333286,
-  &#39;open_btc&#39;: 0.7631822512136273,
-  &#39;open_eth&#39;: 0.96919499078702,
-  &#39;pandemic_adjusted&#39;: 0.19287083227038201,
-  &#39;russia_adjusted&#39;: -0.013847636377490277,
+  &#39;bitcoin price_adjusted&#39;: 0.6109710201770585,
+  &#39;ethereum_adjusted&#39;: 0.6330626930232556,
+  &#39;ethereum price_adjusted&#39;: 0.628943724435991,
   &#39;stock market_adjusted&#39;: 0.08378378489070502,
-  &#39;stock_market_top_adjusted&#39;: 0.08444433336173332,
-  &#39;taxes_adjusted&#39;: 0.07371695541219228,
-  &#39;united states_adjusted&#39;: 0.08448924123082475,
-  &#39;unix_btc&#39;: 0.418913282043234,
-  &#39;unix_eth&#39;: 0.418913282043234,
-  &#39;wall street_adjusted&#39;: -0.30809172367477994,
-  &#39;war_adjusted&#39;: -0.20137680493689306}}
+  &#39;wall street_adjusted&#39;: -0.3080917236747798,
+  &#39;interest rate_adjusted&#39;: 0.33492703322364487,
+  &#39;fed_adjusted&#39;: 0.18975670304177888,
+  &#39;bankruptcy_adjusted&#39;: -0.13223560705225448,
+  &#39;china_adjusted&#39;: 0.0739901717941714,
+  &#39;united states_adjusted&#39;: 0.08448924123082474,
+  &#39;war_adjusted&#39;: -0.20137680493689317,
+  &#39;russia_adjusted&#39;: -0.01384763637749028,
+  &#39;cryptocurrency_top_adjusted&#39;: 0.7900427572710562,
+  &#39;bitcoin_top_adjusted&#39;: 0.5527180800517096,
+  &#39;investment_top_adjusted&#39;: 0.2097134400761602,
+  &#39;ethereum_top_adjusted&#39;: 0.6798286282008448,
+  &#39;exchange_top_adjusted&#39;: 0.6855698448370272,
+  &#39;bankrup_top_adjusted&#39;: 0.33379592043190065,
+  &#39;stock_market_top_adjusted&#39;: 0.08444433336173328,
+  &#39;inflation_adjusted&#39;: -0.08933412473073292,
+  &#39;taxes_adjusted&#39;: 0.07371695541219223,
+  &#39;digital_wallet_top_adjusted&#39;: 0.5263807730433213,
+  &#39;covid19_adjusted&#39;: 0.08991612029527593,
+  &#39;pandemic_adjusted&#39;: 0.19287083227038196,
+  &#39;elon musk_adjusted&#39;: 0.13418832434167877,
+  &#39;do kwon_adjusted&#39;: -0.19356820450554751,
+  &#39;future_commodities_adjusted&#39;: 0.23468495722986943,
+  &#39;banking_adjusted&#39;: 0.1294816629879929,
+  &#39;foreign_currency_adjusted&#39;: 0.2321771579747054,
+  &#39;unix_eth&#39;: 0.4189132820432339,
+  &#39;open_eth&#39;: 0.9691949907870198,
+  &#39;high_eth&#39;: 0.972091568534227,
+  &#39;low_eth&#39;: 0.9704650417333286,
+  &#39;close_eth&#39;: 0.9738598888235387,
+  &#39;Volume ETH_eth&#39;: 0.5193259883856844,
+  &#39;Volume USDT_eth&#39;: 0.059542773963238906,
+  &#39;eth_close_open_mean&#39;: 0.9723917937709378,
+  &#39;unix_btc&#39;: 0.4189132820432339,
+  &#39;open_btc&#39;: 0.763182251213627,
+  &#39;high_btc&#39;: 0.7689915323427913,
+  &#39;low_btc&#39;: 0.7523992678065139,
+  &#39;close_btc&#39;: 0.7621686165959352}}
 </pre></div>
 </div>
 </div>
@@ -1177,10 +1116,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-77badfd3-25da-4055-8acd-579ffc5b5e3b">
-    <div class="colab-df-container">
-      <div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1476,83 +1412,7 @@ title="Print to PDF"
     </tr>
   </tbody>
 </table>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-77badfd3-25da-4055-8acd-579ffc5b5e3b')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-77badfd3-25da-4055-8acd-579ffc5b5e3b button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-77badfd3-25da-4055-8acd-579ffc5b5e3b');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1575,10 +1435,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-f8fb0a70-8577-41ce-8a95-a123f8845efc">
-    <div class="colab-df-container">
-      <div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1874,83 +1731,7 @@ title="Print to PDF"
     </tr>
   </tbody>
 </table>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-f8fb0a70-8577-41ce-8a95-a123f8845efc')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-f8fb0a70-8577-41ce-8a95-a123f8845efc button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-f8fb0a70-8577-41ce-8a95-a123f8845efc');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
+</div></div></div>
 </div>
 <p>Comparando ambas tablas, podemos ver que la correlación más alta, que es con la variable “close_eth” es de 0.999110 para y_lag1 y 0.973860 para y_lag7. No sólo eso, sino que el orden entre las correlaciones parecería mantenerse al ampliar la ventana temporal a predecir. De esto se desprenden algunos puntos a considerar en el análisis. Por un lado, existen variables como el precio de cierre diario de ethereum que tienen una correlación lineal casi perfecta al predecir la cotización del día siguiente y cuya asociación lineal solamente disminuye aproximadamente en 0.025 puntos al pasar a la cotización del séptimo día futuro al actual, lo cual sigue siendo una correlación lineal sumamente alta. En segundo lugar, el orden de las asociaciones no varía de manera considerable al pasar de ambas variables dependientes, de hecho la información de ethereum como los distintos precios presentes tienen la mayor correlación con el target, por lo que considerar su cotización corriente es de suma importancia para la predicción. En tercer lugar, la alta correlación en ambas ventanas extremas genera un panorama alentador en términos de cuán lejos un modelo de predicción podría anticipar el precio futuro de ethereum.</p>
 <p>A su vez, <em>high_btc</em> aparece como una variable muy correlacionada con el precio de ethereum, confirmando la teoría que comentábamos en el archivo <a class="reference external" href="https://colab.research.google.com/drive/1iqGw9KMUPGrJEMBnjgvQCGRqOvaNGE0G"><strong>2.1 Análisis univariado</strong></a>. Por lo tanto, podemos confirmar que el precio de ethereum también se asocia lineal y fuertemente con el precio de bitcoin.</p>
@@ -1963,7 +1744,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.4799494267276063
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.47994942672760643
 </pre></div>
 </div>
 </div>
@@ -1971,7 +1752,7 @@ title="Print to PDF"
 <p>Como se puede ver, la correlación aumenta considerablemente y su signo pasa a cambiar. La magnitud pasa de 0.076 (signo positivo) en todo el período a 0.48 (signo negativo). De esta forma, la correlación indica que mayor frecuencia diaria de la palabra <em>covid 19</em> en google se asocia negativamente con la cotización del precio de ethereum del día siguiente al actual.</p>
 </section>
 <section id="graficos-de-dispersion-y-distribucion">
-<h2>Gráficos de dispersión y distribución<a class="headerlink" href="#graficos-de-dispersion-y-distribucion" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.2.2. </span>Gráficos de dispersión y distribución<a class="headerlink" href="#graficos-de-dispersion-y-distribucion" title="Permalink to this headline">#</a></h2>
 <p>A continuación, se realiza un análisis de dispersión entre la variable dependiente, rezagada 1 y 7 días, <em>y_lag1</em> e <em>y_lag7</em> respectivamente con las predictoras que vimos anteriormente tienen una alta correlación con el target.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1981,7 +1762,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x7f48c246c8d0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x22457e4dae0&gt;
 </pre></div>
 </div>
 <img alt="../_images/2_2_analisis_bivariado_26_1.png" src="../_images/2_2_analisis_bivariado_26_1.png" />
@@ -1995,7 +1776,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x7f48bd3feed0&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x22457e4e2f0&gt;
 </pre></div>
 </div>
 <img alt="../_images/2_2_analisis_bivariado_27_1.png" src="../_images/2_2_analisis_bivariado_27_1.png" />
@@ -2046,10 +1827,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-ce5b94d5-97b3-4779-84ac-815a4d06056c">
-    <div class="colab-df-container">
-      <div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -2345,83 +2123,7 @@ title="Print to PDF"
     </tr>
   </tbody>
 </table>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-ce5b94d5-97b3-4779-84ac-815a4d06056c')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-ce5b94d5-97b3-4779-84ac-815a4d06056c button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-ce5b94d5-97b3-4779-84ac-815a4d06056c');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2513,13 +2215,13 @@ title="Print to PDF"
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Análisis univariado de los datos</p>
+            <p class="prev-next-title"><span class="section-number">2.1. </span>Análisis univariado</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="2_3_analisis_multivariado.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Análisis multivariado de los datos</p>
+        <p class="prev-next-title"><span class="section-number">2.3. </span>Análisis multivariado</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

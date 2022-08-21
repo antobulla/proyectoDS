@@ -9,7 +9,7 @@
 # In[1]:
 
 
-get_ipython().system('pip install pytrends')
+get_ipython().system('pip install pytrends ')
 
 
 # In[2]:
