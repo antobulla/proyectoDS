@@ -26,7 +26,7 @@ import scipy as scp
 # 
 # Debido a que se intenta seguir la lógica establecida en el enfoque de validación, es decir, extraer de la base un subconjunto para entrenamiento y otro para testeo, este análisis se realiza sobre los datos que se van a entrenar. La razón radica en que los datos que son para testeo del modelo serán utilizados únicamente a modo de evaluación, entendiéndose a los mismos como datos "desconocidos" al momento de explorar la base y ajustar los modelos. Por esto, una vez importado el dataset nos quedamos con los primeros años de la serie, que va desde el 8 de agosto de 2015 hasta el 31 de diciembre de 2020.  
 
-# In[2]:
+# In[ ]:
 
 
 # importamos dataset
@@ -41,7 +41,7 @@ train = df[start:'2020-12-31']
 train.head()
 
 
-# In[3]:
+# In[ ]:
 
 
 # Información de la composición del dataset
@@ -57,7 +57,7 @@ df.info()
 # Esto lleva a plantear como hipótesis que las variables "de momento" podrían correlacionarse con los cambios abruptos del precio de las cotizaciones de Ethereum. En cambio, palabras con promedio de búsqueda diario alto podrían tener menor correlación con grandes movimientos de la cotización de ethereum. Los promedios, junto con otros estadísticos como los quintiles y desvío estándar pueden observarse en la siguiente tabla.  
 # 
 
-# In[4]:
+# In[ ]:
 
 
 df.loc[:, ['adjusted' in i for i in df.columns]].describe().T.sort_values(by='mean', ascending=False).apply(lambda s: s.apply('{0:.5f}'.format))
@@ -67,7 +67,7 @@ df.loc[:, ['adjusted' in i for i in df.columns]].describe().T.sort_values(by='me
 # 
 # En primer lugar, observamos la serie del precio diario promedio de ethereum, nuestra variable a predecir. Como se puede ver en la primera figura, la serie presenta un componente irregular no despreciable, la serie comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando un diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, donde la misma comienza a subir. Dicha irregularidad presenta una alta volatilidad o varianza, por lo que sería deseable poder aplicar alguna transformación a la serie antes de predecir.  
 
-# In[5]:
+# In[ ]:
 
 
 mpl.style.use('ggplot') # set estilo
@@ -88,7 +88,7 @@ plt.title("Serie del precio diario promedio de ethereum");
 
 # La transformación elegida es la transformación logarítmica, la cual permite una compresión de los datos, generando una serie con menor nivel de irregularidad y, por lo tanto, con mejor comportamiento para predecir. A continuación, se presenta la serie del precio promedio de ethereum diario en logaritmo. 
 
-# In[6]:
+# In[ ]:
 
 
 fig, ax = plt.subplots(figsize=(16,10))
@@ -110,7 +110,7 @@ plt.title("Serie del precio diario promedio de ethereum en logaritmo");
 
 # ### Gráficos de línea 
 
-# In[7]:
+# In[ ]:
 
 
 mpl.rcParams.update({'font.size': 10}) # set tamaño de ticks
@@ -136,7 +136,7 @@ ax[4].set_ylabel('elon musk');
 
 # ### Histogramas y densidad
 
-# In[8]:
+# In[ ]:
 
 
 distplot(df.high_btc);
@@ -144,25 +144,25 @@ distplot(df.high_btc);
 
 # El precio de bitcoin se concentra en valores menores a 20.000 USD.
 
-# In[9]:
+# In[ ]:
 
 
 distplot(df.banking_adjusted);
 
 
-# In[10]:
+# In[ ]:
 
 
 distplot(df.investment_top_adjusted)
 
 
-# In[11]:
+# In[ ]:
 
 
 distplot(df.covid19_adjusted)
 
 
-# In[12]:
+# In[ ]:
 
 
 distplot(df['elon musk_adjusted'])

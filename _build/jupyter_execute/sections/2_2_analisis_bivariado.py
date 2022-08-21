@@ -22,7 +22,7 @@ import scipy as scp
 # 
 # Para comenzar, importamos el dataset crudo con el target a predecir y los predictores que vamos a utilizar. Debido a que se intenta seguir la lógica establecida en el enfoque de validación, es decir, extraer de la base un subconjunto para entrenamiento y otro para testeo, el análisis exploratorio se realiza sobre los datos que se van a entrenar. La razón radica en que los datos que son para testeo del modelo serán utilizados únicamente a modo de evaluación, entendiéndose a los mismos como datos "desconocidos" al momento de explorar los datos y ajustar los modelos. Por esto, una vez importado el dataset nos quedamos con los primeros años de la serie, que va desde el 8 de agosto de 2015 hasta el 31 de diciembre de 2020.     
 
-# In[2]:
+# In[ ]:
 
 
 # importamos dataset
@@ -42,7 +42,7 @@ train.head()
 # 
 # En primer lugar, observamos la serie del precio diario promedio de ethereum, nuestra variable a predecir. Como se puede ver en la primera figura, la serie presenta un componente irregular no despreciable, la serie comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando un diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, donde la misma comienza a subir. Dicha irregularidad presenta una alta volatilidad o varianza, por lo que sería deseable poder aplicar alguna transformación a la serie antes de predecir.   
 
-# In[3]:
+# In[ ]:
 
 
 mpl.style.use('ggplot') # set estilo
@@ -64,13 +64,13 @@ plt.title("Serie del precio diario promedio de ethereum");
 # 
 # La transformación elegida es la transformación logarítmica, la cual permite una compresión de los datos, generando una serie con menor nivel de irregularidad y, por lo tanto, con mejor comportamiento para predecir. A continuación, se presenta la serie del precio promedio de ethereum diario en logaritmo. 
 
-# In[4]:
+# In[ ]:
 
 
 np.var(np.log10(train['y_lag1']))
 
 
-# In[5]:
+# In[ ]:
 
 
 fig, ax = plt.subplots(figsize=(16,10))
@@ -90,7 +90,7 @@ plt.title("Serie del precio diario promedio de ethereum en logaritmo");
 # 
 # En primer lugar realizamos un análisis de correlaciones lineales de pearson entre los diferentes rezagos del target y las variables predictoras. La idea detrás de esto es ver si podríamos proyectar un ejercicio de predicción con ventanas temporales mayores a un día de diferencia entre los predictores y la dependiente. Lo cual permitiría tener una mirada más amplia de la evolución predicha de la cotización de ethereum, permitiendo al usuario del modelo conocer su evolución futura en un rango de tiempo futuro mayor al día. 
 
-# In[6]:
+# In[ ]:
 
 
 #Correlación entre las target y otras variables
@@ -106,7 +106,7 @@ for i in range(1,8):
   correlaciones[f'y_lag{i}'] = input
 
 
-# In[7]:
+# In[ ]:
 
 
 correlaciones
@@ -114,37 +114,37 @@ correlaciones
 
 # En primer lugar, generamos un dataframe con las correlaciones lineales de pearson entre las variables independientes y el primer rezago de la cotización (`y_lag1`). Luego, analizamos la correlación utilizando como target el séptimo rezago del precio de ethereum (`y_lag7`). 
 
-# In[8]:
+# In[ ]:
 
 
 df_corr_lag1 = pd.DataFrame(correlaciones['y_lag1'].items(), columns = ['Predictores', 'Correlacion'])
 
 
-# In[9]:
+# In[ ]:
 
 
 df_corr_lag1['corr_abs'] = abs(df_corr_lag1['Correlacion'])
 
 
-# In[10]:
+# In[ ]:
 
 
 df_corr_lag1.sort_values('corr_abs', ascending = False)
 
 
-# In[11]:
+# In[ ]:
 
 
 df_corr_lag7 = pd.DataFrame(correlaciones['y_lag7'].items(), columns = ['Predictores', 'Correlacion'])
 
 
-# In[12]:
+# In[ ]:
 
 
 df_corr_lag7['corr_abs'] = abs(df_corr_lag7['Correlacion'])
 
 
-# In[13]:
+# In[ ]:
 
 
 df_corr_lag7.sort_values('corr_abs', ascending = False)
@@ -158,7 +158,7 @@ df_corr_lag7.sort_values('corr_abs', ascending = False)
 # 
 # Como habíamos visto en ese análisis, no se veía dependencia clara entre la búsqueda de esas palabras y el precio de ethereum. Aquí lo podemos confirmar. De esas cuatro palabras, la que tiene mayor correlación con el precio de ethereum a predecir es 'investment_top_adjusted' con 0.210613 contra *y_lag1* y 0.209713 contra *y_lag7*. Retomando el análisis en la sección de análisis univariado, las variables "de momento" tienen la característica de que se podrían correlacionar fuertemente con el target en un período específico de tiempo, por lo que considerar las correlaciones en todo el período de estudio podría subestimar la influencia de estos predictores, como es el caso de la palabra *covid19* o *elon musk*, que podrían tener un rol importante en detectar patrones más volátiles. De hecho, repetimos el ejercicio de correlación entre la palabra *covid19* y el target *y_lag1* pero restringiendo el período de tiempo a marzo de 2020 - diciembre de 2020.
 
-# In[14]:
+# In[ ]:
 
 
 scp.stats.pearsonr(train.loc['2020-03-01':, 'y_lag1'], train.loc['2020-03-01':, 'covid19_adjusted'])[0]
@@ -170,14 +170,14 @@ scp.stats.pearsonr(train.loc['2020-03-01':, 'y_lag1'], train.loc['2020-03-01':, 
 # 
 # A continuación, se realiza un análisis de dispersión entre la variable dependiente, rezagada 1 y 7 días, *y_lag1* e *y_lag7* respectivamente con las predictoras que vimos anteriormente tienen una alta correlación con el target. 
 
-# In[15]:
+# In[ ]:
 
 
 #Grafico usando un scatterplot y histrograma 
 sns.jointplot(x = 'close_eth', y= 'y_lag1', data=train ,color='blue')
 
 
-# In[16]:
+# In[ ]:
 
 
 #Grafico usando un scatterplot y histrograma 
@@ -190,7 +190,7 @@ sns.jointplot(x = 'close_eth', y= 'y_lag7', data=train ,color='green')
 # 
 # A su vez, durante gran parte del período el precio de ethereum se concentró entre 0 y 500 USD, lo cual se puede observar en el gráfico debido a una mayor densidad de puntos en ese área. La distribución de las variables es asimétrica hacia la derecha.
 
-# In[17]:
+# In[ ]:
 
 
 #Grafico usando un scatterplot y histograma 
@@ -198,7 +198,7 @@ sns.jointplot(x = 'high_btc', y= 'y_lag1', data=train ,color='red').fig.suptitle
 ("")
 
 
-# In[18]:
+# In[ ]:
 
 
 #Grafico usando un scatterplot y histograma 
@@ -214,20 +214,20 @@ sns.jointplot(x = 'high_btc', y= 'y_lag7', data=train ,color='red').fig.suptitle
 # 
 # Por último, la distribución de las variables es asimétrica hacia la derecha.
 
-# In[19]:
+# In[ ]:
 
 
 df_corr_lag1.sort_values('corr_abs', ascending = False)
 #list(loc[0:4, 'Predictores'])
 
 
-# In[20]:
+# In[ ]:
 
 
 train1 = train.loc[:,['close_eth', 'crypto_adjusted', 'high_btc', 'exchange_top_adjusted', 'digital_wallet_top_adjusted']]
 
 
-# In[21]:
+# In[ ]:
 
 
 #generacion de los graficos de correlacion entre los 3 metodos, 
@@ -251,7 +251,7 @@ for j,i in enumerate(['pearson','kendall','spearman']):
 
 # Comparación entre el precio de cierre de Ethereum, el precio de cierre de Bitcoin y las búsquedas de Bitcoin y Ethereum:
 
-# In[22]:
+# In[ ]:
 
 
 # defino el tamaño del gráfico

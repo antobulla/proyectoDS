@@ -5,6 +5,15 @@
 # 
 # 
 
+# ## Regresión lineal 
+# En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS). 
+# 
+# Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados. 
+# 
+# La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como *forward stepwise selection*, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin *features* y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de *k-folds-cross validation* bajo dos formas: la primera, conocida como *Time Series Split Cross-Validation* parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como *Blocked Cross-Validation*, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de *train* como de validación. 
+# 
+# Por último, el análisis se enfocara en predecir la misma variable *target* pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum. 
+
 # In[1]:
 
 
@@ -18,16 +27,7 @@ from sklearn.metrics import mean_squared_error
 import math
 
 
-# ## Regresión lineal 
-# En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS). 
-# 
-# Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados. 
-# 
-# La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como *forward stepwise selection*, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin *features* y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de *k-folds-cross validation* bajo dos formas: la primera, conocida como *Time Series Split Cross-Validation* parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como *Blocked Cross-Validation*, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de *train* como de validación. 
-# 
-# Por último, el análisis se enfocara en predecir la misma variable *target* pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum. 
-
-# In[4]:
+# In[ ]:
 
 
 ### Importamos bases
@@ -56,7 +56,7 @@ y_test = y_test.set_index('Date')
 
 # ### Entrenamiento del modelo 
 
-# In[9]:
+# In[ ]:
 
 
 #agregar constante
@@ -64,7 +64,7 @@ x_train = sm.add_constant(train)
 x_test = sm.add_constant(test)
 
 
-# In[20]:
+# In[ ]:
 
 
 # ajuste lineal
@@ -78,16 +78,16 @@ print(model.summary())
 # 
 # Resulta también interesante que el ajuste sea de 1, tanto observando el R2 como el R2 ajustado. En base a esto surge la pregunta de si dicho ajuste se mantendría al estimar valores de ethereum más lejanos en el tiempo.  
 
-# In[28]:
+# In[ ]:
 
 
 r_squaredAdj = []
 for i in range(1,len(y_train.columns)+1):
   model = sm.OLS(y_train.loc[:,f'log_y_lag{i}'], x_train.astype(float)).fit()
-  r_squaredAdj = r_squaredAdj + [round(model.rsquared, 4)]
+  r_squaredAdj = r_squaredAdj + [round(model.rsquared, 4)]  
 
 
-# In[29]:
+# In[ ]:
 
 
 r_squaredAdj
@@ -98,7 +98,7 @@ r_squaredAdj
 # ### Evaluación performance en el grupo de entrenamiento
 # Primero evaluamos la performance predictiva en el grupo de entrenamiento, siendo conscientes del probable sobreajuste que esta evaluación genere. Para realizar la evluación de desempeño del modelo utilizamos como métrica la raíz del error cuadrático medio como proporción de la media del target. Esto último para poder tener mayor claridad a la hora de interpretar los resultados.
 
-# In[30]:
+# In[ ]:
 
 
 # computamos el predicho para cada uno de los rezagos de la dependiente
@@ -109,7 +109,7 @@ for i in range(1,len(y_train.columns)+1):
   predictions_dict[f'pred_y_lag{i}'] = predictions
 
 
-# In[39]:
+# In[ ]:
 
 
 for i in range(1,len(y_train.columns)+1):
@@ -126,7 +126,7 @@ for i in range(1,len(y_train.columns)+1):
 # ### Evaluación performance en el grupo de test
 # Pasamos a evaluar la performance en el grupo test. 
 
-# In[40]:
+# In[ ]:
 
 
 predictions_test_dict = {}
@@ -136,7 +136,7 @@ for i in range(1,len(y_test.columns)+1):
   predictions_test_dict[f'pred_y_lag{i}'] = predictions
 
 
-# In[41]:
+# In[ ]:
 
 
 for i in range(1,len(y_test.columns)+1):
@@ -150,7 +150,7 @@ for i in range(1,len(y_test.columns)+1):
 
 # Curiosamente, la performance predictiva tiene mejoras en el grupo test respecto a la evaluación en el grupo de entrenamiento. A continuación, pasamos a graficar el observado versus el predicho para cada target estimado.
 
-# In[49]:
+# In[ ]:
 
 
 plt.style.use('default')
@@ -173,7 +173,7 @@ for i in range(0,7):
 # 
 # Por simplicidad, para el caso de selección y validación cruzada se utilizará solamente el precio de ethereum rezagado siete días. 
 
-# In[53]:
+# In[ ]:
 
 
 # x_test_step = sm.add_constant(test)
@@ -223,13 +223,13 @@ while len(candidates) > 0:
   c = c + 1
 
 
-# In[54]:
+# In[ ]:
 
 
 output_df
 
 
-# In[61]:
+# In[ ]:
 
 
 mpl.rcParams.update({'font.size': 10}) # set tamaño de ticks
@@ -252,7 +252,7 @@ plt.title("Performance del modelo bajo selección");
 
 # #### Time Series Split Cross-Validation
 
-# In[62]:
+# In[ ]:
 
 
 def date_range(start, end, intv):
@@ -264,13 +264,13 @@ def date_range(start, end, intv):
     yield end.strftime("%Y-%m-%d")
 
 
-# In[63]:
+# In[ ]:
 
 
 x_train.index
 
 
-# In[65]:
+# In[ ]:
 
 
 lower = x_train.index[0]
@@ -279,7 +279,7 @@ timelist = list(date_range(lower, upper, 10))
 timelist
 
 
-# In[66]:
+# In[ ]:
 
 
 rmse_matrix_train = []
@@ -313,14 +313,14 @@ for i in range(1, len(timelist)-1):
   rmse_matrix_valid.append(metric_error_valid)
 
 
-# In[67]:
+# In[ ]:
 
 
 # vemos los resultados en validación para cada iteración
 rmse_matrix_valid
 
 
-# In[68]:
+# In[ ]:
 
 
 # promediamos los errores en validación de cada iteración
@@ -335,7 +335,7 @@ print(f'En promedio, la predicción arroja un error del {round(mean_error_cv_tra
 
 # #### Blocked Cross-Validation
 
-# In[70]:
+# In[ ]:
 
 
 rmse_matrix_train_blocked = []
@@ -369,7 +369,7 @@ for i in range(0, len(timelist)-2):
   rmse_matrix_valid_blocked.append(metric_error_valid)
 
 
-# In[71]:
+# In[ ]:
 
 
 # promediamos los errores en validación de cada iteración
@@ -380,4 +380,94 @@ mean_error_cv_valid_blocked = Average(rmse_matrix_valid_blocked)
 mean_error_cv_train_blocked = Average(rmse_matrix_train_blocked)
 
 print(f'En promedio, la predicción arroja un error del {round(mean_error_cv_train_blocked, 2)}% de la media en entrenamiento y el {round(mean_error_cv_valid_blocked, 2)}% en validación')
+
+
+# ### Random Forest
+
+# In[ ]:
+
+
+# Library
+from sklearn.ensemble import RandomForestRegressor
+# modelo con 1000 decision trees
+rf = RandomForestRegressor(n_estimators = 1000)
+# entrenamos el modelo
+rf.fit(train, y_train['log_y_lag7'])
+# Evaluamos el modelo ajustado en test
+predictions = rf.predict(test)
+## computamos la raíz del error cuadrático promedio sobre la media del target como métrica
+# error cuadrático medio
+mse = mean_squared_error(y_test['log_y_lag7'], 
+                           predictions)
+# aplicamos raíz                            
+rmse = math.sqrt(mse)
+# promedio de la dependiente
+mean_target_test = y_test['log_y_lag7'].mean()
+# computamos finalmente la métrica
+rmse_mean_y = (rmse/mean_target_test)*100 
+print(f'En promedio, la predicción en random forest con mil modelos arroja un error del {round(rmse_mean_y, 2)}% en test')
+
+
+
+# In[ ]:
+
+
+## importancia de atributos
+# nombre de las variables predictoras
+feature_list = list(train.columns)
+# Get numerical feature importances
+importances = list(rf.feature_importances_)
+# List of tuples with variable and importance
+feature_importances = [(feature, round(importance, 2)) for feature, importance in zip(feature_list, importances)]
+# Sort the feature importances by most important first
+feature_importances = sorted(feature_importances, key = lambda x: x[1], reverse = True)
+# Print out the feature and importances 
+[print('Variable: {:20} Importance: {}'.format(*pair)) for pair in feature_importances];
+
+
+# In[ ]:
+
+
+# import de las librerías
+import matplotlib.pyplot as plt
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+# configuro el estilo
+plt.style.use('fivethirtyeight')
+
+# defino el tamaño del gráfico
+f = plt.figure()
+f.set_figwidth(15)
+f.set_figheight(5)
+
+# list of x locations for plotting
+x_values = list(range(len(importances)))
+
+# Genero el gráfico de barras
+plt.bar(x_values, importances, orientation = 'vertical')
+
+# Propiedades de los gráficos, Títulos y etiquetas
+plt.xticks(x_values, feature_list, rotation='vertical')
+plt.ylabel('Importancia'); plt.xlabel('Variable'); plt.title('Importancia de las variables');
+
+
+# Al igual que en la regresión lineal, la variable que parece tener más importancia es 'log_price_eth'.
+
+# In[ ]:
+
+
+# import de las librerías
+import graphviz
+from sklearn.tree import export_graphviz
+import pydot
+
+# Pull out one tree from the forest
+tree = rf.estimators_[5]
+
+# Export the image to a dot file
+data = export_graphviz(tree, out_file = None, feature_names = feature_list, rounded = True, 
+                       precision = 1, filled = True, special_characters = True)
+
+graph = graphviz.Source(data)
+graph
 

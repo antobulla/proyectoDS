@@ -273,7 +273,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/agusstaudt/eht_prediction.git/master?urlpath=tree/sections/5_prediccion.ipynb"
+        <a href="https://mybinder.org/v2/gh/antobulla/proyectoDS/master?urlpath=tree/sections/5_prediccion.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -316,7 +316,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/agusstaudt/eht_prediction.git"
+        <a href="https://github.com/antobulla/proyectoDS"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -333,7 +333,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/agusstaudt/eht_prediction.git/issues/new?title=Issue%20on%20page%20%2Fsections/5_prediccion.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/antobulla/proyectoDS/issues/new?title=Issue%20on%20page%20%2Fsections/5_prediccion.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -462,6 +462,11 @@ title="Print to PDF"
      </li>
     </ul>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#random-forest">
+     4.1.1.6. Random Forest
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -525,6 +530,11 @@ title="Print to PDF"
      </li>
     </ul>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#random-forest">
+     4.1.1.6. Random Forest
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -539,6 +549,12 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="prediccion-del-precio-futuro-de-ethereum">
 <h1><span class="section-number">4.1. </span>Predicción del precio futuro de ethereum<a class="headerlink" href="#prediccion-del-precio-futuro-de-ethereum" title="Permalink to this headline">#</a></h1>
+<section id="regresion-lineal">
+<h2><span class="section-number">4.1.1. </span>Regresión lineal<a class="headerlink" href="#regresion-lineal" title="Permalink to this headline">#</a></h2>
+<p>En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS).</p>
+<p>Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados.</p>
+<p>La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como <em>forward stepwise selection</em>, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin <em>features</em> y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de <em>k-folds-cross validation</em> bajo dos formas: la primera, conocida como <em>Time Series Split Cross-Validation</em> parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como <em>Blocked Cross-Validation</em>, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de <em>train</em> como de validación.</p>
+<p>Por último, el análisis se enfocara en predecir la misma variable <em>target</em> pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
@@ -555,23 +571,18 @@ title="Print to PDF"
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 7&gt;</span><span class="nt">()</span>
+<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
+<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="kn">import</span> <span class="nn">math</span>
 
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;sklearn&#39;
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
 </pre></div>
 </div>
 </div>
 </div>
-<section id="regresion-lineal">
-<h2><span class="section-number">4.1.1. </span>Regresión lineal<a class="headerlink" href="#regresion-lineal" title="Permalink to this headline">#</a></h2>
-<p>En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS).</p>
-<p>Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados.</p>
-<p>La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como <em>forward stepwise selection</em>, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin <em>features</em> y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de <em>k-folds-cross validation</em> bajo dos formas: la primera, conocida como <em>Time Series Split Cross-Validation</em> parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como <em>Blocked Cross-Validation</em>, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de <em>train</em> como de validación.</p>
-<p>Por último, el análisis se enfocara en predecir la misma variable <em>target</em> pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Importamos bases</span>
@@ -611,9 +622,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/statsmodels/tools/_testing.py:19: FutureWarning: pandas.util.testing is deprecated. Use the functions in the public API at pandas.testing instead.
-  import pandas.util.testing as tm
-/usr/local/lib/python3.7/dist-packages/statsmodels/tsa/tsatools.py:117: FutureWarning: In a future version of pandas all arguments of concat except for the argument &#39;objs&#39; will be keyword-only
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/statsmodels/tsa/tsatools.py:117: FutureWarning: In a future version of pandas all arguments of concat except for the argument &#39;objs&#39; will be keyword-only
   x = pd.concat(x[::order], 1)
 </pre></div>
 </div>
@@ -635,8 +644,8 @@ title="Print to PDF"
 Dep. Variable:             log_y_lag1   R-squared:                       1.000
 Model:                            OLS   Adj. R-squared:                  1.000
 Method:                 Least Squares   F-statistic:                 1.759e+05
-Date:                Tue, 02 Aug 2022   Prob (F-statistic):               0.00
-Time:                        01:04:02   Log-Likelihood:                 5852.8
+Date:                Thu, 18 Aug 2022   Prob (F-statistic):               0.00
+Time:                        22:04:56   Log-Likelihood:                 5852.8
 No. Observations:                1956   AIC:                        -1.162e+04
 Df Residuals:                    1911   BIC:                        -1.136e+04
 Df Model:                          44                                         
@@ -711,7 +720,7 @@ strong multicollinearity or other numerical problems.
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
   <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-  <span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="n">r_squaredAdj</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+  <span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="n">r_squaredAdj</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>  
 </pre></div>
 </div>
 </div>
@@ -2007,7 +2016,7 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-354ea8af-eab1-49a0-a93f-0272e46411da">
+  <div id="df-33fdf69c-0f59-48d2-ad8f-04df50014564">
     <div class="colab-df-container">
       <div>
 <style scoped>
@@ -2260,7 +2269,7 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
   </tbody>
 </table>
 </div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-354ea8af-eab1-49a0-a93f-0272e46411da')"
+      <button class="colab-df-convert" onclick="convertToInteractive('df-33fdf69c-0f59-48d2-ad8f-04df50014564')"
               title="Convert this dataframe to an interactive table."
               style="display:none;">
 
@@ -2311,12 +2320,12 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 
       <script>
         const buttonEl =
-          document.querySelector('#df-354ea8af-eab1-49a0-a93f-0272e46411da button.colab-df-convert');
+          document.querySelector('#df-33fdf69c-0f59-48d2-ad8f-04df50014564 button.colab-df-convert');
         buttonEl.style.display =
           google.colab.kernel.accessAllowed ? 'block' : 'none';
 
         async function convertToInteractive(key) {
-          const element = document.querySelector('#df-354ea8af-eab1-49a0-a93f-0272e46411da');
+          const element = document.querySelector('#df-33fdf69c-0f59-48d2-ad8f-04df50014564');
           const dataTable =
             await google.colab.kernel.invokeFunction('convertToInteractive',
                                                      [key], {});
@@ -2610,6 +2619,157 @@ Iteration 8 working on range of date 2019-12-04 to 2020-06-17 (training) to pred
 </div>
 </div>
 </section>
+</section>
+<section id="random-forest">
+<h3><span class="section-number">4.1.1.6. </span>Random Forest<a class="headerlink" href="#random-forest" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Library</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+<span class="c1"># modelo con 1000 decision trees</span>
+<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># entrenamos el modelo</span>
+<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">[</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">])</span>
+<span class="c1"># Evaluamos el modelo ajustado en test</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+<span class="c1">## computamos la raíz del error cuadrático promedio sobre la media del target como métrica</span>
+<span class="c1"># error cuadrático medio</span>
+<span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">[</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> 
+                           <span class="n">predictions</span><span class="p">)</span>
+<span class="c1"># aplicamos raíz                            </span>
+<span class="n">rmse</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+<span class="c1"># promedio de la dependiente</span>
+<span class="n">mean_target_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="c1"># computamos finalmente la métrica</span>
+<span class="n">rmse_mean_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">rmse</span><span class="o">/</span><span class="n">mean_target_test</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> 
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;En promedio, la predicción en random forest con mil modelos arroja un error del </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse_mean_y</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% en test&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>En promedio, la predicción en random forest con mil modelos arroja un error del 14.48% en test
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## importancia de atributos</span>
+<span class="c1"># nombre de las variables predictoras</span>
+<span class="n">feature_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="c1"># Get numerical feature importances</span>
+<span class="n">importances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">)</span>
+<span class="c1"># List of tuples with variable and importance</span>
+<span class="n">feature_importances</span> <span class="o">=</span> <span class="p">[(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">importance</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">importance</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">feature_list</span><span class="p">,</span> <span class="n">importances</span><span class="p">)]</span>
+<span class="c1"># Sort the feature importances by most important first</span>
+<span class="n">feature_importances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">feature_importances</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Print out the feature and importances </span>
+<span class="p">[</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Variable: </span><span class="si">{:20}</span><span class="s1"> Importance: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">))</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">feature_importances</span><span class="p">];</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variable: log_price_eth        Importance: 0.95
+Variable: ethereum_adjusted_log Importance: 0.03
+Variable: log_price_btc        Importance: 0.0
+Variable: log_price_btc_lag1   Importance: 0.0
+Variable: log_price_btc_lag2   Importance: 0.0
+Variable: log_price_btc_lag3   Importance: 0.0
+Variable: log_price_btc_lag4   Importance: 0.0
+Variable: log_price_btc_lag5   Importance: 0.0
+Variable: log_price_btc_lag6   Importance: 0.0
+Variable: log_volume_btc-usd   Importance: 0.0
+Variable: log_volume_eth-usd   Importance: 0.0
+Variable: var_price_eth        Importance: 0.0
+Variable: var_price_btc        Importance: 0.0
+Variable: cryptocurrency_adjusted_log Importance: 0.0
+Variable: crypto_adjusted_log  Importance: 0.0
+Variable: bitcoin_adjusted_log Importance: 0.0
+Variable: bitcoin price_adjusted_log Importance: 0.0
+Variable: ethereum price_adjusted_log Importance: 0.0
+Variable: stock market_adjusted_log Importance: 0.0
+Variable: wall street_adjusted_log Importance: 0.0
+Variable: interest rate_adjusted_log Importance: 0.0
+Variable: fed_adjusted_log     Importance: 0.0
+Variable: bankruptcy_adjusted_log Importance: 0.0
+Variable: china_adjusted_log   Importance: 0.0
+Variable: united states_adjusted_log Importance: 0.0
+Variable: war_adjusted_log     Importance: 0.0
+Variable: russia_adjusted_log  Importance: 0.0
+Variable: cryptocurrency_top_adjusted_log Importance: 0.0
+Variable: bitcoin_top_adjusted_log Importance: 0.0
+Variable: investment_top_adjusted_log Importance: 0.0
+Variable: ethereum_top_adjusted_log Importance: 0.0
+Variable: exchange_top_adjusted_log Importance: 0.0
+Variable: bankrup_top_adjusted_log Importance: 0.0
+Variable: stock_market_top_adjusted_log Importance: 0.0
+Variable: inflation_adjusted_log Importance: 0.0
+Variable: taxes_adjusted_log   Importance: 0.0
+Variable: digital_wallet_top_adjusted_log Importance: 0.0
+Variable: covid19_adjusted_log Importance: 0.0
+Variable: pandemic_adjusted_log Importance: 0.0
+Variable: elon musk_adjusted_log Importance: 0.0
+Variable: do kwon_adjusted_log Importance: 0.0
+Variable: future_commodities_adjusted_log Importance: 0.0
+Variable: banking_adjusted_log Importance: 0.0
+Variable: foreign_currency_adjusted_log Importance: 0.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import de las librerías</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="c1"># configuro el estilo</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;fivethirtyeight&#39;</span><span class="p">)</span>
+
+<span class="c1"># defino el tamaño del gráfico</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">set_figwidth</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">set_figheight</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># list of x locations for plotting</span>
+<span class="n">x_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">importances</span><span class="p">)))</span>
+
+<span class="c1"># Genero el gráfico de barras</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">importances</span><span class="p">,</span> <span class="n">orientation</span> <span class="o">=</span> <span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
+
+<span class="c1"># Propiedades de los gráficos, Títulos y etiquetas</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Importancia&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Variable&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Importancia de las variables&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5_prediccion_40_0.png" src="../_images/5_prediccion_40_0.png" />
+</div>
+</div>
+<p>Al igual que en la regresión lineal, la variable que parece tener más importancia es ‘log_price_eth’.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import de las librerías</span>
+<span class="kn">import</span> <span class="nn">graphviz</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">export_graphviz</span>
+<span class="kn">import</span> <span class="nn">pydot</span>
+
+<span class="c1"># Pull out one tree from the forest</span>
+<span class="n">tree</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+<span class="c1"># Export the image to a dot file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">export_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">out_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">feature_names</span> <span class="o">=</span> <span class="n">feature_list</span><span class="p">,</span> <span class="n">rounded</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                       <span class="n">precision</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filled</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">special_characters</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">graph</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5_prediccion_42_0.svg" src="../_images/5_prediccion_42_0.svg" /></div>
+</div>
 </section>
 </section>
 </section>

@@ -7,8 +7,8 @@
 
 
 ### Cargamos librería 
-get_ipython().system('pip install --upgrade xlrd ')
-get_ipython().system('pip install yfinance ')
+get_ipython().system('pip install --upgrade xlrd')
+get_ipython().system('pip install yfinance')
 import pandas as pd 
 import numpy as np # numpy y pandas to data wrangling 
 from datetime import datetime, timedelta # to work w date
@@ -38,7 +38,7 @@ gtrends = gtrends.set_index("Date")
 gtrends = gtrends.loc[:, ['adjusted' in i for i in gtrends.columns]]
 
 
-# In[3]:
+# In[16]:
 
 
 gtrends
@@ -52,7 +52,7 @@ gtrends
 # 
 # [***CryptoDataDownload***](https://www.cryptodatadownload.com/) es una plataforma que brinda, entre otras cosas, información histórica de la cotización de diferentes criptomonedas a partir de la **API Poloniex**. Entre ellas, se encuentran las cotizaciones de ethereum y bitcoin. Los datos comprenden el precio de apertura y clausura en un momento del tiempo dado (horario, diario, etc.), el precio más alto y bajo, y el volumen de transacciones. Para ambas criptomonedas, importamos para el período 08/2015-06/2022. En el caso de ethereum, también promediamos el precio de cierre y apertura diario, nuestra variable a predecir y computamos los primeros 7 rezagos del promedio. Con los rezagos estaríamos teniendo columnas de precios diarios futuros, desde el día siguiente al actual hasta el mismo día de la siguiente semana al día corriente. 
 
-# In[4]:
+# In[17]:
 
 
 # ### Ethereum
@@ -83,7 +83,7 @@ bitcoin = bitcoin.rename(columns={col: col+'_btc' for col in bitcoin.columns})
 
 # Al tener ambas bases de datos pasamos a unirlas según el índice que sería en este caso la fecha.
 
-# In[5]:
+# In[18]:
 
 
 ## Unión criptomonedas
@@ -93,7 +93,7 @@ crypto_pol = crypto_pol.drop(['symbol_eth','symbol_btc'], axis = 1)
 crypto_pol.index = pd.to_datetime(crypto_pol.index)
 
 
-# In[6]:
+# In[19]:
 
 
 ## visualizamos
@@ -104,7 +104,7 @@ crypto_pol
 # 
 # Ya con ambas bases cargadas pasamos a unirlos. Por lo que nos quedaría un *dataframe* con información de las dos criptomonedas utilizadas, ethereum y bitcoin (siendo la primera la moneda a predecir), y las frecuencias de tópicos y términos de búsqueda históricas ajustadas de frecuencia temporal diaria. Debido a que todas las variables en el *dataset* deben ser numéricas, pasamos también a transformar todas las columnas en series numéricas, para evitar cualquier problema relacionado al *type*. 
 
-# In[7]:
+# In[20]:
 
 
 # unión con merge
@@ -118,7 +118,7 @@ df = df.apply(pd.to_numeric)
 df.info()
 
 
-# In[8]:
+# In[21]:
 
 
 # visualización
@@ -127,7 +127,7 @@ df
 
 # Ya con la base construida se pasa a guardar el dataset en formato *.csv* con el nombre de *input*. 
 
-# In[9]:
+# In[22]:
 
 
 # guardar el dataset en carpeta data set del proyecto en google drive
