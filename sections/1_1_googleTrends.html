@@ -431,18 +431,21 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pytrends in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (4.8.0)
-Requirement already satisfied: requests&gt;=2.0 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from pytrends) (2.28.1)
-Requirement already satisfied: lxml in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from pytrends) (4.9.1)
-Requirement already satisfied: pandas&gt;=0.25 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pytrends) (1.4.3)
-Requirement already satisfied: python-dateutil&gt;=2.8.1 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2.8.2)
-Requirement already satisfied: numpy&gt;=1.21.0 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pandas&gt;=0.25-&gt;pytrends) (1.23.1)
-Requirement already satisfied: pytz&gt;=2020.1 in c:\users\usuario\appdata\roaming\python\python310\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2022.1)
-Requirement already satisfied: certifi&gt;=2017.4.17 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (2022.6.15)
-Requirement already satisfied: charset-normalizer&lt;3,&gt;=2 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (2.1.0)
-Requirement already satisfied: idna&lt;4,&gt;=2.5 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (3.3)
-Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from requests&gt;=2.0-&gt;pytrends) (1.26.10)
-Requirement already satisfied: six&gt;=1.5 in c:\users\usuario\appdata\local\programs\python\python310\lib\site-packages (from python-dateutil&gt;=2.8.1-&gt;pandas&gt;=0.25-&gt;pytrends) (1.16.0)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Collecting pytrends
+  Using cached pytrends-4.8.0-py3-none-any.whl
+Requirement already satisfied: requests&gt;=2.0 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from pytrends) (2.26.0)
+Requirement already satisfied: pandas&gt;=0.25 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from pytrends) (1.3.3)
+Requirement already satisfied: lxml in c:\users\usuario\anaconda3\lib\site-packages (from pytrends) (4.8.0)
+Requirement already satisfied: numpy&gt;=1.17.3 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from pandas&gt;=0.25-&gt;pytrends) (1.21.2)
+Requirement already satisfied: pytz&gt;=2017.3 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2021.3)
+Requirement already satisfied: python-dateutil&gt;=2.7.3 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from pandas&gt;=0.25-&gt;pytrends) (2.8.2)
+Requirement already satisfied: six&gt;=1.5 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from python-dateutil&gt;=2.7.3-&gt;pandas&gt;=0.25-&gt;pytrends) (1.16.0)
+Requirement already satisfied: certifi&gt;=2017.4.17 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from requests&gt;=2.0-&gt;pytrends) (2021.10.8)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from requests&gt;=2.0-&gt;pytrends) (1.26.7)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from requests&gt;=2.0-&gt;pytrends) (3.3)
+Requirement already satisfied: charset-normalizer~=2.0.0 in c:\users\usuario\appdata\roaming\python\python39\site-packages (from requests&gt;=2.0-&gt;pytrends) (2.0.7)
+Installing collected packages: pytrends
+Successfully installed pytrends-4.8.0
 </pre></div>
 </div>
 </div>
@@ -618,72 +621,40 @@ Requirement already satisfied: six&gt;=1.5 in c:\users\usuario\appdata\local\pro
 Iteration from 2015-08-01 to 2015-11-01
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2015-11-02 to 2016-02-02
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-02-03 to 2016-05-05
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-05-06 to 2016-08-06
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-08-07 to 2016-11-07
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-11-08 to 2017-02-08
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2017-02-09 to 2017-05-12
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2017-05-13 to 2017-08-13
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\USUARIO\AppData\Local\Temp\ipykernel_11052\1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
-  dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">Input In [5],</span> in <span class="ni">&lt;cell line: 3&gt;</span><span class="nt">()</span>
+<span class="o">~</span>\<span class="n">AppData</span>\<span class="n">Local</span>\<span class="n">Temp</span><span class="o">/</span><span class="n">ipykernel_10428</span><span class="o">/</span><span class="mf">3790658114.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;2015-08-01&#39;</span> <span class="c1"># parece ser el límite inferior de precios de bitcoin en yahoo finance</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;2022-06-15&#39;</span>
 <span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">var_dict</span> <span class="o">=</span> <span class="n">daily_gt</span><span class="p">(</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">kw_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="p">,</span> <span class="n">inputCategories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span> <span class="n">inputCategoriesNames</span><span class="o">=</span><span class="n">categoriesNames</span><span class="p">)</span>
 
-<span class="nn">Input In [3],</span> in <span class="ni">daily_gt</span><span class="nt">(keyword, start, end, inputCategories, inputCategoriesNames, hl, tz)</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span>   <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>   <span class="k">del</span> <span class="n">data</span>
-<span class="ne">---&gt; </span><span class="mi">66</span>   <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># para aumentar el tiempo entre iteración para evitar el eror 429</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span> <span class="k">else</span><span class="p">:</span> 
-<span class="g g-Whitespace">     </span><span class="mi">68</span>   <span class="k">continue</span>      
+<span class="nn">~\AppData\Local\Temp/ipykernel_10428/3229874301.py</span> in <span class="ni">daily_gt</span><span class="nt">(keyword, start, end, inputCategories, inputCategoriesNames, hl, tz)</span>
+<span class="g g-Whitespace">     </span><span class="mi">64</span>         <span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span>         <span class="k">del</span> <span class="n">data</span>
+<span class="ne">---&gt; </span><span class="mi">66</span>         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># para aumentar el tiempo entre iteración para evitar el eror 429</span>
+<span class="g g-Whitespace">     </span><span class="mi">67</span>       <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">68</span>         <span class="k">continue</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
