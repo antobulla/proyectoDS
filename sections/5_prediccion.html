@@ -50,6 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Anexo" href="../intro_anexo.html" />
@@ -462,9 +464,16 @@ title="Print to PDF"
      </li>
     </ul>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#extreme-gradient-boosting-xgboost">
+   4.1.2. Extreme Gradient Boosting (XGBoost)
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#random-forest">
-     4.1.1.6. Random Forest
+    <a class="reference internal nav-link" href="#random-search-en-series-de-tiempo">
+     4.1.2.1. Random search en series de tiempo
     </a>
    </li>
   </ul>
@@ -530,9 +539,16 @@ title="Print to PDF"
      </li>
     </ul>
    </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#extreme-gradient-boosting-xgboost">
+   4.1.2. Extreme Gradient Boosting (XGBoost)
+  </a>
+  <ul class="nav section-nav flex-column">
    <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#random-forest">
-     4.1.1.6. Random Forest
+    <a class="reference internal nav-link" href="#random-search-en-series-de-tiempo">
+     4.1.2.1. Random search en series de tiempo
     </a>
    </li>
   </ul>
@@ -549,40 +565,50 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="prediccion-del-precio-futuro-de-ethereum">
 <h1><span class="section-number">4.1. </span>Predicción del precio futuro de ethereum<a class="headerlink" href="#prediccion-del-precio-futuro-de-ethereum" title="Permalink to this headline">#</a></h1>
-<section id="regresion-lineal">
-<h2><span class="section-number">4.1.1. </span>Regresión lineal<a class="headerlink" href="#regresion-lineal" title="Permalink to this headline">#</a></h2>
-<p>En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS).</p>
-<p>Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados.</p>
-<p>La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como <em>forward stepwise selection</em>, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin <em>features</em> y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de <em>k-folds-cross validation</em> bajo dos formas: la primera, conocida como <em>Time Series Split Cross-Validation</em> parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como <em>Blocked Cross-Validation</em>, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de <em>train</em> como de validación.</p>
-<p>Por último, el análisis se enfocara en predecir la misma variable <em>target</em> pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generales</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
 <span class="kn">import</span> <span class="nn">math</span>
+
+<span class="c1"># regresión lineal </span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="c1"># XGBoost</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">RandomizedSearchCV</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">sample</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choices</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 5&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
 
 <span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
 </pre></div>
 </div>
 </div>
 </div>
+<section id="regresion-lineal">
+<h2><span class="section-number">4.1.1. </span>Regresión lineal<a class="headerlink" href="#regresion-lineal" title="Permalink to this headline">#</a></h2>
+<p>En esta sección se desarrolla el primer modelo de predicción: la regresión lineal múltiple, que tiene como función objetivo el error cuadrático medio y se optimiza mediante mínimos cuadrados ordinarios (OLS).</p>
+<p>Si bien es un modelo simple dentro del abanico de estimadores de machine learning, el método de regresión lineal resulta competitivo en la práctica y presenta ventajas en la facilidad para interpretar los resultados. De esta forma, el trabajo comienza el ejercicio de predicción con OLS para luego pasar a modelos más sofisticados.</p>
+<p>La sección se estructura de la siguiente manera. En primer lugar, ajustamos y evaluamos la performance del modelo, utilizando una separación básica de train y test siguiendo el enfoque de validación. Luego, realizamos un método de selección conocido como <em>forward stepwise selection</em>, que elige los predictores que mayor influencia tengan en la predicción, partiendo de un modelo sin <em>features</em> y avanzando uno a uno en variables hasta llegar al modelo con todas las independientes incluidas. Por último, el trabajo realiza la técnica de <em>k-folds-cross validation</em> bajo dos formas: la primera, conocida como <em>Time Series Split Cross-Validation</em> parte del segmento de observaciones más antiguo para entrenar y evaluar un segmento de observaciones contiguas en el tiempo. El proceso se repite acumulando observaciones al grupo de entrenamiento que en el proceso anterior eran parte del grupo de validación. La segunda forma se conoce como <em>Blocked Cross-Validation</em>, la diferencia con la forma anterior radica en que esta no acumula observaciones en entrenamiento, sino que siempre se renuevan los segmentos tanto de <em>train</em> como de validación.</p>
+<p>Por último, el análisis se enfocara en predecir la misma variable <em>target</em> pero en momentos distintos del tiempo. En total, son 7 variables a predecir, que van desde el rezago 1 hasta el rezago 7 de la cotización de ethereum.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Importamos bases</span>
@@ -621,12 +647,6 @@ title="Print to PDF"
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/statsmodels/tsa/tsatools.py:117: FutureWarning: In a future version of pandas all arguments of concat except for the argument &#39;objs&#39; will be keyword-only
-  x = pd.concat(x[::order], 1)
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -644,8 +664,8 @@ title="Print to PDF"
 Dep. Variable:             log_y_lag1   R-squared:                       1.000
 Model:                            OLS   Adj. R-squared:                  1.000
 Method:                 Least Squares   F-statistic:                 1.759e+05
-Date:                Thu, 18 Aug 2022   Prob (F-statistic):               0.00
-Time:                        22:04:56   Log-Likelihood:                 5852.8
+Date:                Sun, 11 Sep 2022   Prob (F-statistic):               0.00
+Time:                        08:38:47   Log-Likelihood:                 5852.8
 No. Observations:                1956   AIC:                        -1.162e+04
 Df Residuals:                    1911   BIC:                        -1.136e+04
 Df Model:                          44                                         
@@ -705,7 +725,7 @@ Skew:                          -0.243   Prob(JB):                         0.00
 Kurtosis:                       8.216   Cond. No.                     1.50e+04
 ==============================================================================
 
-Warnings:
+Notes:
 [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 [2] The condition number is large, 1.5e+04. This might indicate that there are
 strong multicollinearity or other numerical problems.
@@ -720,7 +740,7 @@ strong multicollinearity or other numerical problems.
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
   <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">],</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-  <span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="n">r_squaredAdj</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>  
+  <span class="n">r_squaredAdj</span> <span class="o">=</span> <span class="n">r_squaredAdj</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -815,31 +835,31 @@ El error de predicción en el grupo de entrenamiento es equivalente al 3% del pr
   <span class="n">rmse</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
   <span class="n">mean_target_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
   <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Raíz del error cuadrático medio para log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> en test:&quot;</span><span class="p">)</span>
-  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;El error de predicción es equivalente al </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="o">/</span><span class="n">mean_target_test</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s1">% del promedio de la variable dependiente</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;El error de predicción es equivalente al </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse</span><span class="o">/</span><span class="n">mean_target_test</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% del promedio de la variable dependiente</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Raíz del error cuadrático medio para log_y_lag1 en test:
-El error de predicción es equivalente al 0% del promedio de la variable dependiente
+El error de predicción es equivalente al 0.36% del promedio de la variable dependiente
 
 Raíz del error cuadrático medio para log_y_lag2 en test:
-El error de predicción es equivalente al 1% del promedio de la variable dependiente
+El error de predicción es equivalente al 0.84% del promedio de la variable dependiente
 
 Raíz del error cuadrático medio para log_y_lag3 en test:
-El error de predicción es equivalente al 1% del promedio de la variable dependiente
+El error de predicción es equivalente al 1.2% del promedio de la variable dependiente
 
 Raíz del error cuadrático medio para log_y_lag4 en test:
-El error de predicción es equivalente al 2% del promedio de la variable dependiente
+El error de predicción es equivalente al 1.52% del promedio de la variable dependiente
 
 Raíz del error cuadrático medio para log_y_lag5 en test:
-El error de predicción es equivalente al 2% del promedio de la variable dependiente
+El error de predicción es equivalente al 1.84% del promedio de la variable dependiente
 
 Raíz del error cuadrático medio para log_y_lag6 en test:
-El error de predicción es equivalente al 2% del promedio de la variable dependiente
+El error de predicción es equivalente al 2.08% del promedio de la variable dependiente
 
 Raíz del error cuadrático medio para log_y_lag7 en test:
-El error de predicción es equivalente al 2% del promedio de la variable dependiente
+El error de predicción es equivalente al 2.27% del promedio de la variable dependiente
 </pre></div>
 </div>
 </div>
@@ -864,6 +884,32 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 </div>
 <div class="cell_output docutils container">
 <img alt="../_images/5_prediccion_19_0.png" src="../_images/5_prediccion_19_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## graficamos el predicho versus el observado en cotizaciones</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span> <span class="c1"># set estilo</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span> <span class="c1"># set tamaño de ticks</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">30</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">):</span>
+    <span class="n">pred_exp</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">predictions_test_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;pred_y_lag</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">observ_exp</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="sa">f</span><span class="s1">&#39;log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">])</span>
+    <span class="n">pred_exp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">pred_exp</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">observ_exp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">observ_exp</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pred_exp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#1f78b4&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Predicho&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">observ_exp</span> <span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#e31a1c&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Observado&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;precio observado y predicho&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tiempo&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Serie del precio diario promedio de ethereum log_y_lag</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper left&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5_prediccion_20_0.png" src="../_images/5_prediccion_20_0.png" />
 </div>
 </div>
 <p>Como se puede ver, la dispersión entre el valor real y el estimado aumenta a medida que tratamos de predecir ventanas de tiempo más lejanas al período actual. No obstante, la performance se mantiene alta inclusive a la hora de predecir el valor de ethereum del mismo día de la semana siguiente al actual.</p>
@@ -2016,7 +2062,7 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-33fdf69c-0f59-48d2-ad8f-04df50014564">
+  <div id="df-354ea8af-eab1-49a0-a93f-0272e46411da">
     <div class="colab-df-container">
       <div>
 <style scoped>
@@ -2269,7 +2315,7 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
   </tbody>
 </table>
 </div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-33fdf69c-0f59-48d2-ad8f-04df50014564')"
+      <button class="colab-df-convert" onclick="convertToInteractive('df-354ea8af-eab1-49a0-a93f-0272e46411da')"
               title="Convert this dataframe to an interactive table."
               style="display:none;">
 
@@ -2320,12 +2366,12 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 
       <script>
         const buttonEl =
-          document.querySelector('#df-33fdf69c-0f59-48d2-ad8f-04df50014564 button.colab-df-convert');
+          document.querySelector('#df-354ea8af-eab1-49a0-a93f-0272e46411da button.colab-df-convert');
         buttonEl.style.display =
           google.colab.kernel.accessAllowed ? 'block' : 'none';
 
         async function convertToInteractive(key) {
-          const element = document.querySelector('#df-33fdf69c-0f59-48d2-ad8f-04df50014564');
+          const element = document.querySelector('#df-354ea8af-eab1-49a0-a93f-0272e46411da');
           const dataTable =
             await google.colab.kernel.invokeFunction('convertToInteractive',
                                                      [key], {});
@@ -2361,7 +2407,7 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5_prediccion_24_0.png" src="../_images/5_prediccion_24_0.png" />
+<img alt="../_images/5_prediccion_25_0.png" src="../_images/5_prediccion_25_0.png" />
 </div>
 </div>
 </section>
@@ -2386,41 +2432,25 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x_train</span><span class="o">.</span><span class="n">index</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Index([&#39;2015-08-17&#39;, &#39;2015-08-18&#39;, &#39;2015-08-19&#39;, &#39;2015-08-20&#39;, &#39;2015-08-21&#39;,
-       &#39;2015-08-22&#39;, &#39;2015-08-23&#39;, &#39;2015-08-24&#39;, &#39;2015-08-25&#39;, &#39;2015-08-26&#39;,
-       ...
-       &#39;2020-12-22&#39;, &#39;2020-12-23&#39;, &#39;2020-12-24&#39;, &#39;2020-12-25&#39;, &#39;2020-12-26&#39;,
-       &#39;2020-12-27&#39;, &#39;2020-12-28&#39;, &#39;2020-12-29&#39;, &#39;2020-12-30&#39;, &#39;2020-12-31&#39;],
-      dtype=&#39;object&#39;, name=&#39;Date&#39;, length=1956)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lower</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">upper</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">timelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">date_range</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">timelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">date_range</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
 <span class="n">timelist</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;2015-08-17&#39;,
- &#39;2016-02-29&#39;,
- &#39;2016-09-12&#39;,
- &#39;2017-03-27&#39;,
- &#39;2017-10-10&#39;,
- &#39;2018-04-24&#39;,
- &#39;2018-11-06&#39;,
- &#39;2019-05-22&#39;,
- &#39;2019-12-04&#39;,
- &#39;2020-06-17&#39;,
+ &#39;2016-02-11&#39;,
+ &#39;2016-08-07&#39;,
+ &#39;2017-02-02&#39;,
+ &#39;2017-07-30&#39;,
+ &#39;2018-01-25&#39;,
+ &#39;2018-07-22&#39;,
+ &#39;2019-01-17&#39;,
+ &#39;2019-07-14&#39;,
+ &#39;2020-01-09&#39;,
+ &#39;2020-07-05&#39;,
  &#39;2020-12-31&#39;]
 </pre></div>
 </div>
@@ -2439,8 +2469,8 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
   <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Iteration </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> working on range of date </span><span class="si">{</span><span class="n">first</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">last</span><span class="si">}</span><span class="s1"> (training) to predict range </span><span class="si">{</span><span class="n">first_valid</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">last_valid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
   <span class="n">x_train_cv</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
   <span class="n">x_valid_cv</span> <span class="o">=</span> <span class="n">x_train</span><span class="p">[</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
-  <span class="n">y_train_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
-  <span class="n">y_valid_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">][</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+  <span class="n">y_train_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag1&#39;</span><span class="p">][</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+  <span class="n">y_valid_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag1&#39;</span><span class="p">][</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
   <span class="n">model_cv</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y_train_cv</span><span class="p">,</span> <span class="n">x_train_cv</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
   <span class="c1"># Prueba en observaciones usadas para ajustar</span>
   <span class="n">predictions_train_cv</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_train_cv</span><span class="p">)</span>
@@ -2461,32 +2491,35 @@ El error de predicción es equivalente al 2% del promedio de la variable dependi
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration 1 working on range of date 2015-08-17 to 2016-02-29 (training) to predict range 2016-03-01 to 2016-09-12
-  El error de predicción representa el 16.27% de la media en entrenamiento y el 5.35% en validación
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration 1 working on range of date 2015-08-17 to 2016-02-11 (training) to predict range 2016-02-12 to 2016-08-07
+  El error de predicción representa el 8.05% de la media en entrenamiento y el 2.49% en validación
 
-Iteration 2 working on range of date 2015-08-17 to 2016-09-12 (training) to predict range 2016-09-13 to 2017-03-27
-  El error de predicción representa el 8.15% de la media en entrenamiento y el 5.18% en validación
+Iteration 2 working on range of date 2015-08-17 to 2016-08-07 (training) to predict range 2016-08-08 to 2017-02-02
+  El error de predicción representa el 3.76% de la media en entrenamiento y el 2.72% en validación
 
-Iteration 3 working on range of date 2015-08-17 to 2017-03-27 (training) to predict range 2017-03-28 to 2017-10-10
-  El error de predicción representa el 6.85% de la media en entrenamiento y el 3.26% en validación
+Iteration 3 working on range of date 2015-08-17 to 2017-02-02 (training) to predict range 2017-02-03 to 2017-07-30
+  El error de predicción representa el 3.31% de la media en entrenamiento y el 2.27% en validación
 
-Iteration 4 working on range of date 2015-08-17 to 2017-10-10 (training) to predict range 2017-10-11 to 2018-04-24
-  El error de predicción representa el 5.2% de la media en entrenamiento y el 2.23% en validación
+Iteration 4 working on range of date 2015-08-17 to 2017-07-30 (training) to predict range 2017-07-31 to 2018-01-25
+  El error de predicción representa el 2.93% de la media en entrenamiento y el 1.28% en validación
 
-Iteration 5 working on range of date 2015-08-17 to 2018-04-24 (training) to predict range 2018-04-25 to 2018-11-06
-  El error de predicción representa el 4.12% de la media en entrenamiento y el 1.92% en validación
+Iteration 5 working on range of date 2015-08-17 to 2018-01-25 (training) to predict range 2018-01-26 to 2018-07-22
+  El error de predicción representa el 2.3% de la media en entrenamiento y el 0.99% en validación
 
-Iteration 6 working on range of date 2015-08-17 to 2018-11-06 (training) to predict range 2018-11-07 to 2019-05-22
-  El error de predicción representa el 3.59% de la media en entrenamiento y el 2.6% en validación
+Iteration 6 working on range of date 2015-08-17 to 2018-07-22 (training) to predict range 2018-07-23 to 2019-01-17
+  El error de predicción representa el 1.93% de la media en entrenamiento y el 1.18% en validación
 
-Iteration 7 working on range of date 2015-08-17 to 2019-05-22 (training) to predict range 2019-05-23 to 2019-12-04
-  El error de predicción representa el 3.42% de la media en entrenamiento y el 1.95% en validación
+Iteration 7 working on range of date 2015-08-17 to 2019-01-17 (training) to predict range 2019-01-18 to 2019-07-14
+  El error de predicción representa el 1.79% de la media en entrenamiento y el 0.9% en validación
 
-Iteration 8 working on range of date 2015-08-17 to 2019-12-04 (training) to predict range 2019-12-05 to 2020-06-17
-  El error de predicción representa el 3.2% de la media en entrenamiento y el 2.87% en validación
+Iteration 8 working on range of date 2015-08-17 to 2019-07-14 (training) to predict range 2019-07-15 to 2020-01-09
+  El error de predicción representa el 1.66% de la media en entrenamiento y el 0.83% en validación
 
-Iteration 9 working on range of date 2015-08-17 to 2020-06-17 (training) to predict range 2020-06-18 to 2020-12-31
-  El error de predicción representa el 3.16% de la media en entrenamiento y el 1.85% en validación
+Iteration 9 working on range of date 2015-08-17 to 2020-01-09 (training) to predict range 2020-01-10 to 2020-07-05
+  El error de predicción representa el 1.56% de la media en entrenamiento y el 1.11% en validación
+
+Iteration 10 working on range of date 2015-08-17 to 2020-07-05 (training) to predict range 2020-07-06 to 2020-12-31
+  El error de predicción representa el 1.51% de la media en entrenamiento y el 0.99% en validación
 </pre></div>
 </div>
 </div>
@@ -2499,15 +2532,16 @@ Iteration 9 working on range of date 2015-08-17 to 2020-06-17 (training) to pred
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[5.348293300025361,
- 5.178798186233119,
- 3.2553243936745835,
- 2.227741385567562,
- 1.921154279024017,
- 2.604855683827148,
- 1.9527665258923081,
- 2.8716572526397135,
- 1.8477717427437357]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2.4941522266641267,
+ 2.7249460977753173,
+ 2.269967558511233,
+ 1.2766187626074974,
+ 0.9926973246945384,
+ 1.176709950144632,
+ 0.904918740526607,
+ 0.8317127192911236,
+ 1.112305455898825,
+ 0.9857715928647285]
 </pre></div>
 </div>
 </div>
@@ -2526,7 +2560,7 @@ Iteration 9 working on range of date 2015-08-17 to 2020-06-17 (training) to pred
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>En promedio, la predicción arroja un error del 5.99% de la media en entrenamiento y el 3.02% en validación
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>En promedio, la predicción arroja un error del 2.88% de la media en entrenamiento y el 1.48% en validación
 </pre></div>
 </div>
 </div>
@@ -2620,155 +2654,688 @@ Iteration 8 working on range of date 2019-12-04 to 2020-06-17 (training) to pred
 </div>
 </section>
 </section>
-<section id="random-forest">
-<h3><span class="section-number">4.1.1.6. </span>Random Forest<a class="headerlink" href="#random-forest" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="extreme-gradient-boosting-xgboost">
+<h2><span class="section-number">4.1.2. </span>Extreme Gradient Boosting (XGBoost)<a class="headerlink" href="#extreme-gradient-boosting-xgboost" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Library</span>
-<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
-<span class="c1"># modelo con 1000 decision trees</span>
-<span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="c1"># entrenamos el modelo</span>
-<span class="n">rf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">[</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">])</span>
-<span class="c1"># Evaluamos el modelo ajustado en test</span>
-<span class="n">predictions</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
-<span class="c1">## computamos la raíz del error cuadrático promedio sobre la media del target como métrica</span>
-<span class="c1"># error cuadrático medio</span>
-<span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">[</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> 
-                           <span class="n">predictions</span><span class="p">)</span>
-<span class="c1"># aplicamos raíz                            </span>
-<span class="n">rmse</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
-<span class="c1"># promedio de la dependiente</span>
-<span class="n">mean_target_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="p">[</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-<span class="c1"># computamos finalmente la métrica</span>
-<span class="n">rmse_mean_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">rmse</span><span class="o">/</span><span class="n">mean_target_test</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span> 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;En promedio, la predicción en random forest con mil modelos arroja un error del </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse_mean_y</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s1">% en test&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cargamos la clase style para poner colores a los prints</span>
+<span class="k">class</span> <span class="nc">style</span><span class="p">():</span>
+    <span class="n">black</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[30m&#39;</span>
+    <span class="n">red</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[31m&#39;</span>
+    <span class="n">green</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1;32m&#39;</span> <span class="c1"># bold</span>
+    <span class="n">underline</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span>
+    <span class="n">mark</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\33</span><span class="s1">[44m&#39;</span>
+    <span class="n">endc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>La técnica de <em>Boosting</em> es una de las ideas de aprendizaje más eficaces de los últimos 20 años, cuya motivación ha sido la búsqueda de un procedimiento que combine <em>outputs</em> de muchos clasificadores “débiles” para producir un potente estimador agregado. Dentro de este enfoque predictivo, Extreme Gradient Boosting (XGBoost) es reconocido como un algoritmo de amplio uso por su capacidad predictiva excepcional. La idea principal de este algoritmo es que el mismo construye <em>D</em> árboles de clasificación (CART) uno por uno, tal que el modelo subsecuente es entrenado utilizando el residual del árbol previo (<em>decision tree ensembles</em>). Esto es, el nuevo árbol corrige los errores hechos por el árbol previamente entrenado y predice nuevamente el <em>outcome</em>.
+Así, en XGBoost cada modelo ensamblado utiliza la suma de las <em>D</em> funciones para predecir el output.</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{Y}_i=\sum_{d=1}^{D}f_{d}(X_i),f_{d}\in F, i=1,...,N 
+\]</div>
+<p>Donde <span class="math notranslate nohighlight">\(F\)</span> es el conjunto de todos los modelos CART posibles, y cada <span class="math notranslate nohighlight">\(f_{d}\)</span> representa una estructura de árbol independiente que es denotada como <span class="math notranslate nohighlight">\(q\)</span>. Esto es, <span class="math notranslate nohighlight">\(q\)</span> representa el conjunto de reglas de un modelo que clasifica cada individuo <span class="math notranslate nohighlight">\(i\)</span> en un nodo final. La fase de entrenamiento implica clasificar <span class="math notranslate nohighlight">\(N\)</span> observaciones tal que, dado las variables <span class="math notranslate nohighlight">\(X\)</span>, cada nodo final tenga un <em>score</em> que corresponda a la proporción de casos que son clasificados dentro de la ocurrencia del evento para esa combinación específica de <span class="math notranslate nohighlight">\(X_i\)</span>. Se denota al <em>score</em> como <span class="math notranslate nohighlight">\(w_{q(X)}\)</span>.</p>
+<p>Luego, <span class="math notranslate nohighlight">\(q\)</span> puede escribirse como una función <span class="math notranslate nohighlight">\(q:\mathbb{R}^{P}\longrightarrow T\)</span>, donde <span class="math notranslate nohighlight">\(T\)</span> es el número total de nodos finales de un árbol y <span class="math notranslate nohighlight">\(j\)</span> denota un nodo final individual, <span class="math notranslate nohighlight">\(j=1,...,T\)</span>. Para calcular la predicción final para cada individuo, el <em>score</em> de los nodos finales se suman mediante la Ecuación anterior, donde <span class="math notranslate nohighlight">\(F=\lbrace f(x)=w_{q(X)}\rbrace\)</span> con <span class="math notranslate nohighlight">\(q:\mathbb{R}^{P}\longrightarrow T\)</span> y <span class="math notranslate nohighlight">\(w \in \mathbb{R}^T\)</span>.</p>
+<p>En general los métodos de <em>boosting</em> ajustan cada árbol a través de versiones re-ponderadas. La ponderación es un mecanismo que penaliza las predicciones incorrectas de los modelos anteriores, con el objetivo de mejorar la predicción. Así, la estructura de ponderadores son generalmente valores óptimos, que son ajustados una vez que la función de pérdida es minimizada. Por lo que los nuevos modelos incorporan la nueva estructura de ponderación en cada iteración, y predice un nuevo <em>outcome</em>.</p>
+<p>La función a ser optimizada está dada por
+$<span class="math notranslate nohighlight">\(
+\mathcal{L}=\sum_{i=1}^{N} l(y_i,\hat{y}_i)+\sum_{d=1}^{D}\Omega(f_d)
+\)</span>$</p>
+<p>donde <span class="math notranslate nohighlight">\(l\)</span> es una función de pérdida convexa diferenciable que mide la diferencia entre la predicción <span class="math notranslate nohighlight">\(\hat{y}_i\)</span> y la dependiente <span class="math notranslate nohighlight">\(y_i\)</span>. Mientras que el segundo término es el componente que penaliza la complejidad de las funciones creadas por XGBoost. Intuitivamente, la función objetivo regularizada tenderá a seleccionar aquel modelo que provea funciones predictivas y simples.</p>
+<p>Finalmente, además de la penalización de complejidad, en <em>Extreme Gradient Boosting</em> existen una amplia variedad de otros hiperparámetros que se deben elegir previo a la ejecución del algoritmo. A continuación se listan los más comunes a establecer:</p>
+<ul class="simple">
+<li><p><strong>nrounds</strong>: número de árboles. Rango <span class="math notranslate nohighlight">\([0,\infty)\)</span>.</p></li>
+<li><p><strong>max_depth</strong>: profundidad máxima de los árboles. Rango <span class="math notranslate nohighlight">\([0,\infty]\)</span>.</p></li>
+<li><p><strong>eta</strong>: proporción a la que el árbol aprende. Rango <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+<li><p><strong>gamma</strong>: mínima reducción del error para generar un corte. Rango <span class="math notranslate nohighlight">\([0,\infty]\)</span>.</p></li>
+<li><p><strong>colsample_bytree</strong>: variables a muestrear y considerar en cada árbol. Rango <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+<li><p><strong>min_child_weight</strong>: mínima cantidad de observaciones en los nodos finales para considerar un corte. Rango <span class="math notranslate nohighlight">\([0,\infty]\)</span>.</p></li>
+<li><p><strong>subsample</strong>: muestreo de observaciones a considerar en cada árbol. Rango <span class="math notranslate nohighlight">\([0,1]\)</span>.</p></li>
+</ul>
+<p>Para realizar la estimación en XGBoost realizamos los siguientes pasos. En primer lugar, volvemos a cargar las bases que necesitamos para realizar el ejercicio de predicción; luego creamos una función <em>custom</em> para aplicar el método de <em>random search</em> con un enfoque de validación ya utilizado denomicado <em>Time Series Split 10-Cross-Validation</em>. El mejor modelo de dicha estimación es evaluado en el grupo <em>test</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Importamos bases</span>
+<span class="c1"># train</span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1JgC5z_ed0YfAjuiYxl9SqqPvgxX3-cZs/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+
+<span class="c1"># test</span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1GqALyVt4jKpkUoR2IbQJBvek4Y5rkEg-/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="c1"># target en train </span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1qWQobNkMKTZah0hKhMWiiI1rDy89NaN6/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">y_train</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="c1"># target en test</span>
+<span class="n">aux</span> <span class="o">=</span> <span class="s1">&#39;https://drive.google.com/file/d/1PhiVLaNQ3k7-XifEepwD4LoymDAmixix/view?usp=sharing&#39;</span>
+<span class="n">link</span> <span class="o">=</span><span class="s1">&#39;https://drive.google.com/uc?id=&#39;</span> <span class="o">+</span> <span class="n">aux</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="random-search-en-series-de-tiempo">
+<h3><span class="section-number">4.1.2.1. </span>Random search en series de tiempo<a class="headerlink" href="#random-search-en-series-de-tiempo" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#### XGBOOST time series function</span>
+<span class="k">def</span> <span class="nf">xgb_ts</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">n_estimator</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span>
+            <span class="n">max_depth_input</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span>
+            <span class="n">learning_rate_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+            <span class="n">subsample_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">colsample_bytree_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> 
+            <span class="n">colsample_bylevel_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">folds</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+            <span class="n">n_grid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="c1">###### función para separar los grupos según intervalos de tiempo</span>
+    <span class="k">def</span> <span class="nf">date_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">intv</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">end</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span>  <span class="o">-</span> <span class="n">start</span> <span class="p">)</span> <span class="o">/</span> <span class="n">intv</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">intv</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1">#### 1. generación de hiperparámetros</span>
+    <span class="c1"># dict</span>
+    <span class="n">n_grid</span> <span class="o">=</span> <span class="n">n_grid</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">random_search_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="n">choices</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">max_depth_input</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">n_grid</span><span class="p">),</span> <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">choices</span><span class="p">(</span><span class="n">learning_rate_input</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_grid</span><span class="p">),</span> 
+                                       <span class="s1">&#39;subsample&#39;</span><span class="p">:</span><span class="n">choices</span><span class="p">(</span><span class="n">subsample_input</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_grid</span><span class="p">),</span> <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">:</span><span class="n">choices</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">colsample_bytree_input</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">n_grid</span><span class="p">),</span>
+                                       <span class="s1">&#39;colsample_bylevel&#39;</span><span class="p">:</span><span class="n">choices</span><span class="p">(</span><span class="n">colsample_bylevel_input</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_grid</span><span class="p">),</span> <span class="s1">&#39;n_estimator&#39;</span><span class="p">:</span><span class="n">choices</span><span class="p">(</span><span class="n">n_estimator</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">n_grid</span><span class="p">)})</span>
+
+    <span class="c1">#### 2. Iteración sobre la lista de hiperparámetros</span>
+    <span class="n">result_table_splitCV</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span> <span class="c1"># input donde ponemos los resultados generales</span>
+    <span class="c1"># print cross-validation approach in time series </span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">underline</span><span class="si">}</span><span class="s1"> Time Series Split </span><span class="si">{</span><span class="n">folds</span><span class="si">}</span><span class="s1">-Cross-Validation </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">index</span><span class="p">)):</span>
+        <span class="c1">##### 2.1 seteo regresión xgboost </span>
+        <span class="c1">## Ajustamos un modelo xgboost con una combinación de hiperparámetros</span>
+        <span class="n">xgbr</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">XGBRegressor</span><span class="p">(</span><span class="n">objective</span> <span class="o">=</span><span class="s1">&#39;reg:squarederror&#39;</span><span class="p">,</span> 
+                                <span class="n">max_depth</span> <span class="o">=</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">max_depth</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                <span class="n">subsample</span> <span class="o">=</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">subsample</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                <span class="n">colsample_bytree</span> <span class="o">=</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">colsample_bytree</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                <span class="n">colsample_bylevel</span> <span class="o">=</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">colsample_bylevel</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                <span class="n">n_estimators</span> <span class="o">=</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">n_estimator</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+        <span class="c1">##### 2.2 Time Series Split Cross-Validation</span>
+        <span class="c1"># armamos los grupos</span>
+        <span class="n">lower</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">upper</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">timelist</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">date_range</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">folds</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># iteración sobre los grupos armados</span>
+        <span class="n">rmse_mean_table</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># input para poner resultados de performance en cada fold</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">timelist</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># intervalo de tiempo para las iteraciones</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># fecha inicial train</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="c1"># fecha final train</span>
+            <span class="n">aux</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">last</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">first_valid</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1"># fecha inicial valid</span>
+            <span class="n">last_valid</span> <span class="o">=</span> <span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># fecha inicial valid</span>
+            <span class="c1"># formamos las bases train y validación</span>
+            <span class="n">x_train_cv</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+            <span class="n">x_valid_cv</span> <span class="o">=</span> <span class="n">train</span><span class="p">[</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+            <span class="n">y_train_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">first</span><span class="p">:</span><span class="n">last</span><span class="p">]</span>
+            <span class="n">y_valid_cv</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">first_valid</span><span class="p">:</span><span class="n">last_valid</span><span class="p">]</span>
+            <span class="n">xgbr</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train_cv</span><span class="p">,</span> <span class="n">y_train_cv</span><span class="p">)</span>
+            <span class="c1">## predecimos en validación </span>
+            <span class="n">ypred</span> <span class="o">=</span> <span class="n">xgbr</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_valid_cv</span><span class="p">)</span>
+            <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_valid_cv</span><span class="p">,</span> <span class="n">ypred</span><span class="p">)</span>
+            <span class="n">rmse_mean</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">mse</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span><span class="o">/</span><span class="n">y_valid_cv</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span> 
+            <span class="n">rmse_mean_table</span> <span class="o">=</span> <span class="n">rmse_mean_table</span> <span class="o">+</span> <span class="p">[</span><span class="n">rmse_mean</span><span class="p">]</span> 
+        <span class="c1"># Generamos dataframe de hiperparámetros utilizados + resultados de performance</span>
+        <span class="n">hyperpar_input</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;max_depth&#39;</span><span class="p">:</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">max_depth</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                        <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="n">random_search_list</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                        <span class="s1">&#39;subsample&#39;</span><span class="p">:</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">subsample</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                        <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">:</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">colsample_bytree</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                        <span class="s1">&#39;colsample_bylevel&#39;</span><span class="p">:</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">colsample_bylevel</span><span class="p">[</span><span class="n">c</span><span class="p">],</span>
+                                        <span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">n_estimator</span><span class="p">[</span><span class="n">c</span><span class="p">]},</span> <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="p">])</span> <span class="c1"># 0 representa la fila de hiperparámetros a utilizar en la iteración</span>
+        <span class="n">hyperpar_input</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">mean_folds</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rmse_mean_table</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">rmse_mean_table</span><span class="p">)</span>
+        <span class="n">rmse_mean_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rmse_mean_table</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">rmse_mean_table</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">result_table_splitCV</span> <span class="o">=</span> <span class="n">result_table_splitCV</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">hyperpar_input</span><span class="p">,</span> <span class="n">rmse_mean_table</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">mean_folds</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>   
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Model </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s1"> - max_depth: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">max_depth</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">, &#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;learning_rate: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">,&#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;subsample: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">subsample</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">, &#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;colsample_bytree: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">colsample_bytree</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;colsample_bylevel: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">colsample_bylevel</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">, &#39;</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;n_estimators: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="n">random_search_list</span><span class="o">.</span><span class="n">n_estimator</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">, mean_folds_error: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">mean_folds</span><span class="p">)</span><span class="si">}</span><span class="s1">%</span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1"> of the target mean in validation set&#39;</span><span class="p">)</span>
+    <span class="c1"># output</span>
+    <span class="n">fold</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;fold_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">folds</span><span class="p">)]</span>
+    <span class="n">colnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span> <span class="s1">&#39;subsample&#39;</span><span class="p">,</span> <span class="s1">&#39;colsample_bytree&#39;</span><span class="p">,</span> <span class="s1">&#39;colsample_bylevel&#39;</span><span class="p">,</span> <span class="s1">&#39;n_estimators&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">fold</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;mean_folds_error&#39;</span><span class="p">]</span>  
+    <span class="n">result_table_splitCV</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">colnames</span>
+    <span class="n">result_table_splitCV</span> <span class="o">=</span> <span class="n">result_table_splitCV</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mean_folds_error&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result_table_splitCV</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xgb_ts</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> <span class="n">n_grid</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">folds</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>  <span class="n">n_estimator</span> <span class="o">=</span> <span class="p">[</span><span class="mi">900</span><span class="p">,</span> <span class="mi">700</span><span class="p">],</span> <span class="n">max_depth_input</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>En promedio, la predicción en random forest con mil modelos arroja un error del 14.48% en test
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> Time Series Split 10-Cross-Validation 
+Model 0 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">20</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.08</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.28</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.98</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.54</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">14%</span> of the target mean in validation set
+Model 1 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">26</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.05</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.39</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.89</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.21</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 2 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">18</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.01</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.19</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.87</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.61</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 3 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">19</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.08</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.93</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.74</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.8</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">14%</span> of the target mean in validation set
+Model 4 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">21</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.09</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.38</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.34</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.45</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 5 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">26</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.09</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.41</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.19</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.23</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">20%</span> of the target mean in validation set
+Model 6 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">18</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.04</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.52</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.17</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.54</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">18%</span> of the target mean in validation set
+Model 7 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">24</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.03</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.32</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.56</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.63</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">15%</span> of the target mean in validation set
+Model 8 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">24</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.0</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.38</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.49</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.74</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">36%</span> of the target mean in validation set
+Model 9 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">17</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.08</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.65</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.58</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.39</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 10 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">24</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.1</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.78</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.25</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.8</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 11 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">15</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.08</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">1.0</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.74</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.83</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">14%</span> of the target mean in validation set
+Model 12 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">18</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.03</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.74</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.71</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.61</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">15%</span> of the target mean in validation set
+Model 13 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">21</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.0</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.63</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.23</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.28</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">38%</span> of the target mean in validation set
+Model 14 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">22</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.02</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.36</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.54</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.38</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 15 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">21</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.08</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.93</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.85</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.56</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">14%</span> of the target mean in validation set
+Model 16 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">25</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.07</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.34</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">1.0</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.23</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">16%</span> of the target mean in validation set
+Model 17 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">15</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.09</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.16</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.5</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.65</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">15%</span> of the target mean in validation set
+Model 18 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">16</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.03</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">1.0</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.67</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.3</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">17%</span> of the target mean in validation set
+Model 19 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">24</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.04</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.43</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.83</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.49</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">900</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">15%</span> of the target mean in validation set
+Model 20 - max_depth: <span class=" -Color -Color-Bold -Color-Bold-Green">18</span>,  learning_rate: <span class=" -Color -Color-Bold -Color-Bold-Green">0.03</span>, subsample: <span class=" -Color -Color-Bold -Color-Bold-Green">0.76</span>,  colsample_bytree: <span class=" -Color -Color-Bold -Color-Bold-Green">0.5</span> colsample_bylevel: <span class=" -Color -Color-Bold -Color-Bold-Green">0.93</span>,  n_estimators: <span class=" -Color -Color-Bold -Color-Bold-Green">700</span>, mean_folds_error: <span class=" -Color -Color-Bold -Color-Bold-Green">15%</span> of the target mean in validation set
 </pre></div>
 </div>
-</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>max_depth</th>
+      <th>learning_rate</th>
+      <th>subsample</th>
+      <th>colsample_bytree</th>
+      <th>colsample_bylevel</th>
+      <th>n_estimators</th>
+      <th>fold_0</th>
+      <th>fold_1</th>
+      <th>fold_2</th>
+      <th>fold_3</th>
+      <th>fold_4</th>
+      <th>fold_5</th>
+      <th>fold_6</th>
+      <th>fold_7</th>
+      <th>fold_8</th>
+      <th>fold_9</th>
+      <th>mean_folds_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>19</td>
+      <td>0.075755</td>
+      <td>0.926531</td>
+      <td>0.742857</td>
+      <td>0.797959</td>
+      <td>900</td>
+      <td>40</td>
+      <td>7</td>
+      <td>50</td>
+      <td>12</td>
+      <td>7</td>
+      <td>10</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>14.0</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>15</td>
+      <td>0.083837</td>
+      <td>1.000000</td>
+      <td>0.742857</td>
+      <td>0.834694</td>
+      <td>900</td>
+      <td>40</td>
+      <td>7</td>
+      <td>49</td>
+      <td>12</td>
+      <td>7</td>
+      <td>10</td>
+      <td>4</td>
+      <td>5</td>
+      <td>3</td>
+      <td>6</td>
+      <td>14.3</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>20</td>
+      <td>0.075755</td>
+      <td>0.283673</td>
+      <td>0.981633</td>
+      <td>0.540816</td>
+      <td>900</td>
+      <td>44</td>
+      <td>6</td>
+      <td>50</td>
+      <td>12</td>
+      <td>6</td>
+      <td>10</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>5</td>
+      <td>14.4</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>21</td>
+      <td>0.075755</td>
+      <td>0.926531</td>
+      <td>0.853061</td>
+      <td>0.559184</td>
+      <td>700</td>
+      <td>38</td>
+      <td>7</td>
+      <td>51</td>
+      <td>12</td>
+      <td>7</td>
+      <td>11</td>
+      <td>4</td>
+      <td>5</td>
+      <td>3</td>
+      <td>6</td>
+      <td>14.4</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>18</td>
+      <td>0.029286</td>
+      <td>0.742857</td>
+      <td>0.706122</td>
+      <td>0.614286</td>
+      <td>700</td>
+      <td>43</td>
+      <td>6</td>
+      <td>50</td>
+      <td>12</td>
+      <td>6</td>
+      <td>12</td>
+      <td>4</td>
+      <td>5</td>
+      <td>3</td>
+      <td>5</td>
+      <td>14.6</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>24</td>
+      <td>0.037367</td>
+      <td>0.430612</td>
+      <td>0.834694</td>
+      <td>0.485714</td>
+      <td>900</td>
+      <td>44</td>
+      <td>7</td>
+      <td>50</td>
+      <td>12</td>
+      <td>6</td>
+      <td>10</td>
+      <td>4</td>
+      <td>4</td>
+      <td>4</td>
+      <td>6</td>
+      <td>14.7</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>18</td>
+      <td>0.029286</td>
+      <td>0.761224</td>
+      <td>0.504082</td>
+      <td>0.926531</td>
+      <td>700</td>
+      <td>43</td>
+      <td>7</td>
+      <td>50</td>
+      <td>12</td>
+      <td>6</td>
+      <td>12</td>
+      <td>4</td>
+      <td>5</td>
+      <td>3</td>
+      <td>7</td>
+      <td>14.9</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>24</td>
+      <td>0.025245</td>
+      <td>0.320408</td>
+      <td>0.559184</td>
+      <td>0.632653</td>
+      <td>900</td>
+      <td>45</td>
+      <td>7</td>
+      <td>50</td>
+      <td>12</td>
+      <td>7</td>
+      <td>11</td>
+      <td>4</td>
+      <td>4</td>
+      <td>4</td>
+      <td>7</td>
+      <td>15.1</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>15</td>
+      <td>0.091918</td>
+      <td>0.155102</td>
+      <td>0.504082</td>
+      <td>0.651020</td>
+      <td>900</td>
+      <td>44</td>
+      <td>7</td>
+      <td>51</td>
+      <td>13</td>
+      <td>9</td>
+      <td>11</td>
+      <td>5</td>
+      <td>3</td>
+      <td>4</td>
+      <td>7</td>
+      <td>15.4</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>25</td>
+      <td>0.065653</td>
+      <td>0.338776</td>
+      <td>1.000000</td>
+      <td>0.228571</td>
+      <td>900</td>
+      <td>45</td>
+      <td>7</td>
+      <td>50</td>
+      <td>12</td>
+      <td>7</td>
+      <td>13</td>
+      <td>5</td>
+      <td>5</td>
+      <td>4</td>
+      <td>7</td>
+      <td>15.5</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>18</td>
+      <td>0.005041</td>
+      <td>0.191837</td>
+      <td>0.871429</td>
+      <td>0.614286</td>
+      <td>700</td>
+      <td>47</td>
+      <td>6</td>
+      <td>52</td>
+      <td>16</td>
+      <td>8</td>
+      <td>8</td>
+      <td>5</td>
+      <td>2</td>
+      <td>5</td>
+      <td>7</td>
+      <td>15.6</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>22</td>
+      <td>0.015143</td>
+      <td>0.357143</td>
+      <td>0.540816</td>
+      <td>0.375510</td>
+      <td>900</td>
+      <td>47</td>
+      <td>7</td>
+      <td>51</td>
+      <td>13</td>
+      <td>7</td>
+      <td>12</td>
+      <td>5</td>
+      <td>6</td>
+      <td>3</td>
+      <td>7</td>
+      <td>15.8</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>21</td>
+      <td>0.087878</td>
+      <td>0.375510</td>
+      <td>0.338776</td>
+      <td>0.448980</td>
+      <td>700</td>
+      <td>47</td>
+      <td>8</td>
+      <td>50</td>
+      <td>14</td>
+      <td>6</td>
+      <td>14</td>
+      <td>5</td>
+      <td>6</td>
+      <td>5</td>
+      <td>7</td>
+      <td>16.2</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>26</td>
+      <td>0.051510</td>
+      <td>0.393878</td>
+      <td>0.889796</td>
+      <td>0.210204</td>
+      <td>700</td>
+      <td>47</td>
+      <td>6</td>
+      <td>51</td>
+      <td>13</td>
+      <td>7</td>
+      <td>13</td>
+      <td>5</td>
+      <td>8</td>
+      <td>4</td>
+      <td>8</td>
+      <td>16.2</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>17</td>
+      <td>0.075755</td>
+      <td>0.651020</td>
+      <td>0.577551</td>
+      <td>0.393878</td>
+      <td>700</td>
+      <td>49</td>
+      <td>9</td>
+      <td>50</td>
+      <td>13</td>
+      <td>8</td>
+      <td>12</td>
+      <td>5</td>
+      <td>6</td>
+      <td>4</td>
+      <td>7</td>
+      <td>16.3</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>24</td>
+      <td>0.100000</td>
+      <td>0.779592</td>
+      <td>0.246939</td>
+      <td>0.797959</td>
+      <td>900</td>
+      <td>48</td>
+      <td>8</td>
+      <td>50</td>
+      <td>12</td>
+      <td>7</td>
+      <td>13</td>
+      <td>6</td>
+      <td>8</td>
+      <td>5</td>
+      <td>8</td>
+      <td>16.5</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>16</td>
+      <td>0.033327</td>
+      <td>1.000000</td>
+      <td>0.669388</td>
+      <td>0.302041</td>
+      <td>900</td>
+      <td>46</td>
+      <td>8</td>
+      <td>51</td>
+      <td>13</td>
+      <td>7</td>
+      <td>13</td>
+      <td>6</td>
+      <td>10</td>
+      <td>4</td>
+      <td>8</td>
+      <td>16.6</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>18</td>
+      <td>0.041408</td>
+      <td>0.522449</td>
+      <td>0.173469</td>
+      <td>0.540816</td>
+      <td>700</td>
+      <td>52</td>
+      <td>10</td>
+      <td>51</td>
+      <td>18</td>
+      <td>9</td>
+      <td>12</td>
+      <td>7</td>
+      <td>8</td>
+      <td>5</td>
+      <td>9</td>
+      <td>18.1</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>26</td>
+      <td>0.093939</td>
+      <td>0.412245</td>
+      <td>0.191837</td>
+      <td>0.228571</td>
+      <td>900</td>
+      <td>54</td>
+      <td>11</td>
+      <td>53</td>
+      <td>21</td>
+      <td>16</td>
+      <td>14</td>
+      <td>8</td>
+      <td>7</td>
+      <td>6</td>
+      <td>10</td>
+      <td>20.0</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>24</td>
+      <td>0.001000</td>
+      <td>0.375510</td>
+      <td>0.485714</td>
+      <td>0.742857</td>
+      <td>900</td>
+      <td>52</td>
+      <td>23</td>
+      <td>61</td>
+      <td>41</td>
+      <td>38</td>
+      <td>25</td>
+      <td>29</td>
+      <td>27</td>
+      <td>31</td>
+      <td>36</td>
+      <td>36.3</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>21</td>
+      <td>0.001000</td>
+      <td>0.632653</td>
+      <td>0.228571</td>
+      <td>0.283673</td>
+      <td>900</td>
+      <td>54</td>
+      <td>27</td>
+      <td>62</td>
+      <td>45</td>
+      <td>41</td>
+      <td>27</td>
+      <td>32</td>
+      <td>27</td>
+      <td>30</td>
+      <td>38</td>
+      <td>38.3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## importancia de atributos</span>
-<span class="c1"># nombre de las variables predictoras</span>
-<span class="n">feature_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
-<span class="c1"># Get numerical feature importances</span>
-<span class="n">importances</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rf</span><span class="o">.</span><span class="n">feature_importances_</span><span class="p">)</span>
-<span class="c1"># List of tuples with variable and importance</span>
-<span class="n">feature_importances</span> <span class="o">=</span> <span class="p">[(</span><span class="n">feature</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">importance</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="k">for</span> <span class="n">feature</span><span class="p">,</span> <span class="n">importance</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">feature_list</span><span class="p">,</span> <span class="n">importances</span><span class="p">)]</span>
-<span class="c1"># Sort the feature importances by most important first</span>
-<span class="n">feature_importances</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">feature_importances</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="c1"># Print out the feature and importances </span>
-<span class="p">[</span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Variable: </span><span class="si">{:20}</span><span class="s1"> Importance: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">pair</span><span class="p">))</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">feature_importances</span><span class="p">];</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## evaluamos en test ajustando el mejor modelo en todo el subconjunto de train</span>
+<span class="n">xgbr_best</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">XGBRegressor</span><span class="p">(</span><span class="n">objective</span> <span class="o">=</span><span class="s1">&#39;reg:squarederror&#39;</span><span class="p">,</span> 
+                        <span class="n">max_depth</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+                        <span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.075755</span><span class="p">,</span>
+                        <span class="n">subsample</span> <span class="o">=</span> <span class="mf">0.926531</span><span class="p">,</span>
+                        <span class="n">colsample_bytree</span> <span class="o">=</span> <span class="mf">0.742857</span><span class="p">,</span>
+                        <span class="n">colsample_bylevel</span> <span class="o">=</span> <span class="mf">0.797959</span><span class="p">,</span>
+                        <span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">900</span><span class="p">)</span>
+<span class="n">xgbr_best</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">])</span>
+<span class="c1">## predecimos en test</span>
+<span class="n">ypred_best</span> <span class="o">=</span> <span class="n">xgbr_best</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+<span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">],</span> <span class="n">ypred_best</span><span class="p">)</span>
+<span class="n">rmse_mean_best</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">mse</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span><span class="o">/</span><span class="n">y_test</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;log_y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;La predicción del mejor modelo validado de XGBoost arroja un error de predicción del </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">rmse_mean_best</span><span class="p">)</span><span class="si">}</span><span class="s1">%</span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1"> de la media del target en el subconjunto de test&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Variable: log_price_eth        Importance: 0.95
-Variable: ethereum_adjusted_log Importance: 0.03
-Variable: log_price_btc        Importance: 0.0
-Variable: log_price_btc_lag1   Importance: 0.0
-Variable: log_price_btc_lag2   Importance: 0.0
-Variable: log_price_btc_lag3   Importance: 0.0
-Variable: log_price_btc_lag4   Importance: 0.0
-Variable: log_price_btc_lag5   Importance: 0.0
-Variable: log_price_btc_lag6   Importance: 0.0
-Variable: log_volume_btc-usd   Importance: 0.0
-Variable: log_volume_eth-usd   Importance: 0.0
-Variable: var_price_eth        Importance: 0.0
-Variable: var_price_btc        Importance: 0.0
-Variable: cryptocurrency_adjusted_log Importance: 0.0
-Variable: crypto_adjusted_log  Importance: 0.0
-Variable: bitcoin_adjusted_log Importance: 0.0
-Variable: bitcoin price_adjusted_log Importance: 0.0
-Variable: ethereum price_adjusted_log Importance: 0.0
-Variable: stock market_adjusted_log Importance: 0.0
-Variable: wall street_adjusted_log Importance: 0.0
-Variable: interest rate_adjusted_log Importance: 0.0
-Variable: fed_adjusted_log     Importance: 0.0
-Variable: bankruptcy_adjusted_log Importance: 0.0
-Variable: china_adjusted_log   Importance: 0.0
-Variable: united states_adjusted_log Importance: 0.0
-Variable: war_adjusted_log     Importance: 0.0
-Variable: russia_adjusted_log  Importance: 0.0
-Variable: cryptocurrency_top_adjusted_log Importance: 0.0
-Variable: bitcoin_top_adjusted_log Importance: 0.0
-Variable: investment_top_adjusted_log Importance: 0.0
-Variable: ethereum_top_adjusted_log Importance: 0.0
-Variable: exchange_top_adjusted_log Importance: 0.0
-Variable: bankrup_top_adjusted_log Importance: 0.0
-Variable: stock_market_top_adjusted_log Importance: 0.0
-Variable: inflation_adjusted_log Importance: 0.0
-Variable: taxes_adjusted_log   Importance: 0.0
-Variable: digital_wallet_top_adjusted_log Importance: 0.0
-Variable: covid19_adjusted_log Importance: 0.0
-Variable: pandemic_adjusted_log Importance: 0.0
-Variable: elon musk_adjusted_log Importance: 0.0
-Variable: do kwon_adjusted_log Importance: 0.0
-Variable: future_commodities_adjusted_log Importance: 0.0
-Variable: banking_adjusted_log Importance: 0.0
-Variable: foreign_currency_adjusted_log Importance: 0.0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>La predicción del mejor modelo validado de XGBoost arroja un error de predicción del <span class=" -Color -Color-Bold -Color-Bold-Green">14%</span> de la media del target
 </pre></div>
 </div>
 </div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import de las librerías</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="o">%</span><span class="k">matplotlib</span> inline
-
-<span class="c1"># configuro el estilo</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;fivethirtyeight&#39;</span><span class="p">)</span>
-
-<span class="c1"># defino el tamaño del gráfico</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">f</span><span class="o">.</span><span class="n">set_figwidth</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">f</span><span class="o">.</span><span class="n">set_figheight</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># list of x locations for plotting</span>
-<span class="n">x_values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">importances</span><span class="p">)))</span>
-
-<span class="c1"># Genero el gráfico de barras</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">importances</span><span class="p">,</span> <span class="n">orientation</span> <span class="o">=</span> <span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
-
-<span class="c1"># Propiedades de los gráficos, Títulos y etiquetas</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x_values</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Importancia&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Variable&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Importancia de las variables&#39;</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/5_prediccion_40_0.png" src="../_images/5_prediccion_40_0.png" />
-</div>
-</div>
-<p>Al igual que en la regresión lineal, la variable que parece tener más importancia es ‘log_price_eth’.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import de las librerías</span>
-<span class="kn">import</span> <span class="nn">graphviz</span>
-<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">export_graphviz</span>
-<span class="kn">import</span> <span class="nn">pydot</span>
-
-<span class="c1"># Pull out one tree from the forest</span>
-<span class="n">tree</span> <span class="o">=</span> <span class="n">rf</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
-
-<span class="c1"># Export the image to a dot file</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">export_graphviz</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">out_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">feature_names</span> <span class="o">=</span> <span class="n">feature_list</span><span class="p">,</span> <span class="n">rounded</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
-                       <span class="n">precision</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">filled</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">special_characters</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="n">graph</span> <span class="o">=</span> <span class="n">graphviz</span><span class="o">.</span><span class="n">Source</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="n">graph</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/5_prediccion_42_0.svg" src="../_images/5_prediccion_42_0.svg" /></div>
 </div>
 </section>
 </section>
