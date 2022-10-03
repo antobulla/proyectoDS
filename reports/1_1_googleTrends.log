@@ -32,8 +32,10 @@ nbclient.exceptions.CellTimeoutError: A cell timed out while it was being execut
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
+# fijamos el intervalo de tiempo e importamos la lista de palabras armada antes 
 start = '2015-08-01' # parece ser el límite inferior de precios de bitcoin en yahoo finance
 end = '2022-06-15'
-var_dict = daily_gt(keyword = kw_list, start = start, end = end, inputCategories=categories, inputCategoriesNames=categoriesNames)
+var_dict = daily_gt(keyword = kw_list, start = start, end = end, 
+                    inputCategories=categories, inputCategoriesNames=categoriesNames)
 -------------------
 
