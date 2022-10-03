@@ -201,7 +201,8 @@ y_test = y_test.set_index('Date')
 # $$
 # \hat{Y}_i=\sum_{d=1}^{D}f_{d}(X_i),f_{d}\in F, i=1,...,N 
 # $$
-# Donde $F$ es el conjunto de todos los modelos CART posibles, y cada $f_{d}$ representa una estructura de árbol independiente que es denotada como $q$. Esto es, $q$ representa el conjunto de reglas de un modelo que clasifica cada individuo $i$ en un nodo final. La fase de entrenamiento implica clasificar $N$ observaciones tal que, dado las variables $X$, cada nodo final tenga un *score* que corresponda a la proporción de casos que son clasificados dentro de la ocurrencia del evento para esa combinación específica de $X_i$. Se denota al *score* como $w_{q(X)}$.
+# 
+# donde $F$ es el conjunto de todos los modelos CART posibles, y cada $f_{d}$ representa una estructura de árbol independiente que es denotada como $q$. Esto es, $q$ representa el conjunto de reglas de un modelo que clasifica cada individuo $i$ en un nodo final. La fase de entrenamiento implica clasificar $N$ observaciones tal que, dado las variables $X$, cada nodo final tenga un *score* que corresponda a la proporción de casos que son clasificados dentro de la ocurrencia del evento para esa combinación específica de $X_i$. Se denota al *score* como $w_{q(X)}$.
 # 
 # Luego, $q$ puede escribirse como una función $q:\mathbb{R}^{P}\longrightarrow T$, donde $T$ es el número total de nodos finales de un árbol y $j$ denota un nodo final individual, $j=1,...,T$. Para calcular la predicción final para cada individuo, el *score* de los nodos finales se suman mediante la Ecuación anterior, donde $F=\lbrace f(x)=w_{q(X)}\rbrace$ con $q:\mathbb{R}^{P}\longrightarrow T$ y $w \in \mathbb{R}^T$.
 # 
