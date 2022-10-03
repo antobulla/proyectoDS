@@ -3,31 +3,38 @@
 
 # # Preparación de base google trends
 # 
+# Google permite a todos los usuarios acceder y procesar datos anonimizados sobre volúmenes de búsquedas con google trends. Los datos representan tendencias de búsqueda y volumen o interés de búsqueda en el tiempo. Los mismos pueden ser filtrados por varios criterios, tales como ubicación geográfica (países, regiones, continentes, etc.), temáticas o temas (deportes, finanzas, multimedia, salud, etc) y diferentes unidades de tiempo (anuales, mensuales, semanales y diarios).
 # 
-# Para armar la solicitud de términos de búsqueda se utiliza la librería `pytrends`, cuya forma de utilización se puede encontrar en [***hackernoon***](https://hackernoon.com/how-to-use-google-trends-api-with-python).
+# Google provee el volumen de búsqueda para una palabra indexado entre 0 y 100, donde cero indica el interés de búsqueda relativo más bajo y 100 el más alto dentro del rango de tiempo seleccionado. Esto último es importante remarcar porque el valor del índice de una palabra puede cambiar dependiendo del rango de tiempo utilizado, es decir, dado un intervalo de tiempo, google fija el máximo valor de la serie en 100, y los demás datos se calculan como una tasa respecto a ese valor máximo. Adicionalmente, Google tiene una restricción de unidad de tiempo para intervalos de tiempo específicos. Por ejemplo, una solicitud de una palabra para un mes específico de un año devolverá datos diarios; todo un año retornará datos semanales; mientras que un pedido de más de cinco años de intervalo arrojará datos mensuales. Esto trae una complicación adicional, debido a que intentamos obtener información de frecuencias de búsqueda diarias para un período mayor a 5 años. 
+# 
+# Para resolver estos problemas relacionado al intervalo de tiempo, seguimos el método de ajuste de datos históricos explicados en [**medium**](https://medium.com/@bewerunge.franz/google-trends-how-to-acquire-daily-data-for-broad-time-frames-b6c6dfe200e6). La idea detrás de ésta técnica es armar primero una serie diaria de una palabra, realizando solicitudes con el intervalo de tiempo máximo para que google arroje valores diarios (pedidos de un rango de 90 días). En paralelo importar la serie histórica de esa misma palabra, es decir, los valores de todo el período bajo análisis, lo cual hará que google nos brinde frecuencias mensuales. Con ambos inputs, los datos ajustados se calculan de la siguiente manera: 
+# 
+# $$
+# gtd_{d-m}*(gtd_{m}/100)
+# $$ 
+# 
+# Donde $gtd$ representa el valor de google trends de un término de búsqueda o tópico específico, que puede ser diario ($d-m$) o mensual ($m$). De esta manera, el valor diario es multiplicado por el valor del mismo mes en cuestión pasado previamente a tasa (dividiendo por 100). Esto genera que el valor máximo local, es decir, de cada intervalo de tiempo diario importado se ajuste por su valor histórico y así obtendríamos los valores diarios ajustados a su frecuencia histórica.
+# 
+# Para armar la solicitud de términos de búsqueda se utiliza la librería `pytrends`, cuya forma de utilización se puede encontrar en [***hackernoon***](https://hackernoon.com/how-to-use-google-trends-api-with-python). Con esta función creamos nuestra propia función custom `daily_gt()` que sigue la lógica de normalización explicada antes. 
 
 # In[1]:
 
 
+# instalamos pytrends e importamos algunas librerías que nos serán de utilidad
 get_ipython().system('pip install pytrends')
+from functools import partial, reduce # to transform variable dic in a dataframe  
+import pandas as pd
+import time
+import pandas as pd 
+import numpy as np # numpy y pandas to data wrangling 
+from datetime import datetime, timedelta # to work w date
+from pytrends.request import TrendReq
 
 
 # In[2]:
 
 
-from functools import partial, reduce # to transform variable dic in a dataframe  
-import pandas as pd
-
-
-# In[3]:
-
-
 def daily_gt(keyword, start, end, inputCategories ,inputCategoriesNames , hl='en-US', tz=360):
-  import time
-  import pandas as pd 
-  import numpy as np # numpy y pandas to data wrangling 
-  from datetime import datetime, timedelta # to work w date
-  from pytrends.request import TrendReq
   # función para dividir rango de fechas en segmentos 
   def date_range(start, end, intv):
       start = datetime.strptime(start,"%Y-%m-%d")
@@ -112,7 +119,9 @@ def daily_gt(keyword, start, end, inputCategories ,inputCategoriesNames , hl='en
   return var_dict
 
 
-# In[4]:
+# Una vez elaborada la función `daily_gt()` pasamos a armar las listas de palabras según categoría de búsqueda. Las mismas son agrupadas en la lista final `kw_list` que servirá como input para importar los términos de búsqueda y tópicos elegidos.
+
+# In[3]:
 
 
 crypto = ['cryptocurrency', 'crypto', 'bitcoin', 'bitcoin price', 'ethereum', 'ethereum price']
@@ -125,18 +134,20 @@ topics = ['/m/0vpj4_b', '/m/05p0rrx', '/m/0g_fl', '/m/0108bn2x','/m/0965sb',
 topicsNames = ['cryptocurrency_top', 'bitcoin_top', 'investment_top', 
                'ethereum_top','exchange_top', 'bankrup_top', 
                'stock_market_top', 'inflation', 'taxes', 'digital_wallet_top', 'covid19', 'pandemic']
-categories = [904, 37, 814]
+categories = [904, 37, 814] # tópicos
 categoriesNames = ['future_commodities', 'banking', 'foreign_currency'] 
 kw_list = crypto + monetary + policy + topics + influencers + categories
 kw_list
 
 
-# In[5]:
+# In[4]:
 
 
+# fijamos el intervalo de tiempo e importamos la lista de palabras armada antes 
 start = '2015-08-01' # parece ser el límite inferior de precios de bitcoin en yahoo finance
 end = '2022-06-15'
-var_dict = daily_gt(keyword = kw_list, start = start, end = end, inputCategories=categories, inputCategoriesNames=categoriesNames)
+var_dict = daily_gt(keyword = kw_list, start = start, end = end, 
+                    inputCategories=categories, inputCategoriesNames=categoriesNames)
 
 
 # In[ ]:
@@ -144,6 +155,8 @@ var_dict = daily_gt(keyword = kw_list, start = start, end = end, inputCategories
 
 var_dict.values()
 
+
+# Las series importadas de google trends están en un diccionario, por lo que transformamos cada una de esas frecuencias en un mismo dataframe con la fecha como índice.
 
 # In[ ]:
 

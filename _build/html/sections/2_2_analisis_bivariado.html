@@ -421,9 +421,21 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
-   2.2.1. Variable a predecir: precio diario promedio de ethereum
+  <a class="reference internal nav-link" href="#correlacion-lineal">
+   2.2.1. Correlación lineal
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#target-versus-predictoras">
+     2.2.1.1. Target versus predictoras
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predictoras-entre-si">
+     2.2.1.2. Predictoras entre sí
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#graficos-de-dispersion-y-distribucion">
@@ -450,9 +462,21 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
-   2.2.1. Variable a predecir: precio diario promedio de ethereum
+  <a class="reference internal nav-link" href="#correlacion-lineal">
+   2.2.1. Correlación lineal
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#target-versus-predictoras">
+     2.2.1.1. Target versus predictoras
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#predictoras-entre-si">
+     2.2.1.2. Predictoras entre sí
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#graficos-de-dispersion-y-distribucion">
@@ -471,17 +495,28 @@ title="Print to PDF"
                 
   <section id="analisis-bivariado">
 <h1><span class="section-number">2.2. </span>Análisis bivariado<a class="headerlink" href="#analisis-bivariado" title="Permalink to this headline">#</a></h1>
-<p>En esta sección se realiza el análisis bivariado de los datos, a partir de herramientas de visualización y tablas que nos sugieran ciertos patrones entre el <em>target</em> y los predictores.</p>
+<p>El análisis exploratorio bivariado se realiza con dos objetivos. Por un lado, se busca encontrar patrones entre la variable a predecir y los predictores que nos sugieran rasgos que podríamos encontrar en las estimaciones de modelos de predicción. Por otra parte, también clarifica la forma de utilización de las variables y echa luz acerca de la relación entre ellas. Esto último puede servir para posibles estrategias de simplificación de información (cluster de variabes para reducir la complejidad del dataset), como la forma en que ingresamos los <em>inputs</em> al modelo.</p>
+<p>La sección se inicia igual que el apartado anterior de análisis bivariado, primero cargamos las liberías que utilizamos junto con el dataset armado en la sección de preparación de datos. A su vez, creamos la clase <em>style</em> que se utilizará para darle colores a los <code class="docutils literal notranslate"><span class="pre">prints</span></code> realizados en las líneas de código. Nuevamente, el análisis se realiza sobre el subconjunto de entrenamiento por las razones explicadas antes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cargamos las librerías</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics</span> <span class="kn">import</span> <span class="n">tsaplots</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_pacf</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">seaborn</span> <span class="kn">import</span> <span class="n">distplot</span>
 <span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">scp</span>
+<span class="c1"># muteamos algunos warnings esperables que no afectan los outputs de los códigos</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pandas.core.common</span> <span class="kn">import</span> <span class="n">SettingWithCopyWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">SettingWithCopyWarning</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -489,19 +524,31 @@ title="Print to PDF"
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
 <span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  
+<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">statsmodels.graphics</span> <span class="kn">import</span> <span class="n">tsaplots</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_pacf</span>
 
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
 </pre></div>
 </div>
 </div>
 </div>
-<p>El análisis exploratorio se realiza con dos objetivos. Por un lado, se busca encontrar patrones entre la variable a predecir y los predictores. Por otra parte, también clarifica la forma de utilización de las variables.</p>
-<p>Para comenzar, importamos el dataset crudo con el target a predecir y los predictores que vamos a utilizar. Debido a que se intenta seguir la lógica establecida en el enfoque de validación, es decir, extraer de la base un subconjunto para entrenamiento y otro para testeo, el análisis exploratorio se realiza sobre los datos que se van a entrenar. La razón radica en que los datos que son para testeo del modelo serán utilizados únicamente a modo de evaluación, entendiéndose a los mismos como datos “desconocidos” al momento de explorar los datos y ajustar los modelos. Por esto, una vez importado el dataset nos quedamos con los primeros años de la serie, que va desde el 8 de agosto de 2015 hasta el 31 de diciembre de 2020.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># creamos la clase style para poner colores a los prints</span>
+<span class="k">class</span> <span class="nc">style</span><span class="p">():</span>
+    <span class="n">black</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[30m&#39;</span>
+    <span class="n">red</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[31m&#39;</span>
+    <span class="n">green</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1;32m&#39;</span> <span class="c1"># bold</span>
+    <span class="n">underline</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span>
+    <span class="n">mark</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\33</span><span class="s1">[44m&#39;</span>
+    <span class="n">endc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># importamos dataset</span>
@@ -520,7 +567,7 @@ title="Print to PDF"
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d">
+  <div id="df-519d16d5-b010-4bc9-9f22-bd75da517d6e">
     <div class="colab-df-container">
       <div>
 <style scoped>
@@ -712,7 +759,7 @@ title="Print to PDF"
 </table>
 <p>5 rows × 54 columns</p>
 </div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d')"
+      <button class="colab-df-convert" onclick="convertToInteractive('df-519d16d5-b010-4bc9-9f22-bd75da517d6e')"
               title="Convert this dataframe to an interactive table."
               style="display:none;">
 
@@ -763,12 +810,12 @@ title="Print to PDF"
 
       <script>
         const buttonEl =
-          document.querySelector('#df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d button.colab-df-convert');
+          document.querySelector('#df-519d16d5-b010-4bc9-9f22-bd75da517d6e button.colab-df-convert');
         buttonEl.style.display =
           google.colab.kernel.accessAllowed ? 'block' : 'none';
 
         async function convertToInteractive(key) {
-          const element = document.querySelector('#df-1c69a20b-2ca6-47e1-9e5f-0ceb2424a95d');
+          const element = document.querySelector('#df-519d16d5-b010-4bc9-9f22-bd75da517d6e');
           const dataTable =
             await google.colab.kernel.invokeFunction('convertToInteractive',
                                                      [key], {});
@@ -789,65 +836,16 @@ title="Print to PDF"
   </div>
 </div></div>
 </div>
-<section id="variable-a-predecir-precio-diario-promedio-de-ethereum">
-<h2><span class="section-number">2.2.1. </span>Variable a predecir: precio diario promedio de ethereum<a class="headerlink" href="#variable-a-predecir-precio-diario-promedio-de-ethereum" title="Permalink to this headline">#</a></h2>
-<p>En primer lugar, observamos la serie del precio diario promedio de ethereum, nuestra variable a predecir. Como se puede ver en la primera figura, la serie presenta un componente irregular no despreciable, la serie comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando un diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, donde la misma comienza a subir. Dicha irregularidad presenta una alta volatilidad o varianza, por lo que sería deseable poder aplicar alguna transformación a la serie antes de predecir.</p>
+<section id="correlacion-lineal">
+<h2><span class="section-number">2.2.1. </span>Correlación lineal<a class="headerlink" href="#correlacion-lineal" title="Permalink to this headline">#</a></h2>
+<section id="target-versus-predictoras">
+<h3><span class="section-number">2.2.1.1. </span>Target versus predictoras<a class="headerlink" href="#target-versus-predictoras" title="Permalink to this headline">#</a></h3>
+<p>En primer lugar realizamos un análisis de correlación lineal de pearson entre los diferentes rezagos del precio de ethereum y las variables predictoras. La idea detrás de esto es ver qué tan factible sería proyectar un ejercicio de predicción con ventanas temporales mayores a un día de diferencia entre los predictores y la dependiente, en nuestro caso, intentando predecir los siguiente siete días posteriores al momento corriente. De ser posible, la predicción permitiría tener una mirada más amplia de la evolución predicha de la cotización de ethereum, permitiendo al usuario del modelo conocer su evolución futura en un rango de tiempo futuro mayor al día posterior, brindandole un panorama más amplio para la toma de decisiones.</p>
+<p>Para realizar el análisis creamos un loop donde computamos las correlaciones entre cada target con cada uno de los predictores utilizados.Con motivos de simplificar el análisis, visualizamos el top 10 de las correlaciones entre el primer rezago del precio de etherum con los inputs y el séptimo rezago con los <em>features</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span> <span class="c1"># set estilo</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span> <span class="c1"># set tamaño de ticks</span>
-<span class="c1"># graficamos la base ethereum completa</span>
-<span class="n">train</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#993404&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;precio promedio (ETH/USDT)&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tiempo&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Serie del precio diario promedio de ethereum&quot;</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/2_2_analisis_bivariado_5_0.png" src="../_images/2_2_analisis_bivariado_5_0.png" />
-</div>
-</div>
-<p>Aclaración: la variable <code class="docutils literal notranslate"><span class="pre">y_lag1</span></code> representa el precio de ethereum con un rezago de 1 día y será utilizada para la predicción del precio del día siguiente al precio presente observado.</p>
-<p>Por lo tanto, <code class="docutils literal notranslate"><span class="pre">y_lag{i}</span></code> con <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">7</span></code> será utilizado para predecir el precio del día {i} luego del último día observado.</p>
-<p>La transformación elegida es la transformación logarítmica, la cual permite una compresión de los datos, generando una serie con menor nivel de irregularidad y, por lo tanto, con mejor comportamiento para predecir. A continuación, se presenta la serie del precio promedio de ethereum diario en logaritmo.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">]))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7150378912136298
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#993404&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;logaritmo&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tiempo&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Serie del precio diario promedio de ethereum en logaritmo&quot;</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/2_2_analisis_bivariado_9_0.png" src="../_images/2_2_analisis_bivariado_9_0.png" />
-</div>
-</div>
-<p>Así, luego de aplicar el logaritmo, se logra mayor suavidad en el gráfico en comparación con los valores iniciales de la cotización.</p>
-<p>A continuación se realiza la correlación entre cada una de las variables target y_lag{i} con i=1,…,7 y el resto de variables que componen el dataset.</p>
-<p>Cabe recordar que la variable y_lag{i} corresponde a la predictora del precio de ethereum al siguiente día {i} después del último día observado.</p>
-<p>###Comparación por correlación</p>
-<p>En primer lugar realizamos un análisis de correlaciones lineales de pearson entre los diferentes rezagos del target y las variables predictoras. La idea detrás de esto es ver si podríamos proyectar un ejercicio de predicción con ventanas temporales mayores a un día de diferencia entre los predictores y la dependiente. Lo cual permitiría tener una mirada más amplia de la evolución predicha de la cotización de ethereum, permitiendo al usuario del modelo conocer su evolución futura en un rango de tiempo futuro mayor al día.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Correlación entre las target y otras variables</span>
-<span class="n">columnas</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#devuelve una lista con los nombres de las columnas</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Correlación entre las target y otras variables</span>
+<span class="n">columnas</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span> <span class="c1">#devuelve una lista con los nombres de las columnas</span>
 <span class="n">targets</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">,</span> <span class="s1">&#39;y_lag2&#39;</span><span class="p">,</span> <span class="s1">&#39;y_lag3&#39;</span><span class="p">,</span> <span class="s1">&#39;y_lag4&#39;</span><span class="p">,</span> <span class="s1">&#39;y_lag5&#39;</span><span class="p">,</span> <span class="s1">&#39;y_lag6&#39;</span><span class="p">,</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">]</span>
 <span class="n">columnas</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">columnas</span> <span class="k">if</span> <span class="n">e</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">]</span> <span class="c1"># saco las variables a predecir</span>
 <span class="n">correlaciones</span> <span class="o">=</span> <span class="p">{}</span>
@@ -863,354 +861,16 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">correlaciones</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;y_lag1&#39;: {&#39;Volume ETH_eth&#39;: 0.5047894957651703,
-  &#39;Volume USDT_eth&#39;: 0.042605993417765275,
-  &#39;banking_adjusted&#39;: 0.1340934345929869,
-  &#39;bankrup_top_adjusted&#39;: 0.3457913981257425,
-  &#39;bankruptcy_adjusted&#39;: -0.12240569775127902,
-  &#39;bitcoin price_adjusted&#39;: 0.5854354400621145,
-  &#39;bitcoin_adjusted&#39;: 0.557352593422819,
-  &#39;bitcoin_top_adjusted&#39;: 0.5257793217203065,
-  &#39;china_adjusted&#39;: 0.07139017562677887,
-  &#39;close_btc&#39;: 0.7425504895231956,
-  &#39;close_eth&#39;: 0.9991104208475167,
-  &#39;covid19_adjusted&#39;: 0.0759468397954692,
-  &#39;crypto_adjusted&#39;: 0.8095000718304808,
-  &#39;cryptocurrency_adjusted&#39;: 0.7524065193051735,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.792022205308306,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5243813400307391,
-  &#39;do kwon_adjusted&#39;: -0.17534229099265766,
-  &#39;elon musk_adjusted&#39;: 0.13476136121574397,
-  &#39;eth_close_open_mean&#39;: 0.9981563113028787,
-  &#39;ethereum price_adjusted&#39;: 0.6082259118076733,
-  &#39;ethereum_adjusted&#39;: 0.6252474412436655,
-  &#39;ethereum_top_adjusted&#39;: 0.6786030073330245,
-  &#39;exchange_top_adjusted&#39;: 0.6579713280901952,
-  &#39;fed_adjusted&#39;: 0.18887741017290474,
-  &#39;foreign_currency_adjusted&#39;: 0.22438026637483677,
-  &#39;future_commodities_adjusted&#39;: 0.23276935540109062,
-  &#39;high_btc&#39;: 0.7492468414666101,
-  &#39;high_eth&#39;: 0.9975923074297725,
-  &#39;inflation_adjusted&#39;: -0.0916532090525816,
-  &#39;interest rate_adjusted&#39;: 0.33102253599877735,
-  &#39;investment_top_adjusted&#39;: 0.2106125765340297,
-  &#39;low_btc&#39;: 0.734638006500386,
-  &#39;low_eth&#39;: 0.9967769236397481,
-  &#39;open_btc&#39;: 0.7448095665094774,
-  &#39;open_eth&#39;: 0.9954282657298356,
-  &#39;pandemic_adjusted&#39;: 0.17578914846857355,
-  &#39;russia_adjusted&#39;: -0.023613949389873413,
-  &#39;stock market_adjusted&#39;: 0.09352484276004548,
-  &#39;stock_market_top_adjusted&#39;: 0.09152275784916802,
-  &#39;taxes_adjusted&#39;: 0.08962597830771614,
-  &#39;united states_adjusted&#39;: 0.09297368472834536,
-  &#39;unix_btc&#39;: 0.41307568638084663,
-  &#39;unix_eth&#39;: 0.41307568638084663,
-  &#39;wall street_adjusted&#39;: -0.28041767149680297,
-  &#39;war_adjusted&#39;: -0.22422240611532318},
- &#39;y_lag2&#39;: {&#39;Volume ETH_eth&#39;: 0.5098175105420226,
-  &#39;Volume USDT_eth&#39;: 0.04703560257985455,
-  &#39;banking_adjusted&#39;: 0.13255417010237217,
-  &#39;bankrup_top_adjusted&#39;: 0.34545513640200076,
-  &#39;bankruptcy_adjusted&#39;: -0.12367964147719557,
-  &#39;bitcoin price_adjusted&#39;: 0.5887912399030106,
-  &#39;bitcoin_adjusted&#39;: 0.5614778855822762,
-  &#39;bitcoin_top_adjusted&#39;: 0.5297908208746194,
-  &#39;china_adjusted&#39;: 0.0708623023051485,
-  &#39;close_btc&#39;: 0.744879754890828,
-  &#39;close_eth&#39;: 0.9954339981503175,
-  &#39;covid19_adjusted&#39;: 0.07723791211307496,
-  &#39;crypto_adjusted&#39;: 0.8107531275996034,
-  &#39;cryptocurrency_adjusted&#39;: 0.7558394286985137,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7950636614065703,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5242414322328502,
-  &#39;do kwon_adjusted&#39;: -0.1782901336845545,
-  &#39;elon musk_adjusted&#39;: 0.13488704050985498,
-  &#39;eth_close_open_mean&#39;: 0.9944021091904864,
-  &#39;ethereum price_adjusted&#39;: 0.6127145191344894,
-  &#39;ethereum_adjusted&#39;: 0.6280643014987283,
-  &#39;ethereum_top_adjusted&#39;: 0.6809778410565125,
-  &#39;exchange_top_adjusted&#39;: 0.6643142074217633,
-  &#39;fed_adjusted&#39;: 0.18895912710113755,
-  &#39;foreign_currency_adjusted&#39;: 0.22560986825804114,
-  &#39;future_commodities_adjusted&#39;: 0.2330538894024741,
-  &#39;high_btc&#39;: 0.7516681039816443,
-  &#39;high_eth&#39;: 0.9941506628419825,
-  &#39;inflation_adjusted&#39;: -0.09128469341055252,
-  &#39;interest rate_adjusted&#39;: 0.33132191640438613,
-  &#39;investment_top_adjusted&#39;: 0.2108805881401723,
-  &#39;low_btc&#39;: 0.7366299163573142,
-  &#39;low_eth&#39;: 0.9929717530272132,
-  &#39;open_btc&#39;: 0.7470063364730584,
-  &#39;open_eth&#39;: 0.9916028714784715,
-  &#39;pandemic_adjusted&#39;: 0.17690599337562185,
-  &#39;russia_adjusted&#39;: -0.022817307549143604,
-  &#39;stock market_adjusted&#39;: 0.0905267936895373,
-  &#39;stock_market_top_adjusted&#39;: 0.08871451259034371,
-  &#39;taxes_adjusted&#39;: 0.08612216331274436,
-  &#39;united states_adjusted&#39;: 0.09257925991674869,
-  &#39;unix_btc&#39;: 0.41379185300738913,
-  &#39;unix_eth&#39;: 0.41379185300738913,
-  &#39;wall street_adjusted&#39;: -0.28429606242094385,
-  &#39;war_adjusted&#39;: -0.2222630305350158},
- &#39;y_lag3&#39;: {&#39;Volume ETH_eth&#39;: 0.5132931617613827,
-  &#39;Volume USDT_eth&#39;: 0.05025165580858447,
-  &#39;banking_adjusted&#39;: 0.13250728915125143,
-  &#39;bankrup_top_adjusted&#39;: 0.3449408737503947,
-  &#39;bankruptcy_adjusted&#39;: -0.12445980701449073,
-  &#39;bitcoin price_adjusted&#39;: 0.5927792986948873,
-  &#39;bitcoin_adjusted&#39;: 0.5662982438171936,
-  &#39;bitcoin_top_adjusted&#39;: 0.5341628633974513,
-  &#39;china_adjusted&#39;: 0.07068552735796399,
-  &#39;close_btc&#39;: 0.7478646853263495,
-  &#39;close_eth&#39;: 0.991532505388788,
-  &#39;covid19_adjusted&#39;: 0.07901367924408388,
-  &#39;crypto_adjusted&#39;: 0.8113784450560854,
-  &#39;cryptocurrency_adjusted&#39;: 0.7593520253706272,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7975384758160562,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5248019299921041,
-  &#39;do kwon_adjusted&#39;: -0.18141124130830796,
-  &#39;elon musk_adjusted&#39;: 0.13401322741576072,
-  &#39;eth_close_open_mean&#39;: 0.9904756815528437,
-  &#39;ethereum price_adjusted&#39;: 0.6167551305332982,
-  &#39;ethereum_adjusted&#39;: 0.6302015880075106,
-  &#39;ethereum_top_adjusted&#39;: 0.6824601830154458,
-  &#39;exchange_top_adjusted&#39;: 0.6704418059656446,
-  &#39;fed_adjusted&#39;: 0.19015721624062243,
-  &#39;foreign_currency_adjusted&#39;: 0.2272906073106678,
-  &#39;future_commodities_adjusted&#39;: 0.234032526426632,
-  &#39;high_btc&#39;: 0.7546490240133141,
-  &#39;high_eth&#39;: 0.9903644153056596,
-  &#39;inflation_adjusted&#39;: -0.08958506506236183,
-  &#39;interest rate_adjusted&#39;: 0.3325822456823116,
-  &#39;investment_top_adjusted&#39;: 0.21187069671727124,
-  &#39;low_btc&#39;: 0.7391763279009258,
-  &#39;low_eth&#39;: 0.9891043399301113,
-  &#39;open_btc&#39;: 0.7496731936059524,
-  &#39;open_eth&#39;: 0.9876584571849298,
-  &#39;pandemic_adjusted&#39;: 0.1795217510688503,
-  &#39;russia_adjusted&#39;: -0.02220316619052648,
-  &#39;stock market_adjusted&#39;: 0.08852628196405747,
-  &#39;stock_market_top_adjusted&#39;: 0.08723706766358381,
-  &#39;taxes_adjusted&#39;: 0.08384098713778236,
-  &#39;united states_adjusted&#39;: 0.09159253954819879,
-  &#39;unix_btc&#39;: 0.41468898465359244,
-  &#39;unix_eth&#39;: 0.41468898465359244,
-  &#39;wall street_adjusted&#39;: -0.28857903424005604,
-  &#39;war_adjusted&#39;: -0.21951947526912513},
- &#39;y_lag4&#39;: {&#39;Volume ETH_eth&#39;: 0.5173735187115006,
-  &#39;Volume USDT_eth&#39;: 0.05311408032110115,
-  &#39;banking_adjusted&#39;: 0.13434325039668246,
-  &#39;bankrup_top_adjusted&#39;: 0.34390886394993253,
-  &#39;bankruptcy_adjusted&#39;: -0.12439112942671489,
-  &#39;bitcoin price_adjusted&#39;: 0.598031335504529,
-  &#39;bitcoin_adjusted&#39;: 0.5724328353805046,
-  &#39;bitcoin_top_adjusted&#39;: 0.5394762012534986,
-  &#39;china_adjusted&#39;: 0.071391956766588,
-  &#39;close_btc&#39;: 0.7512472411887037,
-  &#39;close_eth&#39;: 0.9873532873577002,
-  &#39;covid19_adjusted&#39;: 0.08138092162935344,
-  &#39;crypto_adjusted&#39;: 0.8112362203678023,
-  &#39;cryptocurrency_adjusted&#39;: 0.7623077682138625,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7990002572197388,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5256173216758027,
-  &#39;do kwon_adjusted&#39;: -0.1843828919451821,
-  &#39;elon musk_adjusted&#39;: 0.1325488359120907,
-  &#39;eth_close_open_mean&#39;: 0.9864219711948979,
-  &#39;ethereum price_adjusted&#39;: 0.6213498973787431,
-  &#39;ethereum_adjusted&#39;: 0.6320474850683934,
-  &#39;ethereum_top_adjusted&#39;: 0.683866968058047,
-  &#39;exchange_top_adjusted&#39;: 0.6762271752888671,
-  &#39;fed_adjusted&#39;: 0.19191950050760354,
-  &#39;foreign_currency_adjusted&#39;: 0.2296676634127432,
-  &#39;future_commodities_adjusted&#39;: 0.23578520778359324,
-  &#39;high_btc&#39;: 0.7581520215169101,
-  &#39;high_eth&#39;: 0.986331379439219,
-  &#39;inflation_adjusted&#39;: -0.08699846311120916,
-  &#39;interest rate_adjusted&#39;: 0.334378309133556,
-  &#39;investment_top_adjusted&#39;: 0.2138441445445322,
-  &#39;low_btc&#39;: 0.7422099497937578,
-  &#39;low_eth&#39;: 0.9848786707767501,
-  &#39;open_btc&#39;: 0.7529983342181337,
-  &#39;open_eth&#39;: 0.9837375854779531,
-  &#39;pandemic_adjusted&#39;: 0.18248285221735785,
-  &#39;russia_adjusted&#39;: -0.02063204266316944,
-  &#39;stock market_adjusted&#39;: 0.08800340789522323,
-  &#39;stock_market_top_adjusted&#39;: 0.08729509322078495,
-  &#39;taxes_adjusted&#39;: 0.08279676822277239,
-  &#39;united states_adjusted&#39;: 0.09052935151139231,
-  &#39;unix_btc&#39;: 0.4157128014021251,
-  &#39;unix_eth&#39;: 0.4157128014021251,
-  &#39;wall street_adjusted&#39;: -0.2932675950429717,
-  &#39;war_adjusted&#39;: -0.21545253290648397},
- &#39;y_lag5&#39;: {&#39;Volume ETH_eth&#39;: 0.5199336450739674,
-  &#39;Volume USDT_eth&#39;: 0.05555198959984352,
-  &#39;banking_adjusted&#39;: 0.13568782199763008,
-  &#39;bankrup_top_adjusted&#39;: 0.34247233095318574,
-  &#39;bankruptcy_adjusted&#39;: -0.12509090585704652,
-  &#39;bitcoin price_adjusted&#39;: 0.602806693905834,
-  &#39;bitcoin_adjusted&#39;: 0.5781155379512652,
-  &#39;bitcoin_top_adjusted&#39;: 0.5443137235145368,
-  &#39;china_adjusted&#39;: 0.07230256158174235,
-  &#39;close_btc&#39;: 0.7548230331984804,
-  &#39;close_eth&#39;: 0.9832889015309322,
-  &#39;covid19_adjusted&#39;: 0.08403460958652789,
-  &#39;crypto_adjusted&#39;: 0.8081502135679878,
-  &#39;cryptocurrency_adjusted&#39;: 0.7620216966881196,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7975385963223086,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5261058503877135,
-  &#39;do kwon_adjusted&#39;: -0.18756525051788292,
-  &#39;elon musk_adjusted&#39;: 0.13226502525678313,
-  &#39;eth_close_open_mean&#39;: 0.982369481758837,
-  &#39;ethereum price_adjusted&#39;: 0.6252486118666736,
-  &#39;ethereum_adjusted&#39;: 0.6335410826182778,
-  &#39;ethereum_top_adjusted&#39;: 0.6844392299648033,
-  &#39;exchange_top_adjusted&#39;: 0.6810003374971338,
-  &#39;fed_adjusted&#39;: 0.19283640555198925,
-  &#39;foreign_currency_adjusted&#39;: 0.23188132584203797,
-  &#39;future_commodities_adjusted&#39;: 0.237221851314888,
-  &#39;high_btc&#39;: 0.7617775533577384,
-  &#39;high_eth&#39;: 0.9822551715830758,
-  &#39;inflation_adjusted&#39;: -0.0856226208525874,
-  &#39;interest rate_adjusted&#39;: 0.33578580915080675,
-  &#39;investment_top_adjusted&#39;: 0.2153892492053928,
-  &#39;low_btc&#39;: 0.7454394675113436,
-  &#39;low_eth&#39;: 0.9807196652725984,
-  &#39;open_btc&#39;: 0.7563885972986701,
-  &#39;open_eth&#39;: 0.9797042029232472,
-  &#39;pandemic_adjusted&#39;: 0.18559980105134802,
-  &#39;russia_adjusted&#39;: -0.018321755979468238,
-  &#39;stock market_adjusted&#39;: 0.08699920979408209,
-  &#39;stock_market_top_adjusted&#39;: 0.08687675123517545,
-  &#39;taxes_adjusted&#39;: 0.08161435220606217,
-  &#39;united states_adjusted&#39;: 0.08945331023712792,
-  &#39;unix_btc&#39;: 0.416768057033375,
-  &#39;unix_eth&#39;: 0.416768057033375,
-  &#39;wall street_adjusted&#39;: -0.29803125384364776,
-  &#39;war_adjusted&#39;: -0.2109143842008907},
- &#39;y_lag6&#39;: {&#39;Volume ETH_eth&#39;: 0.5192791174220068,
-  &#39;Volume USDT_eth&#39;: 0.05726025523007969,
-  &#39;banking_adjusted&#39;: 0.1333765401257615,
-  &#39;bankrup_top_adjusted&#39;: 0.338642584478012,
-  &#39;bankruptcy_adjusted&#39;: -0.12823889550337508,
-  &#39;bitcoin price_adjusted&#39;: 0.6070345599476237,
-  &#39;bitcoin_adjusted&#39;: 0.5832274305872186,
-  &#39;bitcoin_top_adjusted&#39;: 0.5485848954166713,
-  &#39;china_adjusted&#39;: 0.07340230816032704,
-  &#39;close_btc&#39;: 0.7585292951125476,
-  &#39;close_eth&#39;: 0.9789975279008452,
-  &#39;covid19_adjusted&#39;: 0.08689942806943803,
-  &#39;crypto_adjusted&#39;: 0.8031851551468312,
-  &#39;cryptocurrency_adjusted&#39;: 0.7596594011715994,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7940247231032327,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5262645658039513,
-  &#39;do kwon_adjusted&#39;: -0.19081361811942002,
-  &#39;elon musk_adjusted&#39;: 0.13317472930860003,
-  &#39;eth_close_open_mean&#39;: 0.9777579277063377,
-  &#39;ethereum price_adjusted&#39;: 0.6276378807952327,
-  &#39;ethereum_adjusted&#39;: 0.6339009548035703,
-  &#39;ethereum_top_adjusted&#39;: 0.6829012796724956,
-  &#39;exchange_top_adjusted&#39;: 0.6841940128708488,
-  &#39;fed_adjusted&#39;: 0.19211261953655126,
-  &#39;foreign_currency_adjusted&#39;: 0.23250387409189843,
-  &#39;future_commodities_adjusted&#39;: 0.2365644393376233,
-  &#39;high_btc&#39;: 0.765391434606981,
-  &#39;high_eth&#39;: 0.9774614180881437,
-  &#39;inflation_adjusted&#39;: -0.08660259731818439,
-  &#39;interest rate_adjusted&#39;: 0.3359986108780281,
-  &#39;investment_top_adjusted&#39;: 0.21371032578098914,
-  &#39;low_btc&#39;: 0.7489738500937306,
-  &#39;low_eth&#39;: 0.9760271647776567,
-  &#39;open_btc&#39;: 0.7598396472648221,
-  &#39;open_eth&#39;: 0.9747803261233563,
-  &#39;pandemic_adjusted&#39;: 0.18909693167923514,
-  &#39;russia_adjusted&#39;: -0.016029828967275755,
-  &#39;stock market_adjusted&#39;: 0.08526189634622545,
-  &#39;stock_market_top_adjusted&#39;: 0.08568270383629813,
-  &#39;taxes_adjusted&#39;: 0.07846232486035415,
-  &#39;united states_adjusted&#39;: 0.08724681193095514,
-  &#39;unix_btc&#39;: 0.4178427604200867,
-  &#39;unix_eth&#39;: 0.4178427604200867,
-  &#39;wall street_adjusted&#39;: -0.3027249047771266,
-  &#39;war_adjusted&#39;: -0.20605150714057255},
- &#39;y_lag7&#39;: {&#39;Volume ETH_eth&#39;: 0.5193259883856843,
-  &#39;Volume USDT_eth&#39;: 0.05954277396323893,
-  &#39;banking_adjusted&#39;: 0.129481662987993,
-  &#39;bankrup_top_adjusted&#39;: 0.33379592043190076,
-  &#39;bankruptcy_adjusted&#39;: -0.13223560705225454,
-  &#39;bitcoin price_adjusted&#39;: 0.6109710201770587,
-  &#39;bitcoin_adjusted&#39;: 0.5880900396680514,
-  &#39;bitcoin_top_adjusted&#39;: 0.5527180800517099,
-  &#39;china_adjusted&#39;: 0.0739901717941714,
-  &#39;close_btc&#39;: 0.7621686165959353,
-  &#39;close_eth&#39;: 0.9738598888235394,
-  &#39;covid19_adjusted&#39;: 0.08991612029527597,
-  &#39;crypto_adjusted&#39;: 0.7980886579124391,
-  &#39;cryptocurrency_adjusted&#39;: 0.7572986907424757,
-  &#39;cryptocurrency_top_adjusted&#39;: 0.7900427572710557,
-  &#39;digital_wallet_top_adjusted&#39;: 0.5263807730433215,
-  &#39;do kwon_adjusted&#39;: -0.19356820450554751,
-  &#39;elon musk_adjusted&#39;: 0.13418832434167877,
-  &#39;eth_close_open_mean&#39;: 0.9723917937709374,
-  &#39;ethereum price_adjusted&#39;: 0.6289437244359917,
-  &#39;ethereum_adjusted&#39;: 0.6330626930232552,
-  &#39;ethereum_top_adjusted&#39;: 0.679828628200845,
-  &#39;exchange_top_adjusted&#39;: 0.6855698448370274,
-  &#39;fed_adjusted&#39;: 0.18975670304177897,
-  &#39;foreign_currency_adjusted&#39;: 0.2321771579747054,
-  &#39;future_commodities_adjusted&#39;: 0.2346849572298694,
-  &#39;high_btc&#39;: 0.7689915323427914,
-  &#39;high_eth&#39;: 0.9720915685342273,
-  &#39;inflation_adjusted&#39;: -0.08933412473073292,
-  &#39;interest rate_adjusted&#39;: 0.33492703322364487,
-  &#39;investment_top_adjusted&#39;: 0.20971344007616016,
-  &#39;low_btc&#39;: 0.752399267806514,
-  &#39;low_eth&#39;: 0.9704650417333286,
-  &#39;open_btc&#39;: 0.7631822512136273,
-  &#39;open_eth&#39;: 0.96919499078702,
-  &#39;pandemic_adjusted&#39;: 0.19287083227038201,
-  &#39;russia_adjusted&#39;: -0.013847636377490277,
-  &#39;stock market_adjusted&#39;: 0.08378378489070502,
-  &#39;stock_market_top_adjusted&#39;: 0.08444433336173332,
-  &#39;taxes_adjusted&#39;: 0.07371695541219228,
-  &#39;united states_adjusted&#39;: 0.08448924123082475,
-  &#39;unix_btc&#39;: 0.418913282043234,
-  &#39;unix_eth&#39;: 0.418913282043234,
-  &#39;wall street_adjusted&#39;: -0.30809172367477994,
-  &#39;war_adjusted&#39;: -0.20137680493689306}}
-</pre></div>
-</div>
-</div>
-</div>
-<p>En primer lugar, generamos un dataframe con las correlaciones lineales de pearson entre las variables independientes y el primer rezago de la cotización (<code class="docutils literal notranslate"><span class="pre">y_lag1</span></code>). Luego, analizamos la correlación utilizando como target el séptimo rezago del precio de ethereum (<code class="docutils literal notranslate"><span class="pre">y_lag7</span></code>).</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correlaciones</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Predictores&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag1</span><span class="p">[</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">df_corr_lag1</span><span class="p">[</span><span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag1</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># correlación lineal lag 1: top 10</span>
+<span class="n">df_corr_lag1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correlaciones</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Predictores&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
+<span class="n">df_corr_lag1</span><span class="p">[</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">df_corr_lag1</span><span class="p">[</span><span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
+<span class="n">df_corr_lag1</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-77badfd3-25da-4055-8acd-579ffc5b5e3b">
+  <div id="df-b57e703d-4033-4f48-b1b2-d7685be02e9a">
     <div class="colab-df-container">
       <div>
 <style scoped>
@@ -1237,279 +897,69 @@ title="Print to PDF"
   </thead>
   <tbody>
     <tr>
-      <th>36</th>
+      <th>37</th>
       <td>close_eth</td>
       <td>0.999110</td>
       <td>0.999110</td>
     </tr>
     <tr>
-      <th>39</th>
+      <th>40</th>
       <td>eth_close_open_mean</td>
       <td>0.998156</td>
       <td>0.998156</td>
     </tr>
     <tr>
-      <th>34</th>
+      <th>35</th>
       <td>high_eth</td>
       <td>0.997592</td>
       <td>0.997592</td>
     </tr>
     <tr>
-      <th>35</th>
+      <th>36</th>
       <td>low_eth</td>
       <td>0.996777</td>
       <td>0.996777</td>
     </tr>
     <tr>
-      <th>33</th>
+      <th>34</th>
       <td>open_eth</td>
       <td>0.995428</td>
       <td>0.995428</td>
     </tr>
     <tr>
-      <th>1</th>
+      <th>2</th>
       <td>crypto_adjusted</td>
       <td>0.809500</td>
       <td>0.809500</td>
     </tr>
     <tr>
-      <th>15</th>
+      <th>16</th>
       <td>cryptocurrency_top_adjusted</td>
       <td>0.792022</td>
       <td>0.792022</td>
     </tr>
     <tr>
-      <th>0</th>
+      <th>1</th>
       <td>cryptocurrency_adjusted</td>
       <td>0.752407</td>
       <td>0.752407</td>
     </tr>
     <tr>
-      <th>42</th>
+      <th>43</th>
       <td>high_btc</td>
       <td>0.749247</td>
       <td>0.749247</td>
     </tr>
     <tr>
-      <th>41</th>
+      <th>42</th>
       <td>open_btc</td>
       <td>0.744810</td>
       <td>0.744810</td>
     </tr>
-    <tr>
-      <th>44</th>
-      <td>close_btc</td>
-      <td>0.742550</td>
-      <td>0.742550</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>low_btc</td>
-      <td>0.734638</td>
-      <td>0.734638</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>ethereum_top_adjusted</td>
-      <td>0.678603</td>
-      <td>0.678603</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>exchange_top_adjusted</td>
-      <td>0.657971</td>
-      <td>0.657971</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>ethereum_adjusted</td>
-      <td>0.625247</td>
-      <td>0.625247</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>ethereum price_adjusted</td>
-      <td>0.608226</td>
-      <td>0.608226</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>bitcoin price_adjusted</td>
-      <td>0.585435</td>
-      <td>0.585435</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>bitcoin_adjusted</td>
-      <td>0.557353</td>
-      <td>0.557353</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>bitcoin_top_adjusted</td>
-      <td>0.525779</td>
-      <td>0.525779</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>digital_wallet_top_adjusted</td>
-      <td>0.524381</td>
-      <td>0.524381</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td>Volume ETH_eth</td>
-      <td>0.504789</td>
-      <td>0.504789</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>unix_eth</td>
-      <td>0.413076</td>
-      <td>0.413076</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>unix_btc</td>
-      <td>0.413076</td>
-      <td>0.413076</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>bankrup_top_adjusted</td>
-      <td>0.345791</td>
-      <td>0.345791</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>interest rate_adjusted</td>
-      <td>0.331023</td>
-      <td>0.331023</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>wall street_adjusted</td>
-      <td>-0.280418</td>
-      <td>0.280418</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>future_commodities_adjusted</td>
-      <td>0.232769</td>
-      <td>0.232769</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>foreign_currency_adjusted</td>
-      <td>0.224380</td>
-      <td>0.224380</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>war_adjusted</td>
-      <td>-0.224222</td>
-      <td>0.224222</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>investment_top_adjusted</td>
-      <td>0.210613</td>
-      <td>0.210613</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>fed_adjusted</td>
-      <td>0.188877</td>
-      <td>0.188877</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>pandemic_adjusted</td>
-      <td>0.175789</td>
-      <td>0.175789</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>do kwon_adjusted</td>
-      <td>-0.175342</td>
-      <td>0.175342</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>elon musk_adjusted</td>
-      <td>0.134761</td>
-      <td>0.134761</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>banking_adjusted</td>
-      <td>0.134093</td>
-      <td>0.134093</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>bankruptcy_adjusted</td>
-      <td>-0.122406</td>
-      <td>0.122406</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>stock market_adjusted</td>
-      <td>0.093525</td>
-      <td>0.093525</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>united states_adjusted</td>
-      <td>0.092974</td>
-      <td>0.092974</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>inflation_adjusted</td>
-      <td>-0.091653</td>
-      <td>0.091653</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>stock_market_top_adjusted</td>
-      <td>0.091523</td>
-      <td>0.091523</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>taxes_adjusted</td>
-      <td>0.089626</td>
-      <td>0.089626</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>covid19_adjusted</td>
-      <td>0.075947</td>
-      <td>0.075947</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>china_adjusted</td>
-      <td>0.071390</td>
-      <td>0.071390</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>Volume USDT_eth</td>
-      <td>0.042606</td>
-      <td>0.042606</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>russia_adjusted</td>
-      <td>-0.023614</td>
-      <td>0.023614</td>
-    </tr>
   </tbody>
 </table>
 </div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-77badfd3-25da-4055-8acd-579ffc5b5e3b')"
+      <button class="colab-df-convert" onclick="convertToInteractive('df-b57e703d-4033-4f48-b1b2-d7685be02e9a')"
               title="Convert this dataframe to an interactive table."
               style="display:none;">
 
@@ -1560,12 +1010,12 @@ title="Print to PDF"
 
       <script>
         const buttonEl =
-          document.querySelector('#df-77badfd3-25da-4055-8acd-579ffc5b5e3b button.colab-df-convert');
+          document.querySelector('#df-b57e703d-4033-4f48-b1b2-d7685be02e9a button.colab-df-convert');
         buttonEl.style.display =
           google.colab.kernel.accessAllowed ? 'block' : 'none';
 
         async function convertToInteractive(key) {
-          const element = document.querySelector('#df-77badfd3-25da-4055-8acd-579ffc5b5e3b');
+          const element = document.querySelector('#df-b57e703d-4033-4f48-b1b2-d7685be02e9a');
           const dataTable =
             await google.colab.kernel.invokeFunction('convertToInteractive',
                                                      [key], {});
@@ -1588,27 +1038,16 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag7</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correlaciones</span><span class="p">[</span><span class="s1">&#39;y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Predictores&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag7</span><span class="p">[</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">df_corr_lag7</span><span class="p">[</span><span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag7</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># correlación lineal lag 7: top 10</span>
+<span class="n">df_corr_lag7</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correlaciones</span><span class="p">[</span><span class="s1">&#39;y_lag7&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Predictores&#39;</span><span class="p">,</span> <span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
+<span class="n">df_corr_lag7</span><span class="p">[</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">df_corr_lag7</span><span class="p">[</span><span class="s1">&#39;Correlacion&#39;</span><span class="p">])</span>
+<span class="n">df_corr_lag7</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_html">
-  <div id="df-f8fb0a70-8577-41ce-8a95-a123f8845efc">
+  <div id="df-4912bb26-c405-49c7-b31d-e33ddaa6ebc5">
     <div class="colab-df-container">
       <div>
 <style scoped>
@@ -1635,279 +1074,69 @@ title="Print to PDF"
   </thead>
   <tbody>
     <tr>
-      <th>36</th>
+      <th>37</th>
       <td>close_eth</td>
       <td>0.973860</td>
       <td>0.973860</td>
     </tr>
     <tr>
-      <th>39</th>
+      <th>40</th>
       <td>eth_close_open_mean</td>
       <td>0.972392</td>
       <td>0.972392</td>
     </tr>
     <tr>
-      <th>34</th>
+      <th>35</th>
       <td>high_eth</td>
       <td>0.972092</td>
       <td>0.972092</td>
     </tr>
     <tr>
-      <th>35</th>
+      <th>36</th>
       <td>low_eth</td>
       <td>0.970465</td>
       <td>0.970465</td>
     </tr>
     <tr>
-      <th>33</th>
+      <th>34</th>
       <td>open_eth</td>
       <td>0.969195</td>
       <td>0.969195</td>
     </tr>
     <tr>
-      <th>1</th>
+      <th>2</th>
       <td>crypto_adjusted</td>
       <td>0.798089</td>
       <td>0.798089</td>
     </tr>
     <tr>
-      <th>15</th>
+      <th>16</th>
       <td>cryptocurrency_top_adjusted</td>
       <td>0.790043</td>
       <td>0.790043</td>
     </tr>
     <tr>
-      <th>42</th>
+      <th>43</th>
       <td>high_btc</td>
       <td>0.768992</td>
       <td>0.768992</td>
     </tr>
     <tr>
-      <th>41</th>
+      <th>42</th>
       <td>open_btc</td>
       <td>0.763182</td>
       <td>0.763182</td>
     </tr>
     <tr>
-      <th>44</th>
+      <th>45</th>
       <td>close_btc</td>
       <td>0.762169</td>
       <td>0.762169</td>
     </tr>
-    <tr>
-      <th>0</th>
-      <td>cryptocurrency_adjusted</td>
-      <td>0.757299</td>
-      <td>0.757299</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>low_btc</td>
-      <td>0.752399</td>
-      <td>0.752399</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>exchange_top_adjusted</td>
-      <td>0.685570</td>
-      <td>0.685570</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>ethereum_top_adjusted</td>
-      <td>0.679829</td>
-      <td>0.679829</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>ethereum_adjusted</td>
-      <td>0.633063</td>
-      <td>0.633063</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>ethereum price_adjusted</td>
-      <td>0.628944</td>
-      <td>0.628944</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>bitcoin price_adjusted</td>
-      <td>0.610971</td>
-      <td>0.610971</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>bitcoin_adjusted</td>
-      <td>0.588090</td>
-      <td>0.588090</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>bitcoin_top_adjusted</td>
-      <td>0.552718</td>
-      <td>0.552718</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>digital_wallet_top_adjusted</td>
-      <td>0.526381</td>
-      <td>0.526381</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td>Volume ETH_eth</td>
-      <td>0.519326</td>
-      <td>0.519326</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>unix_btc</td>
-      <td>0.418913</td>
-      <td>0.418913</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>unix_eth</td>
-      <td>0.418913</td>
-      <td>0.418913</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>interest rate_adjusted</td>
-      <td>0.334927</td>
-      <td>0.334927</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>bankrup_top_adjusted</td>
-      <td>0.333796</td>
-      <td>0.333796</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>wall street_adjusted</td>
-      <td>-0.308092</td>
-      <td>0.308092</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>future_commodities_adjusted</td>
-      <td>0.234685</td>
-      <td>0.234685</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>foreign_currency_adjusted</td>
-      <td>0.232177</td>
-      <td>0.232177</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>investment_top_adjusted</td>
-      <td>0.209713</td>
-      <td>0.209713</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>war_adjusted</td>
-      <td>-0.201377</td>
-      <td>0.201377</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>do kwon_adjusted</td>
-      <td>-0.193568</td>
-      <td>0.193568</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>pandemic_adjusted</td>
-      <td>0.192871</td>
-      <td>0.192871</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>fed_adjusted</td>
-      <td>0.189757</td>
-      <td>0.189757</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>elon musk_adjusted</td>
-      <td>0.134188</td>
-      <td>0.134188</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>bankruptcy_adjusted</td>
-      <td>-0.132236</td>
-      <td>0.132236</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>banking_adjusted</td>
-      <td>0.129482</td>
-      <td>0.129482</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>covid19_adjusted</td>
-      <td>0.089916</td>
-      <td>0.089916</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>inflation_adjusted</td>
-      <td>-0.089334</td>
-      <td>0.089334</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>united states_adjusted</td>
-      <td>0.084489</td>
-      <td>0.084489</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>stock_market_top_adjusted</td>
-      <td>0.084444</td>
-      <td>0.084444</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>stock market_adjusted</td>
-      <td>0.083784</td>
-      <td>0.083784</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>china_adjusted</td>
-      <td>0.073990</td>
-      <td>0.073990</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>taxes_adjusted</td>
-      <td>0.073717</td>
-      <td>0.073717</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>Volume USDT_eth</td>
-      <td>0.059543</td>
-      <td>0.059543</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>russia_adjusted</td>
-      <td>-0.013848</td>
-      <td>0.013848</td>
-    </tr>
   </tbody>
 </table>
 </div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-f8fb0a70-8577-41ce-8a95-a123f8845efc')"
+      <button class="colab-df-convert" onclick="convertToInteractive('df-4912bb26-c405-49c7-b31d-e33ddaa6ebc5')"
               title="Convert this dataframe to an interactive table."
               style="display:none;">
 
@@ -1958,12 +1187,12 @@ title="Print to PDF"
 
       <script>
         const buttonEl =
-          document.querySelector('#df-f8fb0a70-8577-41ce-8a95-a123f8845efc button.colab-df-convert');
+          document.querySelector('#df-4912bb26-c405-49c7-b31d-e33ddaa6ebc5 button.colab-df-convert');
         buttonEl.style.display =
           google.colab.kernel.accessAllowed ? 'block' : 'none';
 
         async function convertToInteractive(key) {
-          const element = document.querySelector('#df-f8fb0a70-8577-41ce-8a95-a123f8845efc');
+          const element = document.querySelector('#df-4912bb26-c405-49c7-b31d-e33ddaa6ebc5');
           const dataTable =
             await google.colab.kernel.invokeFunction('convertToInteractive',
                                                      [key], {});
@@ -1984,533 +1213,179 @@ title="Print to PDF"
   </div>
 </div></div>
 </div>
-<p>Comparando ambas tablas, podemos ver que la correlación más alta, que es con la variable “close_eth” es de 0.999110 para y_lag1 y 0.973860 para y_lag7. No sólo eso, sino que el orden entre las correlaciones parecería mantenerse al ampliar la ventana temporal a predecir. De esto se desprenden algunos puntos a considerar en el análisis. Por un lado, existen variables como el precio de cierre diario de ethereum que tienen una correlación lineal casi perfecta al predecir la cotización del día siguiente y cuya asociación lineal solamente disminuye aproximadamente en 0.025 puntos al pasar a la cotización del séptimo día futuro al actual, lo cual sigue siendo una correlación lineal sumamente alta. En segundo lugar, el orden de las asociaciones no varía de manera considerable al pasar de ambas variables dependientes, de hecho la información de ethereum como los distintos precios presentes tienen la mayor correlación con el target, por lo que considerar su cotización corriente es de suma importancia para la predicción. En tercer lugar, la alta correlación en ambas ventanas extremas genera un panorama alentador en términos de cuán lejos un modelo de predicción podría anticipar el precio futuro de ethereum.</p>
-<p>A su vez, <em>high_btc</em> aparece como una variable muy correlacionada con el precio de ethereum, confirmando la teoría que comentábamos en el archivo <a class="reference external" href="https://colab.research.google.com/drive/1iqGw9KMUPGrJEMBnjgvQCGRqOvaNGE0G"><strong>2.1 Análisis univariado</strong></a>. Por lo tanto, podemos confirmar que el precio de ethereum también se asocia lineal y fuertemente con el precio de bitcoin.</p>
-<p>También para el análisis univariado seleccionamos las variables con el mayor promedio de búsquedas diario y dos de los de menor promedio de búsquedas diario, pensando en que podían tener relación con el precio de ethereum.  Las variables fueron: ‘banking_adjusted’, ‘investment_top_adjusted’, ‘covid19_adjusted’ y ‘elon musk_adjusted’.</p>
-<p>Como habíamos visto en ese análisis, no se veía dependencia clara entre la búsqueda de esas palabras y el precio de ethereum. Aquí lo podemos confirmar. De esas cuatro palabras, la que tiene mayor correlación con el precio de ethereum a predecir es ‘investment_top_adjusted’ con 0.210613 contra <em>y_lag1</em> y 0.209713 contra <em>y_lag7</em>. Retomando el análisis en la sección de análisis univariado, las variables “de momento” tienen la característica de que se podrían correlacionar fuertemente con el target en un período específico de tiempo, por lo que considerar las correlaciones en todo el período de estudio podría subestimar la influencia de estos predictores, como es el caso de la palabra <em>covid19</em> o <em>elon musk</em>, que podrían tener un rol importante en detectar patrones más volátiles. De hecho, repetimos el ejercicio de correlación entre la palabra <em>covid19</em> y el target <em>y_lag1</em> pero restringiendo el período de tiempo a marzo de 2020 - diciembre de 2020.</p>
+<p>Comparando ambas tablas, podemos ver que la correlación más alta, que es con la variable “close_eth” es de 0.999 para y_lag1 y 0.974 para y_lag7, un resultado esperable dado la alta autocorrelación parcial visto en el análisis univariado. No sólo eso, sino que el orden entre las correlaciones parecería mantenerse al ampliar la ventana temporal a predecir. De esto se desprenden algunos puntos a considerar en el análisis. Por un lado, existen variables como el precio de cierre diario de ethereum que tienen una correlación lineal casi perfecta al predecir la cotización del día siguiente y cuya asociación lineal solamente disminuye aproximadamente en 0.025 puntos al pasar de la cotización del rezago uno al séptimo, lo cual sigue siendo una correlación lineal sumamente alta. En segundo lugar, el orden de las asociaciones no varía de manera considerable al pasar entre ambas variables dependientes, lo cual sugiere la existencia de una relación casi lineal tanto entre los inputs y la cotización del primer rezago como con el séptimo rezado.A su vez, la información de ethereum como los distintos precios presentes tienen la mayor correlación con el target, por lo que considerar su cotización corriente es de suma importancia para la predicción. En tercer lugar, la alta correlación en ambas ventanas extremas genera un panorama alentador en términos de cuán lejos un modelo de predicción podría anticipar el precio futuro de ethereum.</p>
+<p>La variable <em>close_btc</em> aparece como una variable muy correlacionada con el precio de ethereum, sugiriendo lo que comentábamos en el archivo <a class="reference external" href="https://colab.research.google.com/drive/1iqGw9KMUPGrJEMBnjgvQCGRqOvaNGE0G"><strong>2.1 Análisis univariado</strong></a>, acerca de la fuerte asociación entre el precio de bitcoin y ethereum.</p>
+<p>También para el análisis univariado seleccionamos las variables con el mayor promedio de búsquedas diario y dos de los de menor promedio, pensando en que podían tener relación con el precio de ethereum.  Las variables fueron: ‘banking_adjusted’, ‘investment_top_adjusted’, ‘covid19_adjusted’ y ‘elon musk_adjusted’.</p>
+<p>Como habíamos visto en ese análisis, no se veía dependencia clara entre la búsqueda de esas palabras y el precio de ethereum. Aquí lo podemos confirmar. De esas cuatro palabras, la que tiene mayor correlación con el precio de ethereum a predecir es <em>investment_top_adjusted</em> con 0.211 contra <em>y_lag1</em> y 0.21 contra <em>y_lag7</em>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-03-01&#39;</span><span class="p">:,</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-03-01&#39;</span><span class="p">:,</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">varL</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;investment_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;banking_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;elon musk_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">varL</span><span class="p">:</span>
+    <span class="n">cor_lag1</span> <span class="o">=</span>  <span class="n">scp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">v</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">cor_lag7</span> <span class="o">=</span>  <span class="n">scp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">v</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">_lag1: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">cor_lag1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s1">-y_lag7: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">cor_lag7</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-0.4799494267276063
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>investment_top_adjusted_lag1: <span class=" -Color -Color-Bold -Color-Bold-Green">0.211</span>
+investment_top_adjusted-y_lag7: <span class=" -Color -Color-Bold -Color-Bold-Green">0.21</span>
+banking_adjusted_lag1: <span class=" -Color -Color-Bold -Color-Bold-Green">0.134</span>
+banking_adjusted-y_lag7: <span class=" -Color -Color-Bold -Color-Bold-Green">0.129</span>
+elon musk_adjusted_lag1: <span class=" -Color -Color-Bold -Color-Bold-Green">0.135</span>
+elon musk_adjusted-y_lag7: <span class=" -Color -Color-Bold -Color-Bold-Green">0.134</span>
+covid19_adjusted_lag1: <span class=" -Color -Color-Bold -Color-Bold-Green">0.076</span>
+covid19_adjusted-y_lag7: <span class=" -Color -Color-Bold -Color-Bold-Green">0.09</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>Como se puede ver, la correlación aumenta considerablemente y su signo pasa a cambiar. La magnitud pasa de 0.076 (signo positivo) en todo el período a 0.48 (signo negativo). De esta forma, la correlación indica que mayor frecuencia diaria de la palabra <em>covid 19</em> en google se asocia negativamente con la cotización del precio de ethereum del día siguiente al actual.</p>
+<p>Retomando el análisis en la sección de análisis univariado, las variables “de momento” tienen la característica de que se podrían correlacionar fuertemente con el target en un período específico de tiempo, por lo que considerar las correlaciones en todo el período de estudio podría subestimar la influencia de estos predictores, como es el caso de la palabra <em>covid19</em> o <em>elon musk</em>, que podrían tener un rol importante en detectar patrones más volátiles en intervalos menores de tiempo. De hecho, al repetir el ejercicio de correlación entre la palabra <em>covid19</em> y el target <em>y_lag1</em> pero restringiendo el período de tiempo a marzo de 2020 - diciembre de 2020 se observa lo esperado.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cor_lag1</span> <span class="o">=</span>  <span class="n">scp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-03-01&#39;</span><span class="p">:,</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> 
+                               <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-03-01&#39;</span><span class="p">:,</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cor_lag7</span> <span class="o">=</span>  <span class="n">scp</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-03-01&#39;</span><span class="p">:,</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">],</span> 
+                               <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2020-03-01&#39;</span><span class="p">:,</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;covid-19_lag1: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">cor_lag1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;covid-19-y_lag7: </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="nb">round</span><span class="p">(</span><span class="n">cor_lag7</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>covid-19_lag1: <span class=" -Color -Color-Bold -Color-Bold-Green">-0.48</span>
+covid-19-y_lag7: <span class=" -Color -Color-Bold -Color-Bold-Green">-0.414</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Como se puede ver, la correlación aumenta considerablemente y su signo cambia. La magnitud pasa de 0.076 (signo positivo) en todo el período a 0.48 (signo negativo) entre el período relevante de la variable. De esta forma, la correlación indica que mayor frecuencia diaria de la palabra <em>covid 19</em> en google se asocia negativamente con la cotización del precio de ethereum, y su magnitud, como en el caso general, disminuye a mayor ventana temporal.</p>
+</section>
+<section id="predictoras-entre-si">
+<h3><span class="section-number">2.2.1.2. </span>Predictoras entre sí<a class="headerlink" href="#predictoras-entre-si" title="Permalink to this headline">#</a></h3>
+<p>Nos interesa realizar el análisis de la correlación entre predictoras ya que más adelante nos servirá para estudiar con mayor precisión las estimaciones con componentes principales.</p>
+<p>Para esto, separaremos las variables “de momento” de las variables “regulares” considerando lo estudiado en el archivo <a class="reference external" href="https://colab.research.google.com/drive/1iqGw9KMUPGrJEMBnjgvQCGRqOvaNGE0G"><strong>2.1 Análisis univariado</strong></a>.</p>
+<p>Poniendo como punto de corte para hacer la división en grupos que el promedio de frecuencia de búsqueda sea menor a 6.5, las palabras que componen el grupo “de momento” son:
+‘covid19_adjusted’, ‘pandemic_adjusted’, ‘elon musk_adjusted’, ‘russia_adjusted’ y ‘do kwon_adjusted’.</p>
+<p>Las demás palabras componen al grupo “regular”.</p>
+<p>Comenzamos a estudiar la correlación entre las variables predictoras del grupo “regular”, considerando solamente las palabras.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># seleccionamos las columnas de interés</span>
+<span class="n">train2</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s1">&#39;banking_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;taxes_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;interest rate_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;foreign_currency_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;future_commodities_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;china_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;war_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;inflation_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bankruptcy_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;fed_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;united states_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;stock market_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;cryptocurrency_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;crypto_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin price_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;wall street_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum price_adjusted&#39;</span><span class="p">]]</span>
+<span class="c1">#generacion del grafico de correlacion</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">66</span><span class="p">,</span><span class="mi">22</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;pearson&#39;</span><span class="p">]):</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">correlation</span> <span class="o">=</span> <span class="n">train2</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+  <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_2_analisis_bivariado_17_0.png" src="../_images/2_2_analisis_bivariado_17_0.png" />
+</div>
+</div>
+<p>Como se puede observar en el gráfico, el grupo de variables ‘bitcoin_adjusted’, ‘cryptocurrency_adjusted’, ‘crypto_adjusted’, ‘ethereum_adjusted’, ‘bitcoin price_adjusted’ y ‘ethereum price_adjusted’ están muy correlacionadas entre sí, lo que era de esperarse.</p>
+<p>Ahora realizaremos las correlaciones entre las búsquedas top dentro del grupo “regular”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># seleccionamos las columnas de interés</span>
+<span class="n">train2</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s1">&#39;investment_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bankrup_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;digital_wallet_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;stock_market_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;exchange_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;cryptocurrency_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum_top_adjusted&#39;</span><span class="p">]]</span>
+<span class="c1">#generacion del grafico de correlacion </span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">66</span><span class="p">,</span><span class="mi">22</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;pearson&#39;</span><span class="p">]):</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">correlation</span> <span class="o">=</span> <span class="n">train2</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+  <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_2_analisis_bivariado_20_0.png" src="../_images/2_2_analisis_bivariado_20_0.png" />
+</div>
+</div>
+<p>Como es de esperarse, los top más correlacionados entre sí son ‘exchange_top_adjusted’, ‘bitcoin_top_adjusted’, ‘cryptocurrency_top_adjusted’ y ‘ethereum_top_adjusted’.</p>
+<p>Ahora observaremos las correlaciones entre las palabras más correlacionadas entre sí, los top más correlacionados entre sí y las variables de interés que se desprenden de los datos de Poloniex.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># seleccionamos las columnas de interés</span>
+<span class="n">train3</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s1">&#39;bitcoin_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;cryptocurrency_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;crypto_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin price_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum price_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;exchange_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;cryptocurrency_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum_top_adjusted&#39;</span><span class="p">,</span><span class="s1">&#39;close_eth&#39;</span><span class="p">,</span> <span class="s1">&#39;high_btc&#39;</span><span class="p">]]</span>
+<span class="c1">#generacion del grafico de correlacion</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">66</span><span class="p">,</span><span class="mi">22</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;pearson&#39;</span><span class="p">]):</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+  <span class="n">correlation</span> <span class="o">=</span> <span class="n">train3</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
+  <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_2_analisis_bivariado_23_0.png" src="../_images/2_2_analisis_bivariado_23_0.png" />
+</div>
+</div>
+<p>La predictora ‘high_btc’ no está muy correlacionada con las variables estudiadas anteriormente pero sí con ‘close_eth’.
+Por el contrario, ‘close_eth’ sí está más correlacionada con las otras variables, en particular con ‘cryptocurrency_adjusted’, ‘crypto_adjusted’ y ‘cryptocurrency_top_adjusted’ además de ‘high_btc’.</p>
+</section>
 </section>
 <section id="graficos-de-dispersion-y-distribucion">
 <h2><span class="section-number">2.2.2. </span>Gráficos de dispersión y distribución<a class="headerlink" href="#graficos-de-dispersion-y-distribucion" title="Permalink to this headline">#</a></h2>
-<p>A continuación, se realiza un análisis de dispersión entre la variable dependiente, rezagada 1 y 7 días, <em>y_lag1</em> e <em>y_lag7</em> respectivamente con las predictoras que vimos anteriormente tienen una alta correlación con el target.</p>
+<p>A continuación, se realiza un análisis de dispersión entre las variables dependientes <em>y_lag1</em> e <em>y_lag7</em> (a modo de simplificación) con algunas predictoras que tienen una alta correlación lineal con los targets. En primer lugar, se grafica la asociación y distribución del precio actual de ethereum versus los dos rezagos del precio de ethereum.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Grafico usando un scatterplot y histrograma </span>
 <span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;close_eth&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;close_eth&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x7f48c246c8d0&gt;
-</pre></div>
-</div>
+<img alt="../_images/2_2_analisis_bivariado_26_0.png" src="../_images/2_2_analisis_bivariado_26_0.png" />
 <img alt="../_images/2_2_analisis_bivariado_26_1.png" src="../_images/2_2_analisis_bivariado_26_1.png" />
 </div>
 </div>
+<p>Los gráficos de arriba muestran que la correlación lineal altamente positiva tiene una mayor dispersión a mayor ventana de tiempo, ya que al pasar del primer al séptimo rezago del precio de ethereum los puntos se vuelven más distantes entre sí, y cuya dispersión es aún mayor al tratarse de mayores niveles de precio. Esto podría decirnos que la variabilidad del precio futuro de ethereum puede ser predicho adecuadamente con el precio presente solamente si se trata de los días futuros inmediatos (quizás los primeros tres días). Al tratarse de ventanas más distantes podrían entrar en juego otros factores que capten patrones diferentes al que identifica el precio actual de la criptomoneda bajo estudio.</p>
+<p>En los dos gráficos siguientes se realizan los mismos plots pero utilizando el precio de apertura de bitcoin:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Grafico usando un scatterplot y histograma </span>
+<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;open_btc&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;open_btc&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;y_lag7&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_2_analisis_bivariado_28_0.png" src="../_images/2_2_analisis_bivariado_28_0.png" />
+<img alt="../_images/2_2_analisis_bivariado_28_1.png" src="../_images/2_2_analisis_bivariado_28_1.png" />
+</div>
+</div>
+<p>En los gráficos de arriba, se observa una mayor dispersión que para el caso de la comparación con close_eth, lo cual era un resultado esperado debido a que la correlación entre close_eth y las variables targets es mayor que entre close_btc y los diferentes rezagos del precio de ethereum. Lo interesante radica en que la forma de la asociación entre bitcoin y el precio futuro de ethereum no varía al cambiar la ventana temporal, de hecho, como vimos en la tabla de correlaciones en la sección <em>target versus predictoras</em> la correlación entre los precios de cierre y apertura presentes de bitcoin y la cotización futura promedio de ethereum aumenta levemente a mayor ventana temporal. Debido a que la correlación de pearson capta patrones lineales, el aumento de este indicador entre rezagos del precio de ethereum podría deberse a que, una mayor cantidad de puntos se concentran en la parte inferior izquierda del gráfico, es decir, a menores precios, lo cual linealmente implica un mayor ajuste y por lo tanto un indicador de pearson mayor. No obstante, al observar las dispersiones se ve que claramente la relación no es lineal.</p>
+<p>Por último, realizamos el mismo ejercicio pero utilizando el término de búsqueda de google <em>covid-19</em> y lo comparamos con los rezagos del target. Las nubes de puntos junto con sus distribuciones pueden verse en los siguientes gráficos:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Grafico usando un scatterplot y histrograma </span>
-<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;close_eth&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train</span><span class="o">.</span><span class="n">covid19_adjusted</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train</span><span class="o">.</span><span class="n">covid19_adjusted</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;seaborn.axisgrid.JointGrid at 0x7f48bd3feed0&gt;
-</pre></div>
-</div>
-<img alt="../_images/2_2_analisis_bivariado_27_1.png" src="../_images/2_2_analisis_bivariado_27_1.png" />
-</div>
-</div>
-<p>Comparando las variables target y_lag1 e y_lag7 contra close_eth que es con la cual tienen la correlación más alta, se observa una mayor dispersión para el caso de y_lag7, lo que es esperable debido a que su correlación con eth_close es 2.5% menor que para y_lag1.</p>
-<p>Por otro lado, a mayor valor de close_eth y de y_lag{i}, mayor dispersión del gráfico.</p>
-<p>A su vez, durante gran parte del período el precio de ethereum se concentró entre 0 y 500 USD, lo cual se puede observar en el gráfico debido a una mayor densidad de puntos en ese área. La distribución de las variables es asimétrica hacia la derecha.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Grafico usando un scatterplot y histograma </span>
-<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;high_btc&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag1&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Comparación y_lag1 vs high_btc&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">)</span>
-<span class="p">;</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&#39;
-</pre></div>
-</div>
-<img alt="../_images/2_2_analisis_bivariado_29_1.png" src="../_images/2_2_analisis_bivariado_29_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Grafico usando un scatterplot y histograma </span>
-<span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s1">&#39;high_btc&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span> <span class="s1">&#39;y_lag7&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">train</span> <span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Comparación y_lag7 vs high_btc&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;small&#39;</span><span class="p">)</span>
-<span class="p">;</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;&#39;
-</pre></div>
-</div>
+<img alt="../_images/2_2_analisis_bivariado_30_0.png" src="../_images/2_2_analisis_bivariado_30_0.png" />
 <img alt="../_images/2_2_analisis_bivariado_30_1.png" src="../_images/2_2_analisis_bivariado_30_1.png" />
 </div>
 </div>
-<p>En este caso, se observa una mayor dispersión que para el caso de la comparación contra close_eth, lo cual era un resultado esperado debido a que la correlación entre close_eth y las variables target son mayores que la correlación entre high_btc y las variables target.</p>
-<p>De igual manera, se puede ver que para menores valores de high_btc y {y_lag1, y_lag7} la dispersión es menor que para valores más grandes en ambos ejes.</p>
-<p>A su vez, durante gran parte del período el precio de bitcoin se concentró entre 0 y 10.000 USD, lo cual se puede observar en el gráfico debido a una mayor densidad de puntos en ese área. Como conclusión podemos decir que a mayor precio de bitcoin o ethereum, la volatilidad es mayor debido a la menor cantidad de observaciones a precios tan altos.</p>
-<p>Por último, la distribución de las variables es asimétrica hacia la derecha.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_corr_lag1</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;corr_abs&#39;</span><span class="p">,</span> <span class="n">ascending</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-<span class="c1">#list(loc[0:4, &#39;Predictores&#39;])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-ce5b94d5-97b3-4779-84ac-815a4d06056c">
-    <div class="colab-df-container">
-      <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Predictores</th>
-      <th>Correlacion</th>
-      <th>corr_abs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>36</th>
-      <td>close_eth</td>
-      <td>0.999110</td>
-      <td>0.999110</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td>eth_close_open_mean</td>
-      <td>0.998156</td>
-      <td>0.998156</td>
-    </tr>
-    <tr>
-      <th>34</th>
-      <td>high_eth</td>
-      <td>0.997592</td>
-      <td>0.997592</td>
-    </tr>
-    <tr>
-      <th>35</th>
-      <td>low_eth</td>
-      <td>0.996777</td>
-      <td>0.996777</td>
-    </tr>
-    <tr>
-      <th>33</th>
-      <td>open_eth</td>
-      <td>0.995428</td>
-      <td>0.995428</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>crypto_adjusted</td>
-      <td>0.809500</td>
-      <td>0.809500</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>cryptocurrency_top_adjusted</td>
-      <td>0.792022</td>
-      <td>0.792022</td>
-    </tr>
-    <tr>
-      <th>0</th>
-      <td>cryptocurrency_adjusted</td>
-      <td>0.752407</td>
-      <td>0.752407</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td>high_btc</td>
-      <td>0.749247</td>
-      <td>0.749247</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>open_btc</td>
-      <td>0.744810</td>
-      <td>0.744810</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>close_btc</td>
-      <td>0.742550</td>
-      <td>0.742550</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>low_btc</td>
-      <td>0.734638</td>
-      <td>0.734638</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>ethereum_top_adjusted</td>
-      <td>0.678603</td>
-      <td>0.678603</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>exchange_top_adjusted</td>
-      <td>0.657971</td>
-      <td>0.657971</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>ethereum_adjusted</td>
-      <td>0.625247</td>
-      <td>0.625247</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>ethereum price_adjusted</td>
-      <td>0.608226</td>
-      <td>0.608226</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>bitcoin price_adjusted</td>
-      <td>0.585435</td>
-      <td>0.585435</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>bitcoin_adjusted</td>
-      <td>0.557353</td>
-      <td>0.557353</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>bitcoin_top_adjusted</td>
-      <td>0.525779</td>
-      <td>0.525779</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>digital_wallet_top_adjusted</td>
-      <td>0.524381</td>
-      <td>0.524381</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td>Volume ETH_eth</td>
-      <td>0.504789</td>
-      <td>0.504789</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>unix_eth</td>
-      <td>0.413076</td>
-      <td>0.413076</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>unix_btc</td>
-      <td>0.413076</td>
-      <td>0.413076</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>bankrup_top_adjusted</td>
-      <td>0.345791</td>
-      <td>0.345791</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>interest rate_adjusted</td>
-      <td>0.331023</td>
-      <td>0.331023</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>wall street_adjusted</td>
-      <td>-0.280418</td>
-      <td>0.280418</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>future_commodities_adjusted</td>
-      <td>0.232769</td>
-      <td>0.232769</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>foreign_currency_adjusted</td>
-      <td>0.224380</td>
-      <td>0.224380</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>war_adjusted</td>
-      <td>-0.224222</td>
-      <td>0.224222</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>investment_top_adjusted</td>
-      <td>0.210613</td>
-      <td>0.210613</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>fed_adjusted</td>
-      <td>0.188877</td>
-      <td>0.188877</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>pandemic_adjusted</td>
-      <td>0.175789</td>
-      <td>0.175789</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>do kwon_adjusted</td>
-      <td>-0.175342</td>
-      <td>0.175342</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>elon musk_adjusted</td>
-      <td>0.134761</td>
-      <td>0.134761</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>banking_adjusted</td>
-      <td>0.134093</td>
-      <td>0.134093</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>bankruptcy_adjusted</td>
-      <td>-0.122406</td>
-      <td>0.122406</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>stock market_adjusted</td>
-      <td>0.093525</td>
-      <td>0.093525</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>united states_adjusted</td>
-      <td>0.092974</td>
-      <td>0.092974</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>inflation_adjusted</td>
-      <td>-0.091653</td>
-      <td>0.091653</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>stock_market_top_adjusted</td>
-      <td>0.091523</td>
-      <td>0.091523</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>taxes_adjusted</td>
-      <td>0.089626</td>
-      <td>0.089626</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>covid19_adjusted</td>
-      <td>0.075947</td>
-      <td>0.075947</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>china_adjusted</td>
-      <td>0.071390</td>
-      <td>0.071390</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>Volume USDT_eth</td>
-      <td>0.042606</td>
-      <td>0.042606</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>russia_adjusted</td>
-      <td>-0.023614</td>
-      <td>0.023614</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-ce5b94d5-97b3-4779-84ac-815a4d06056c')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-ce5b94d5-97b3-4779-84ac-815a4d06056c button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-ce5b94d5-97b3-4779-84ac-815a4d06056c');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train1</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s1">&#39;close_eth&#39;</span><span class="p">,</span> <span class="s1">&#39;crypto_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;high_btc&#39;</span><span class="p">,</span> <span class="s1">&#39;exchange_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;digital_wallet_top_adjusted&#39;</span><span class="p">]]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#generacion de los graficos de correlacion entre los 3 metodos, </span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">66</span><span class="p">,</span><span class="mi">22</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;pearson&#39;</span><span class="p">,</span><span class="s1">&#39;kendall&#39;</span><span class="p">,</span><span class="s1">&#39;spearman&#39;</span><span class="p">]):</span>
-  <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
-  <span class="n">correlation</span> <span class="o">=</span> <span class="n">train1</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">i</span><span class="p">)</span>
-  <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-  <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
-  <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
-  <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">23</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/2_2_analisis_bivariado_34_0.png" src="../_images/2_2_analisis_bivariado_34_0.png" />
-</div>
-</div>
-<p>Como se puede ver entre el metodo Spearman y Pearson hay valores diferentes. Eso se da porque los valores de pearson son diferenciados por la distribucion que asumimos que es normal y seguramente no lo sea.</p>
-<p>A partir de eso, dado que muchos de nuestros predictores no presentan una distribución normal, nos enfocamos en analizar la matriz de Spearman.</p>
-<p>Para close_eth es esperable que tenga una correlación alta con exchange_top_adjusted porque esta es una categoría que engloba muchas palabras relacionadas al mercado de criptomonedas. De hecho, la palabra crypto_adjusted parecería ser un input para la generación del tópico exchange (exchange_top_adjusted). La correlación con el precio más alto de bitcoin (high_btc) es una característica que ya la hemos analizado antes.</p>
-<p>Finalmente, el tópico digital_wallet no está tan correlacionado con el tópico exchange ni tampoco con la palabra crypto. De todos modos, sí está correlacionado con el precio más alto de bitcoin (high_btc).</p>
-<p>Comparación entre el precio de cierre de Ethereum, el precio de cierre de Bitcoin y las búsquedas de Bitcoin y Ethereum:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># defino el tamaño del gráfico</span>
-<span class="c1">#sns.set(rc = {&#39;figure.figsize&#39;:(22, 7)})</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># armo el gráfico</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;close_eth&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;close_btc&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;bitcoin_adjusted&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;ethereum_adjusted&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
-
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Correlación de indicadores&#39;</span><span class="p">,</span> <span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Ethereum (log)&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Bitcoin (log)&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Busqueda bitcoin (log)&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Busqueda ethereum (log)&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/2_2_analisis_bivariado_37_0.png" src="../_images/2_2_analisis_bivariado_37_0.png" />
-</div>
-</div>
-<p>En los gráficos anteriores se puede observar, de otro modo, cómo el precio de ethereum y el de bitcoin están muy correlacionados, debido a que ethereum sigue claramente la tendencia de precio de bitcoin.</p>
-<p>A su vez, las búsquedas de ambas palabras se asocian con el movimiento del precio.</p>
+<p>En primer lugar, se aclara que para generar los gráficos de arriba primero se filtra el primer período de la serie, donde no existían búsquedas de coronavirus. Para hacerlo solamente filtramos las filas que tiene frecuencias de búsquedas de covid positivas, ya que, como se muestra en el análisis univariado de la sección anterior, una vez generado el fenómeno la proporción de búsqueda siempre se mantuvo por encima de cero.</p>
+<p>En los gráficos se observa una marcada no linealidad: tanto el primer como el séptimo rezago del precio de ethereum presentan una relación elástica en el primer tramo de valores de <em>covid19_adjusted</em> e inelástica en el tramo superior de valores del predictor. En frecuencias entre 0 y 30% de la palabra covid-19 la relación presenta una pendiente lineal empinada, donde ante un aumento de un punto porcentual de la frecuencias de búsqueda de este predictor el precio de ethereum aumenta considerablemente. Mientras que al pasar a frecuencias de búsqueda de covid-19 superior al 30% la relación lineal es levemente negativa, pero casi completamente inelástica, es decir, aumentos de un punto porcentual en la búsqueda diaria de la palabra en cuestión se asocian con leves caídas en el precio futuro de ethereum.</p>
 </section>
 </section>
 

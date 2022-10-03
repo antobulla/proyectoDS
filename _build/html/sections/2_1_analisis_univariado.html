@@ -50,6 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="2.2. Análisis bivariado" href="2_2_analisis_bivariado.html" />
@@ -424,20 +426,22 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
    2.1.1. Variable a predecir: precio diario promedio de ethereum
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#causalidad-de-wiener-granger">
+     2.1.1.1. Causalidad de Wiener-Granger
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#analisis-por-variable">
-   2.1.2. Análisis por variable
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#graficos-de-linea">
-   2.1.3. Gráficos de línea
+  <a class="reference internal nav-link" href="#variables-predictoras-o-features">
+   2.1.2. Variables predictoras o features
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#histogramas-y-densidad">
-   2.1.4. Histogramas y densidad
+   2.1.3. Histogramas y densidad
   </a>
  </li>
 </ul>
@@ -463,20 +467,22 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#variable-a-predecir-precio-diario-promedio-de-ethereum">
    2.1.1. Variable a predecir: precio diario promedio de ethereum
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#causalidad-de-wiener-granger">
+     2.1.1.1. Causalidad de Wiener-Granger
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#analisis-por-variable">
-   2.1.2. Análisis por variable
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#graficos-de-linea">
-   2.1.3. Gráficos de línea
+  <a class="reference internal nav-link" href="#variables-predictoras-o-features">
+   2.1.2. Variables predictoras o features
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#histogramas-y-densidad">
-   2.1.4. Histogramas y densidad
+   2.1.3. Histogramas y densidad
   </a>
  </li>
 </ul>
@@ -491,18 +497,29 @@ title="Print to PDF"
                 
   <section id="analisis-univariado">
 <h1><span class="section-number">2.1. </span>Análisis univariado<a class="headerlink" href="#analisis-univariado" title="Permalink to this headline">#</a></h1>
-<p>En esta sección se realiza el análisis univariado de los datos, a partir de herramientas de visualización y tablas que nos sugieran ciertos patrones entre el target y los predictores.</p>
+<p>El análisis univariado es el primario y más básico. Consiste en analizar cada una de las variables estudiadas por separado, basándose exclusivamente en una a la vez. El motivo principal es entender comportamientos de variables individualmente, tanto el <em>output</em> como los <em>features</em> que utilizamos en el trabajo. Para ello, primero cargamos las liberías que utilizamos junto con el dataset armado en las secciones anteriores, que contiene la variable a predecir, es decir, el precio diario promedio de ethereum (la media entre apertura y clausura) y las variables independientes o predictoras. A su vez, creamos una clase que se utilizará para darle colores a los <code class="docutils literal notranslate"><span class="pre">prints</span></code> realizados en las líneas de código.</p>
+<p>Luego, la estructura exploratoria univariada se divide en la variable a predecir y los predictores utilizados en el trabajo. Debido a que se intenta seguir la lógica establecida en el enfoque de validación, es decir, extraer de la base un subconjunto para entrenamiento y otro para testeo, este análisis se realiza sobre los datos que se van a utilizar para ajustar el modelo. La razón radica en que los datos que son para testear la performance predictiva del estimador serán utilizados únicamente a modo de evaluación, entendiéndose a los mismos como datos “desconocidos” al momento de explorar la base. Por esto, una vez importado el dataset nos quedamos con los primeros años de la serie, que va desde el 8 de agosto de 2015 hasta el 31 de diciembre de 2020.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># cargamos las librerías</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics</span> <span class="kn">import</span> <span class="n">tsaplots</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_pacf</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
 <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">from</span> <span class="nn">seaborn</span> <span class="kn">import</span> <span class="n">distplot</span>
 <span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">scp</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">grangercausalitytests</span>
+<span class="c1"># muteamos algunos warnings esperables que no afectan los outputs de los códigos</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">FutureWarning</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pandas.core.common</span> <span class="kn">import</span> <span class="n">SettingWithCopyWarning</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">SettingWithCopyWarning</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -510,20 +527,40 @@ title="Print to PDF"
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
 <span class="nn">Input In [1],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">style</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>  
+<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">statsmodels.graphics</span> <span class="kn">import</span> <span class="n">tsaplots</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_pacf</span>
 
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;matplotlib&#39;
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;statsmodels&#39;
 </pre></div>
 </div>
 </div>
 </div>
-<p>El análisis univariado es el primario y más básico. Consiste en analizar cada una de las variables estudiadas por separado, basándose exclusivamente en una variable.</p>
-<p>Para comenzar, importamos el dataset crudo con el target a predecir y los predictores que vamos a utilizar. Como variable a predecir, utilizamos el precio diario de la criptomoneda ethereum, promediando su cotización de apertura y clausura.</p>
-<p>Debido a que se intenta seguir la lógica establecida en el enfoque de validación, es decir, extraer de la base un subconjunto para entrenamiento y otro para testeo, este análisis se realiza sobre los datos que se van a entrenar. La razón radica en que los datos que son para testeo del modelo serán utilizados únicamente a modo de evaluación, entendiéndose a los mismos como datos “desconocidos” al momento de explorar la base y ajustar los modelos. Por esto, una vez importado el dataset nos quedamos con los primeros años de la serie, que va desde el 8 de agosto de 2015 hasta el 31 de diciembre de 2020.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># creamos la clase style para poner colores a los prints</span>
+<span class="k">class</span> <span class="nc">style</span><span class="p">():</span>
+    <span class="n">black</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[30m&#39;</span>
+    <span class="n">red</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[31m&#39;</span>
+    <span class="n">green</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1;32m&#39;</span> <span class="c1"># bold</span>
+    <span class="n">underline</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span>
+    <span class="n">mark</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\33</span><span class="s1">[44m&#39;</span>
+    <span class="n">endc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># damos el estilo de ggplot y un tamaño de fuente a los gráficos </span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span> 
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span> 
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># importamos dataset</span>
@@ -540,10 +577,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-a476be4e-abd8-44cf-8050-4e7bd3724f11">
-    <div class="colab-df-container">
-      <div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -732,172 +766,94 @@ title="Print to PDF"
   </tbody>
 </table>
 <p>5 rows × 54 columns</p>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-a476be4e-abd8-44cf-8050-4e7bd3724f11')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-a476be4e-abd8-44cf-8050-4e7bd3724f11 button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-a476be4e-abd8-44cf-8050-4e7bd3724f11');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Información de la composición del dataset</span>
-<span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">underline</span><span class="si">}</span><span class="s1">Shape del dataset:</span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">style</span><span class="o">.</span><span class="n">green</span><span class="si">}{</span><span class="n">train</span><span class="o">.</span><span class="n">shape</span><span class="si">}{</span><span class="n">style</span><span class="o">.</span><span class="n">endc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">train</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
-Index: 2499 entries, 2015-08-08 to 2022-06-14
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shape del dataset: <span class=" -Color -Color-Bold -Color-Bold-Green">(1963, 54)</span>
+&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+Index: 1963 entries, 2015-08-08 to 2020-12-31
 Data columns (total 54 columns):
  #   Column                       Non-Null Count  Dtype  
 ---  ------                       --------------  -----  
- 0   Volume USDT_btc              2499 non-null   float64
- 1   cryptocurrency_adjusted      2499 non-null   float64
- 2   crypto_adjusted              2499 non-null   float64
- 3   bitcoin_adjusted             2499 non-null   float64
- 4   bitcoin price_adjusted       2499 non-null   float64
- 5   ethereum_adjusted            2499 non-null   float64
- 6   ethereum price_adjusted      2499 non-null   float64
- 7   stock market_adjusted        2499 non-null   float64
- 8   wall street_adjusted         2499 non-null   float64
- 9   interest rate_adjusted       2499 non-null   float64
- 10  fed_adjusted                 2499 non-null   float64
- 11  bankruptcy_adjusted          2499 non-null   float64
- 12  china_adjusted               2499 non-null   float64
- 13  united states_adjusted       2499 non-null   float64
- 14  war_adjusted                 2499 non-null   float64
- 15  russia_adjusted              2499 non-null   float64
- 16  cryptocurrency_top_adjusted  2499 non-null   float64
- 17  bitcoin_top_adjusted         2499 non-null   float64
- 18  investment_top_adjusted      2499 non-null   float64
- 19  ethereum_top_adjusted        2499 non-null   float64
- 20  exchange_top_adjusted        2499 non-null   float64
- 21  bankrup_top_adjusted         2499 non-null   float64
- 22  stock_market_top_adjusted    2499 non-null   float64
- 23  inflation_adjusted           2499 non-null   float64
- 24  taxes_adjusted               2499 non-null   float64
- 25  digital_wallet_top_adjusted  2499 non-null   float64
- 26  covid19_adjusted             2499 non-null   float64
- 27  pandemic_adjusted            2499 non-null   float64
- 28  elon musk_adjusted           2499 non-null   float64
- 29  do kwon_adjusted             2499 non-null   float64
- 30  future_commodities_adjusted  2499 non-null   float64
- 31  banking_adjusted             2499 non-null   float64
- 32  foreign_currency_adjusted    2499 non-null   float64
- 33  unix_eth                     2499 non-null   int64  
- 34  open_eth                     2499 non-null   float64
- 35  high_eth                     2499 non-null   float64
- 36  low_eth                      2499 non-null   float64
- 37  close_eth                    2499 non-null   float64
- 38  Volume ETH_eth               2499 non-null   float64
- 39  Volume USDT_eth              2499 non-null   float64
- 40  eth_close_open_mean          2499 non-null   float64
- 41  y_lag1                       2499 non-null   float64
- 42  y_lag2                       2499 non-null   float64
- 43  y_lag3                       2499 non-null   float64
- 44  y_lag4                       2499 non-null   float64
- 45  y_lag5                       2499 non-null   float64
- 46  y_lag6                       2499 non-null   float64
- 47  y_lag7                       2499 non-null   float64
- 48  unix_btc                     2499 non-null   int64  
- 49  open_btc                     2499 non-null   float64
- 50  high_btc                     2499 non-null   float64
- 51  low_btc                      2499 non-null   float64
- 52  close_btc                    2499 non-null   float64
- 53  Volume BTC_btc               2499 non-null   float64
+ 0   Volume USDT_btc              1963 non-null   float64
+ 1   cryptocurrency_adjusted      1963 non-null   float64
+ 2   crypto_adjusted              1963 non-null   float64
+ 3   bitcoin_adjusted             1963 non-null   float64
+ 4   bitcoin price_adjusted       1963 non-null   float64
+ 5   ethereum_adjusted            1963 non-null   float64
+ 6   ethereum price_adjusted      1963 non-null   float64
+ 7   stock market_adjusted        1963 non-null   float64
+ 8   wall street_adjusted         1963 non-null   float64
+ 9   interest rate_adjusted       1963 non-null   float64
+ 10  fed_adjusted                 1963 non-null   float64
+ 11  bankruptcy_adjusted          1963 non-null   float64
+ 12  china_adjusted               1963 non-null   float64
+ 13  united states_adjusted       1963 non-null   float64
+ 14  war_adjusted                 1963 non-null   float64
+ 15  russia_adjusted              1963 non-null   float64
+ 16  cryptocurrency_top_adjusted  1963 non-null   float64
+ 17  bitcoin_top_adjusted         1963 non-null   float64
+ 18  investment_top_adjusted      1963 non-null   float64
+ 19  ethereum_top_adjusted        1963 non-null   float64
+ 20  exchange_top_adjusted        1963 non-null   float64
+ 21  bankrup_top_adjusted         1963 non-null   float64
+ 22  stock_market_top_adjusted    1963 non-null   float64
+ 23  inflation_adjusted           1963 non-null   float64
+ 24  taxes_adjusted               1963 non-null   float64
+ 25  digital_wallet_top_adjusted  1963 non-null   float64
+ 26  covid19_adjusted             1963 non-null   float64
+ 27  pandemic_adjusted            1963 non-null   float64
+ 28  elon musk_adjusted           1963 non-null   float64
+ 29  do kwon_adjusted             1963 non-null   float64
+ 30  future_commodities_adjusted  1963 non-null   float64
+ 31  banking_adjusted             1963 non-null   float64
+ 32  foreign_currency_adjusted    1963 non-null   float64
+ 33  unix_eth                     1963 non-null   int64  
+ 34  open_eth                     1963 non-null   float64
+ 35  high_eth                     1963 non-null   float64
+ 36  low_eth                      1963 non-null   float64
+ 37  close_eth                    1963 non-null   float64
+ 38  Volume ETH_eth               1963 non-null   float64
+ 39  Volume USDT_eth              1963 non-null   float64
+ 40  eth_close_open_mean          1963 non-null   float64
+ 41  y_lag1                       1963 non-null   float64
+ 42  y_lag2                       1963 non-null   float64
+ 43  y_lag3                       1963 non-null   float64
+ 44  y_lag4                       1963 non-null   float64
+ 45  y_lag5                       1963 non-null   float64
+ 46  y_lag6                       1963 non-null   float64
+ 47  y_lag7                       1963 non-null   float64
+ 48  unix_btc                     1963 non-null   int64  
+ 49  open_btc                     1963 non-null   float64
+ 50  high_btc                     1963 non-null   float64
+ 51  low_btc                      1963 non-null   float64
+ 52  close_btc                    1963 non-null   float64
+ 53  Volume BTC_btc               1963 non-null   float64
 dtypes: float64(52), int64(2)
-memory usage: 1.1+ MB
+memory usage: 843.5+ KB
 </pre></div>
 </div>
 </div>
 </div>
-<p>Como se puede observar, el dataframe se compone de 53 columnas y 2499 filas. Entre las variables utilizadas como predictoras, se encuentra la cotización de cierre y apertura del bitcoin, como su volumen diario de transacciones. Además, el dataset contiene frecuencia de las tendencias de google relacionadas al mercado de criptomonedas como las palabras <em>cryptocurrency, crypto, bitcoin, ethereum price, interest rate</em>, entre otros. A su vez, la base de datos a utilizar no contiene valores nulos.</p>
-<p>A continuación se observa la estadística descriptiva de la frecuencia relativa de las palabras buscadas en Google en el período dado.</p>
-<p>Debido a que las frecuencias diarias de búsqueda de google se calculan en relación al valor máximo de toda la serie, se puede inferir que las variables que tienen promedio de búsqueda muy bajos podrían ser consideradas variables “de momento”. Con este término nos referimos a palabras que se ponen de moda en un período corto en relación al período de toda la serie. Por el contrario, variables que tienen un promedio de frecuencia de búsqueda muy altas, parecerían ser aquellas con una evolución temporal más regular.</p>
-<p>Esto lleva a plantear como hipótesis que las variables “de momento” podrían correlacionarse con los cambios abruptos del precio de las cotizaciones de Ethereum. En cambio, palabras con promedio de búsqueda diario alto podrían tener menor correlación con grandes movimientos de la cotización de ethereum. Los promedios, junto con otros estadísticos como los quintiles y desvío estándar pueden observarse en la siguiente tabla.</p>
+<p>Como se puede observar, el dataframe se compone de 54 columnas, 1963 filas y no cuenta con valores faltantes. Entre las variables utilizadas como predictoras, se encuentra la cotización de cierre y apertura del bitcoin, como su volumen diario de transacciones. Además, el dataset contiene frecuencia de las tendencias de google relacionadas al mercado de criptomonedas como las palabras <em>cryptocurrency, crypto, bitcoin, ethereum price, interest rate</em>, entre otros. Por otra parte, el target se compone de un conjunto de siete variables dependientes, las cuales representan el precio promedio de ethereum en distintos momentos futuros de tiempo.</p>
+<p>A continuación, se construye una tabla con estadísticas descriptivas básicas con los inputs de <em>google trends</em>. Debido a que las frecuencias de este último se calculan en relación al valor máximo de toda la serie, se puede inferir que las variables que tienen promedios de búsqueda muy bajos podrían ser consideradas variables “de momento”. Con este último término nos referimos a búsqueda de palabras que se ponen de moda en un lapso corto de tiempo, en relación al período completo. Por el contrario, variables que tienen un promedio de frecuencia de búsqueda muy altas, parecerían ser aquellas con una evolución temporal más regular. Esto lleva a plantear como hipótesis que las variables “de momento” podrían correlacionarse con los cambios abruptos del precio de las cotizaciones de ethereum. En cambio, palabras con promedio de búsqueda diario alto podrían tener menor correlación con grandes movimientos de nuestra variable a predecir. Los promedios, junto con otros estadísticos como los quintiles y desvíos estándar pueden observarse en la siguiente tabla, ordenada de mayor a menor según el promedio de la serie:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;adjusted&#39;</span> <span class="ow">in</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:.5f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estadísticas descriptivas con los términos de búsqueda y tópicos de google trends</span>
+<span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;adjusted&#39;</span> <span class="ow">in</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">train</span><span class="o">.</span><span class="n">columns</span><span class="p">]]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0:.5f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html">
-  <div id="df-548e872f-8fc4-4db0-a1b8-ab8c58e0defd">
-    <div class="colab-df-container">
-      <div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -928,444 +884,372 @@ memory usage: 1.1+ MB
   <tbody>
     <tr>
       <th>banking_adjusted</th>
-      <td>2499.00000</td>
-      <td>65.53982</td>
-      <td>14.03591</td>
-      <td>0.00000</td>
-      <td>55.56000</td>
-      <td>67.89000</td>
-      <td>75.33000</td>
+      <td>1963.00000</td>
+      <td>67.25898</td>
+      <td>14.27488</td>
+      <td>32.80000</td>
+      <td>56.98000</td>
+      <td>70.47000</td>
+      <td>77.20500</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>investment_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>45.39372</td>
-      <td>12.16000</td>
-      <td>0.00000</td>
-      <td>38.18500</td>
-      <td>45.60000</td>
-      <td>53.94000</td>
-      <td>79.00000</td>
+      <td>1963.00000</td>
+      <td>42.40997</td>
+      <td>10.89634</td>
+      <td>18.00000</td>
+      <td>34.26000</td>
+      <td>44.10000</td>
+      <td>50.35000</td>
+      <td>69.00000</td>
     </tr>
     <tr>
       <th>taxes_adjusted</th>
-      <td>2499.00000</td>
-      <td>43.54414</td>
-      <td>13.68105</td>
-      <td>0.00000</td>
-      <td>33.55000</td>
-      <td>42.90000</td>
-      <td>51.68000</td>
-      <td>92.00000</td>
-    </tr>
-    <tr>
-      <th>interest rate_adjusted</th>
-      <td>2499.00000</td>
-      <td>42.05728</td>
-      <td>16.47968</td>
-      <td>0.00000</td>
-      <td>28.91000</td>
-      <td>39.65000</td>
-      <td>53.94000</td>
-      <td>97.00000</td>
+      <td>1963.00000</td>
+      <td>42.05361</td>
+      <td>12.77281</td>
+      <td>12.25000</td>
+      <td>32.45000</td>
+      <td>41.80000</td>
+      <td>50.15000</td>
+      <td>84.28000</td>
     </tr>
     <tr>
       <th>foreign_currency_adjusted</th>
-      <td>2499.00000</td>
-      <td>41.68705</td>
-      <td>13.28344</td>
-      <td>0.00000</td>
-      <td>33.52000</td>
-      <td>41.86000</td>
-      <td>48.97000</td>
-      <td>98.00000</td>
+      <td>1963.00000</td>
+      <td>39.48777</td>
+      <td>11.46834</td>
+      <td>7.92000</td>
+      <td>32.94000</td>
+      <td>40.80000</td>
+      <td>46.92000</td>
+      <td>80.00000</td>
+    </tr>
+    <tr>
+      <th>interest rate_adjusted</th>
+      <td>1963.00000</td>
+      <td>38.89738</td>
+      <td>16.12168</td>
+      <td>8.82000</td>
+      <td>26.84000</td>
+      <td>35.91000</td>
+      <td>48.24000</td>
+      <td>97.00000</td>
     </tr>
     <tr>
       <th>future_commodities_adjusted</th>
-      <td>2499.00000</td>
-      <td>37.37268</td>
-      <td>13.75892</td>
-      <td>0.00000</td>
-      <td>27.14000</td>
-      <td>35.67000</td>
-      <td>42.78000</td>
-      <td>100.00000</td>
+      <td>1963.00000</td>
+      <td>33.80225</td>
+      <td>10.80731</td>
+      <td>13.02000</td>
+      <td>25.37000</td>
+      <td>33.62000</td>
+      <td>39.15500</td>
+      <td>96.03000</td>
     </tr>
     <tr>
       <th>china_adjusted</th>
-      <td>2499.00000</td>
-      <td>30.61341</td>
-      <td>8.16596</td>
-      <td>0.00000</td>
-      <td>27.33000</td>
-      <td>31.68000</td>
-      <td>34.40000</td>
+      <td>1963.00000</td>
+      <td>31.98547</td>
+      <td>7.78720</td>
+      <td>14.43000</td>
+      <td>29.60000</td>
+      <td>32.37000</td>
+      <td>34.80000</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>bankrup_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>30.47424</td>
-      <td>13.00300</td>
-      <td>0.00000</td>
-      <td>20.20500</td>
+      <td>1963.00000</td>
+      <td>31.24008</td>
+      <td>13.91772</td>
+      <td>5.28000</td>
+      <td>20.16000</td>
       <td>28.60000</td>
-      <td>40.15000</td>
+      <td>42.65000</td>
       <td>78.00000</td>
     </tr>
     <tr>
       <th>war_adjusted</th>
-      <td>2499.00000</td>
-      <td>27.08813</td>
-      <td>10.47154</td>
-      <td>0.00000</td>
-      <td>20.70000</td>
-      <td>27.00000</td>
-      <td>33.12000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>digital_wallet_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>26.52101</td>
-      <td>16.44897</td>
-      <td>0.00000</td>
-      <td>13.26000</td>
-      <td>21.84000</td>
-      <td>35.91000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>inflation_adjusted</th>
-      <td>2499.00000</td>
-      <td>20.11456</td>
-      <td>7.58301</td>
-      <td>0.00000</td>
-      <td>14.86500</td>
-      <td>18.90000</td>
-      <td>23.76000</td>
+      <td>1963.00000</td>
+      <td>28.11535</td>
+      <td>10.47700</td>
+      <td>5.74000</td>
+      <td>22.00000</td>
+      <td>27.88000</td>
+      <td>34.30000</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>bankruptcy_adjusted</th>
-      <td>2499.00000</td>
-      <td>19.86671</td>
-      <td>7.51370</td>
-      <td>0.00000</td>
-      <td>14.20000</td>
-      <td>18.48000</td>
-      <td>26.00000</td>
+      <td>1963.00000</td>
+      <td>21.75248</td>
+      <td>7.23612</td>
+      <td>5.06000</td>
+      <td>16.32000</td>
+      <td>21.09000</td>
+      <td>27.72000</td>
       <td>47.00000</td>
     </tr>
     <tr>
+      <th>digital_wallet_top_adjusted</th>
+      <td>1963.00000</td>
+      <td>21.31302</td>
+      <td>12.38493</td>
+      <td>4.50000</td>
+      <td>12.15000</td>
+      <td>16.92000</td>
+      <td>29.13000</td>
+      <td>98.00000</td>
+    </tr>
+    <tr>
       <th>fed_adjusted</th>
-      <td>2499.00000</td>
-      <td>17.93387</td>
-      <td>8.04223</td>
-      <td>0.00000</td>
-      <td>12.32000</td>
-      <td>16.82000</td>
-      <td>22.26000</td>
-      <td>75.00000</td>
+      <td>1963.00000</td>
+      <td>18.67463</td>
+      <td>7.81770</td>
+      <td>4.41000</td>
+      <td>13.34000</td>
+      <td>17.94000</td>
+      <td>22.79000</td>
+      <td>72.00000</td>
+    </tr>
+    <tr>
+      <th>inflation_adjusted</th>
+      <td>1963.00000</td>
+      <td>18.56449</td>
+      <td>5.37000</td>
+      <td>7.80000</td>
+      <td>14.19000</td>
+      <td>17.98000</td>
+      <td>22.72000</td>
+      <td>40.00000</td>
     </tr>
     <tr>
       <th>united states_adjusted</th>
-      <td>2499.00000</td>
-      <td>15.63163</td>
-      <td>8.07969</td>
-      <td>0.00000</td>
-      <td>9.62000</td>
-      <td>16.64000</td>
-      <td>20.84000</td>
+      <td>1963.00000</td>
+      <td>15.42243</td>
+      <td>8.68545</td>
+      <td>1.44000</td>
+      <td>7.83000</td>
+      <td>16.50000</td>
+      <td>21.10500</td>
       <td>62.00000</td>
     </tr>
     <tr>
       <th>stock_market_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>11.91455</td>
-      <td>8.66841</td>
-      <td>0.00000</td>
-      <td>5.79000</td>
-      <td>10.80000</td>
-      <td>16.72000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>exchange_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>10.82978</td>
-      <td>11.69377</td>
-      <td>0.00000</td>
-      <td>2.70000</td>
-      <td>7.35000</td>
-      <td>14.06500</td>
-      <td>90.00000</td>
-    </tr>
-    <tr>
-      <th>bitcoin_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>10.70790</td>
-      <td>10.74317</td>
-      <td>0.00000</td>
-      <td>3.46500</td>
-      <td>7.77000</td>
-      <td>14.28000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>cryptocurrency_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>9.55036</td>
-      <td>12.44627</td>
-      <td>0.00000</td>
-      <td>1.55000</td>
-      <td>5.50000</td>
-      <td>10.08000</td>
+      <td>1963.00000</td>
+      <td>10.89128</td>
+      <td>8.82111</td>
+      <td>0.51000</td>
+      <td>4.94000</td>
+      <td>9.36000</td>
+      <td>15.18000</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>stock market_adjusted</th>
-      <td>2499.00000</td>
-      <td>9.29119</td>
-      <td>7.61016</td>
-      <td>0.00000</td>
-      <td>4.34000</td>
-      <td>8.12000</td>
-      <td>12.73500</td>
+      <td>1963.00000</td>
+      <td>8.38978</td>
+      <td>7.80804</td>
+      <td>0.30000</td>
+      <td>3.60000</td>
+      <td>6.86000</td>
+      <td>11.44000</td>
       <td>100.00000</td>
+    </tr>
+    <tr>
+      <th>bitcoin_top_adjusted</th>
+      <td>1963.00000</td>
+      <td>8.02003</td>
+      <td>9.10565</td>
+      <td>0.65000</td>
+      <td>2.71000</td>
+      <td>6.11000</td>
+      <td>9.66000</td>
+      <td>100.00000</td>
+    </tr>
+    <tr>
+      <th>exchange_top_adjusted</th>
+      <td>1963.00000</td>
+      <td>7.66239</td>
+      <td>10.31665</td>
+      <td>0.34000</td>
+      <td>1.56000</td>
+      <td>6.21000</td>
+      <td>8.64000</td>
+      <td>90.00000</td>
+    </tr>
+    <tr>
+      <th>wall street_adjusted</th>
+      <td>1963.00000</td>
+      <td>7.57221</td>
+      <td>1.98770</td>
+      <td>1.87000</td>
+      <td>6.27000</td>
+      <td>7.40000</td>
+      <td>8.64000</td>
+      <td>17.00000</td>
     </tr>
     <tr>
       <th>bitcoin_adjusted</th>
-      <td>2499.00000</td>
-      <td>9.17082</td>
-      <td>9.53838</td>
-      <td>0.00000</td>
-      <td>3.20000</td>
-      <td>6.40000</td>
-      <td>12.09000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>ethereum_top_adjusted</th>
-      <td>2499.00000</td>
-      <td>8.98426</td>
-      <td>11.83559</td>
-      <td>0.00000</td>
-      <td>1.80000</td>
-      <td>4.08000</td>
-      <td>11.05000</td>
+      <td>1963.00000</td>
+      <td>6.71265</td>
+      <td>7.88458</td>
+      <td>0.78000</td>
+      <td>2.43000</td>
+      <td>5.04000</td>
+      <td>7.98000</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>cryptocurrency_adjusted</th>
-      <td>2499.00000</td>
-      <td>8.61622</td>
-      <td>10.41735</td>
+      <td>1963.00000</td>
+      <td>6.61132</td>
+      <td>9.41560</td>
       <td>0.00000</td>
-      <td>1.80000</td>
-      <td>5.80000</td>
-      <td>10.80000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>crypto_adjusted</th>
-      <td>2499.00000</td>
-      <td>8.30878</td>
-      <td>12.58044</td>
-      <td>0.00000</td>
-      <td>1.02000</td>
-      <td>4.32000</td>
-      <td>8.10000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>ethereum_adjusted</th>
-      <td>2499.00000</td>
-      <td>7.79877</td>
-      <td>11.34894</td>
-      <td>0.00000</td>
-      <td>1.02000</td>
-      <td>3.00000</td>
-      <td>9.72000</td>
+      <td>0.66000</td>
+      <td>4.59000</td>
+      <td>8.19500</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>bitcoin price_adjusted</th>
-      <td>2499.00000</td>
-      <td>7.60682</td>
-      <td>9.37661</td>
-      <td>0.00000</td>
-      <td>1.74000</td>
-      <td>4.92000</td>
-      <td>9.94000</td>
+      <td>1963.00000</td>
+      <td>5.39218</td>
+      <td>7.72023</td>
+      <td>0.08000</td>
+      <td>0.96000</td>
+      <td>3.68000</td>
+      <td>6.60000</td>
       <td>100.00000</td>
     </tr>
     <tr>
-      <th>wall street_adjusted</th>
-      <td>2499.00000</td>
-      <td>7.50018</td>
-      <td>1.94071</td>
-      <td>0.00000</td>
+      <th>cryptocurrency_top_adjusted</th>
+      <td>1963.00000</td>
+      <td>5.02624</td>
+      <td>5.50374</td>
+      <td>0.28000</td>
+      <td>0.86000</td>
+      <td>4.59000</td>
       <td>6.40000</td>
-      <td>7.41000</td>
-      <td>8.52000</td>
-      <td>17.00000</td>
+      <td>56.00000</td>
     </tr>
     <tr>
-      <th>ethereum price_adjusted</th>
-      <td>2499.00000</td>
-      <td>6.54856</td>
-      <td>11.22368</td>
-      <td>0.00000</td>
-      <td>0.46000</td>
-      <td>1.41000</td>
-      <td>7.00000</td>
-      <td>100.00000</td>
+      <th>ethereum_top_adjusted</th>
+      <td>1963.00000</td>
+      <td>4.59634</td>
+      <td>5.10376</td>
+      <td>0.28000</td>
+      <td>1.45000</td>
+      <td>3.06000</td>
+      <td>5.56500</td>
+      <td>44.00000</td>
     </tr>
     <tr>
       <th>covid19_adjusted</th>
-      <td>2499.00000</td>
-      <td>6.10276</td>
-      <td>12.04912</td>
+      <td>1963.00000</td>
+      <td>4.26610</td>
+      <td>12.61671</td>
       <td>0.00000</td>
       <td>0.00000</td>
       <td>0.00000</td>
-      <td>11.22500</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>pandemic_adjusted</th>
-      <td>2499.00000</td>
-      <td>5.43212</td>
-      <td>8.09200</td>
       <td>0.00000</td>
-      <td>0.49000</td>
-      <td>0.74000</td>
-      <td>9.88000</td>
-      <td>100.00000</td>
-    </tr>
-    <tr>
-      <th>elon musk_adjusted</th>
-      <td>2499.00000</td>
-      <td>4.81696</td>
-      <td>6.32177</td>
-      <td>0.00000</td>
-      <td>1.44000</td>
-      <td>2.97000</td>
-      <td>6.00000</td>
       <td>100.00000</td>
     </tr>
     <tr>
       <th>russia_adjusted</th>
-      <td>2499.00000</td>
-      <td>4.53150</td>
-      <td>5.55996</td>
-      <td>0.00000</td>
+      <td>1963.00000</td>
+      <td>3.90478</td>
+      <td>1.96683</td>
+      <td>0.28000</td>
       <td>2.56000</td>
-      <td>4.00000</td>
-      <td>5.28000</td>
-      <td>100.00000</td>
+      <td>3.71000</td>
+      <td>5.11000</td>
+      <td>25.74000</td>
     </tr>
     <tr>
       <th>do kwon_adjusted</th>
-      <td>2499.00000</td>
-      <td>3.34024</td>
-      <td>2.30288</td>
+      <td>1963.00000</td>
+      <td>3.73312</td>
+      <td>2.03471</td>
+      <td>0.46000</td>
+      <td>2.03500</td>
+      <td>3.36000</td>
+      <td>5.12000</td>
+      <td>14.00000</td>
+    </tr>
+    <tr>
+      <th>crypto_adjusted</th>
+      <td>1963.00000</td>
+      <td>3.67837</td>
+      <td>3.31819</td>
+      <td>0.33000</td>
+      <td>0.82500</td>
+      <td>3.54000</td>
+      <td>4.86000</td>
+      <td>33.00000</td>
+    </tr>
+    <tr>
+      <th>elon musk_adjusted</th>
+      <td>1963.00000</td>
+      <td>3.59083</td>
+      <td>4.89545</td>
+      <td>0.22000</td>
+      <td>1.20000</td>
+      <td>2.42000</td>
+      <td>4.10000</td>
+      <td>88.00000</td>
+    </tr>
+    <tr>
+      <th>pandemic_adjusted</th>
+      <td>1963.00000</td>
+      <td>3.57159</td>
+      <td>7.85664</td>
       <td>0.00000</td>
-      <td>1.71000</td>
-      <td>2.76000</td>
-      <td>4.72000</td>
-      <td>35.00000</td>
+      <td>0.45000</td>
+      <td>0.64000</td>
+      <td>0.83000</td>
+      <td>100.00000</td>
+    </tr>
+    <tr>
+      <th>ethereum_adjusted</th>
+      <td>1963.00000</td>
+      <td>3.56301</td>
+      <td>4.75137</td>
+      <td>0.00000</td>
+      <td>0.70000</td>
+      <td>2.04000</td>
+      <td>4.29000</td>
+      <td>42.00000</td>
+    </tr>
+    <tr>
+      <th>ethereum price_adjusted</th>
+      <td>1963.00000</td>
+      <td>2.07885</td>
+      <td>3.35878</td>
+      <td>0.00000</td>
+      <td>0.23000</td>
+      <td>0.96000</td>
+      <td>2.20000</td>
+      <td>33.00000</td>
     </tr>
   </tbody>
 </table>
-</div>
-      <button class="colab-df-convert" onclick="convertToInteractive('df-548e872f-8fc4-4db0-a1b8-ab8c58e0defd')"
-              title="Convert this dataframe to an interactive table."
-              style="display:none;">
-
-  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
-       width="24px">
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M18.56 5.44l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94zm-11 1L8.5 8.5l.94-2.06 2.06-.94-2.06-.94L8.5 2.5l-.94 2.06-2.06.94zm10 10l.94 2.06.94-2.06 2.06-.94-2.06-.94-.94-2.06-.94 2.06-2.06.94z"/><path d="M17.41 7.96l-1.37-1.37c-.4-.4-.92-.59-1.43-.59-.52 0-1.04.2-1.43.59L10.3 9.45l-7.72 7.72c-.78.78-.78 2.05 0 2.83L4 21.41c.39.39.9.59 1.41.59.51 0 1.02-.2 1.41-.59l7.78-7.78 2.81-2.81c.8-.78.8-2.07 0-2.86zM5.41 20L4 18.59l7.72-7.72 1.47 1.35L5.41 20z"/>
-  </svg>
-      </button>
-
-  <style>
-    .colab-df-container {
-      display:flex;
-      flex-wrap:wrap;
-      gap: 12px;
-    }
-
-    .colab-df-convert {
-      background-color: #E8F0FE;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      fill: #1967D2;
-      height: 32px;
-      padding: 0 0 0 0;
-      width: 32px;
-    }
-
-    .colab-df-convert:hover {
-      background-color: #E2EBFA;
-      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
-      fill: #174EA6;
-    }
-
-    [theme=dark] .colab-df-convert {
-      background-color: #3B4455;
-      fill: #D2E3FC;
-    }
-
-    [theme=dark] .colab-df-convert:hover {
-      background-color: #434B5C;
-      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
-      fill: #FFFFFF;
-    }
-  </style>
-
-      <script>
-        const buttonEl =
-          document.querySelector('#df-548e872f-8fc4-4db0-a1b8-ab8c58e0defd button.colab-df-convert');
-        buttonEl.style.display =
-          google.colab.kernel.accessAllowed ? 'block' : 'none';
-
-        async function convertToInteractive(key) {
-          const element = document.querySelector('#df-548e872f-8fc4-4db0-a1b8-ab8c58e0defd');
-          const dataTable =
-            await google.colab.kernel.invokeFunction('convertToInteractive',
-                                                     [key], {});
-          if (!dataTable) return;
-
-          const docLinkHtml = 'Like what you see? Visit the ' +
-            '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
-            + ' to learn more about interactive tables.';
-          element.innerHTML = '';
-          dataTable['output_type'] = 'display_data';
-          await google.colab.output.renderOutput(dataTable, element);
-          const docLink = document.createElement('div');
-          docLink.innerHTML = docLinkHtml;
-          element.appendChild(docLink);
-        }
-      </script>
-    </div>
-  </div>
-</div></div>
+</div></div></div>
 </div>
 <section id="variable-a-predecir-precio-diario-promedio-de-ethereum">
 <h2><span class="section-number">2.1.1. </span>Variable a predecir: precio diario promedio de ethereum<a class="headerlink" href="#variable-a-predecir-precio-diario-promedio-de-ethereum" title="Permalink to this headline">#</a></h2>
-<p>En primer lugar, observamos la serie del precio diario promedio de ethereum, nuestra variable a predecir. Como se puede ver en la primera figura, la serie presenta un componente irregular no despreciable, la serie comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando un diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, donde la misma comienza a subir. Dicha irregularidad presenta una alta volatilidad o varianza, por lo que sería deseable poder aplicar alguna transformación a la serie antes de predecir.</p>
+<p>En primer lugar, analizamos la serie del precio diario promedio de ethereum, nuestro target, que es el promedio entre el precio de apertura y cierre en un día. Como se dijo antes, la misma se compone de siete “instancias” que representan los precios futuros para los primeros siete días siguientes al presente, a saber:</p>
+<div class="math notranslate nohighlight">
+\[
+y = y_{i+T} \text{ con } i = 0 \text{ y } T=1,2,...,7  
+\]</div>
+<p>Donde <span class="math notranslate nohighlight">\(i\)</span> representa el tiempo actual y <span class="math notranslate nohighlight">\(T\)</span> los días a predecir, el cual se compone de siete instancias o días futuros.</p>
+<p>Como se puede apreciar en la primera figura debajo, el precio de ethereum para el período de entrenamiento comienza los primeros años con valores cercanos a cero, para luego aumentar abruptamente, generando diferentes picos desde mediados de 2017 hasta mediados de 2019 aproximadamente. De hecho, el mayor valor de la serie se observa a principios del 2018. Luego, la cotización permanece estable alrededor de los 200 usdt hasta mediados de 2020, momento en el cual el precio promedio comienza a subir. Por supuesto, al estar contemplando la serie histórica del precio de ethereum tomamos los primeros momentos donde la criptomoneda “da sus primeros pasos”. En este período de tiempo la misma no tiene la popularidad que gana a medidados del 2017, por lo que la baja trascendencia de ethereum en el mercado de monedas digitales se refleja en su precio casi nulo.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span> <span class="c1"># set estilo</span>
-<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">15</span><span class="p">})</span> <span class="c1"># set tamaño de ticks</span>
-<span class="c1"># graficamos la base ethereum completa</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># graficamos la base ethereum completa</span>
 <span class="n">train</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#993404&#39;</span><span class="p">)</span>
@@ -1376,55 +1260,54 @@ memory usage: 1.1+ MB
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2_1_analisis_univariado_9_0.png" src="../_images/2_1_analisis_univariado_9_0.png" />
+<img alt="../_images/2_1_analisis_univariado_11_0.png" src="../_images/2_1_analisis_univariado_11_0.png" />
 </div>
 </div>
-<p>Aclaración: la variable <code class="docutils literal notranslate"><span class="pre">y_lag1</span></code> representa el precio de ethereum con un rezago de 1 día y será utilizada para la predicción del precio del día siguiente al precio presente observado.</p>
-<p>Por lo tanto, <code class="docutils literal notranslate"><span class="pre">y_lag{i}</span></code> con <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">=</span> <span class="pre">1,</span> <span class="pre">...,</span> <span class="pre">7</span></code> será utilizado para predecir el precio del día {i} luego del último día observado.</p>
-<p>La transformación elegida es la transformación logarítmica, la cual permite una compresión de los datos, generando una serie con menor nivel de irregularidad y, por lo tanto, con mejor comportamiento para predecir. A continuación, se presenta la serie del precio promedio de ethereum diario en logaritmo.</p>
+<p>Como suele ocurrir en series del mercado financiero, la cotización de ethereum es una serie no estacionaria. Tanto la media como la varianza son funciones del tiempo. Para poder verlo con mayor claridad aplicamos el filtro de Hodrick-Prescott a la serie para extraer el componente de tendencia y de ciclo de la misma. Los resultados se observan en los siguientes dos gráficos debajo:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#993404&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;logaritmo&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Aplicando el filtro H-P para separar en tendencia y ciclo.</span>
+<span class="n">train_y_ciclo</span><span class="p">,</span> <span class="n">train_y_tend</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">hpfilter</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">])</span>
+<span class="n">train</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;y_tendencia&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_y_tend</span>
+<span class="c1"># graficando la variacion del precio real con la tendencia.</span>
+<span class="n">train</span><span class="p">[[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">,</span> <span class="s1">&#39;y_tendencia&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">prop</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;precio promedio (ETH/USDT)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tiempo&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Serie del precio diario promedio de ethereum en logaritmo&quot;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Serie del precio diario promedio de ethereum. Cotización y tendencia&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2_1_analisis_univariado_12_0.png" src="../_images/2_1_analisis_univariado_12_0.png" />
+<img alt="../_images/2_1_analisis_univariado_13_0.png" src="../_images/2_1_analisis_univariado_13_0.png" />
 </div>
 </div>
-<p>Así, luego de aplicar el logaritmo, se logra mayor suavidad en el gráfico en comparación con los valores iniciales de la cotización.</p>
-</section>
-<section id="analisis-por-variable">
-<h2><span class="section-number">2.1.2. </span>Análisis por variable<a class="headerlink" href="#analisis-por-variable" title="Permalink to this headline">#</a></h2>
-<p>Seleccionaremos las variables que consideramos más significativas para realizar su análisis univariado.</p>
-<p>Por un lado, elegimos como primera variable el precio de bitcoin, considerando que es muy común leer o escuchar dentro de comunidades crypto y en Internet en general que las altcoins (criptomonedas alternativas, ethereum es una de ellas) siguen la tendencia de bitcoin.</p>
-<p>Por otro lado, a partir de la tabla de estadísticas descriptivas mostrado antes, seleccionamos dos de las primeras variables y dos de las últimas que allí aparecen, es decir, dos de las que presentan el mayor promedio de búsquedas diario y dos de los de menor, respectivamente. Repasando la idea de los indicadores de palabras, las mismas se calculan asignando el número 100 al valor máximo de toda la serie, a partir de este se calcula la tasa de búsqueda de los demás días respecto a ese valor máximo. Por lo que la interpretación de la proporción de búsqueda se realiza en base a ese valor pico.</p>
-</section>
-<section id="graficos-de-linea">
-<h2><span class="section-number">2.1.3. </span>Gráficos de línea<a class="headerlink" href="#graficos-de-linea" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span> <span class="c1"># set tamaño de ticks</span>
-<span class="c1"># defino el tamaño del gráfico</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># armo el gráfico</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;high_btc&#39;</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;banking_adjusted&#39;</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;investment_top_adjusted&#39;</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">])</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;elon musk_adjusted&#39;</span><span class="p">])</span>
-
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Variables seleccionadas&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;high_btc&#39;</span><span class="p">);</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;banking_adjusted&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;investment_top_adjusted&#39;</span><span class="p">);</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;covid-19&#39;</span><span class="p">);</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;elon musk&#39;</span><span class="p">);</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># graficando el ciclo</span>
+<span class="n">train_y_ciclo</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">prop</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;precio promedio (ETH/USDT)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tiempo&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Ciclo del precio diario promedio de ethereum&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_1_analisis_univariado_14_0.png" src="../_images/2_1_analisis_univariado_14_0.png" />
+</div>
+</div>
+<p>Como se puede observar, ni la media ni la varianza en ambos gráficos son constantes. Esto trae un problema en los resultados que se puedan obtener del ejercicio, debido a que los hallazgos podrían ser de índole local más que global, es decir, los resultados no garantizan la identificación de patrones que puedan repetirse en períodos futuros lejanos. Sin embargo, en este trabajo se decide no optar por la estacionalización del target. Debido a que buscamos predecir precios de corto plazo, creemos que la estacionalización del target conllevaría un mayor margen de error en la predicción. De todas formas, para suavizar la serie y disminuir la irregularidad del precio de ethereum se opta por transformarla en logaritmo de base 10. El gráfico de abajo muestra el comportamiento de la variable transformada:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># graficamos el target transformado con logaritmo base 10</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#993404&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;precio promedio (ETH/USDT) en logaritmo&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;tiempo&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Serie del precio diario promedio de ethereum en logaritmo&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -1432,93 +1315,232 @@ memory usage: 1.1+ MB
 <img alt="../_images/2_1_analisis_univariado_16_0.png" src="../_images/2_1_analisis_univariado_16_0.png" />
 </div>
 </div>
-<p>Como puede verse, la serie de la palabra <em>bitcoin</em> sigue muy de cerca la evolución del precio de ethereum, con un primer pico en 2018 y una tendencia positiva durante el 2020. Por otra parte, variables constantes como <em>banking</em> e <em>investment</em> no parecen tener cambios agudos que puedan tener una asociación con las fluctuaciones de ethereum, mientras que la búsqueda de <em>covid_19</em> lógicamente comienza a aparecer masivamente recién en 2020. En el caso de <em>elon musk</em>, la misma también aparece con mayor frecuencia durante el año 2020, aunque también tiene picos de menor nivel durante el 2018.</p>
+<p>La transformación logarítmica no elimina la tendencia, pero genera en la cotización un comportamiento más suave y factible para predecir.</p>
+<p>Por último, chequeamos la autocorrelación que presenta nuestra variable a predecir, utilizando dos medidas para esto. Por un lado, la correlación serial común que mide la asociación entre <span class="math notranslate nohighlight">\(Y_t\)</span> e <span class="math notranslate nohighlight">\(Y_{t-k}\)</span>. Por otra parte, utilizamos la autocorrelación parcial, la cual mide la misma asociación pero controlando los demás rezagos de la serie. Los resultados se pueden ver en las siguientes dos figuras:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot función de autocorrelación</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_acf</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> <span class="n">lags</span><span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Autocorrelación en el precio de ethereum&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">tsaplots</span><span class="o">.</span><span class="n">plot_pacf</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;y_lag1&#39;</span><span class="p">],</span> <span class="n">lags</span><span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Autocorrelación parcial en el precio de ethereum&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_1_analisis_univariado_18_0.png" src="../_images/2_1_analisis_univariado_18_0.png" />
+</div>
+</div>
+<p>En las dos figuras de arriba se muestra la autocorrelación de la serie del precio de ethereum, al analizar la autocorrelación común vemos una fuerte correlación serial positiva de los 20 rezagos estudiados, sin embargo, al controlar cada rezago en la estimación (correlación parcial) podemos ver que el efecto del tiempo disminuye, volviendose en la mayoría de los casos no significativa estadísticamente. Siguiendo la última figura y con motivos de simplificar dimensiones incluiremos los dos primeros rezagos como predictores del precio de ethereum.</p>
+<section id="causalidad-de-wiener-granger">
+<h3><span class="section-number">2.1.1.1. </span>Causalidad de Wiener-Granger<a class="headerlink" href="#causalidad-de-wiener-granger" title="Permalink to this headline">#</a></h3>
+<p>El test de causalidad de Wiener-Granger (Granger de ahora en más) es un test estadístico utilizado para determinar si una serie temporal puede predecir a otra. La lógica del test es que si una serie temporal <span class="math notranslate nohighlight">\(X_1\)</span> “causa” otra <span class="math notranslate nohighlight">\(Y\)</span>, los modelos de <span class="math notranslate nohighlight">\(Y\)</span> en los que se emplean los datos rezagados de <span class="math notranslate nohighlight">\(X_1\)</span> e <span class="math notranslate nohighlight">\(Y\)</span> deben funcionar mejor que los que utilizan solamente los lags de <span class="math notranslate nohighlight">\(Y\)</span>. Por supuesto, el hecho de poner “causa” entre comillas <code class="docutils literal notranslate"><span class="pre">&quot;</span> <span class="pre">&quot;</span></code> se debe a que los resultados no deben entenderse como un fenómeno causal propiamente dicho, debido a que el test solamente identifica si una variable antecede a otra en una serie temporal. Con dicha prueba no hay forma de demostrar mecanismos de índole causal.</p>
+<p>Dicho esto, en este apartado se pretende ver si existe una relación de causalidad del tipo Granger entre la serie del precio de bitcoin y el de ethereum. Para ello, evaluamos si los 7 rezagos del precio de bitcoin podrían estar asociados significativamente con el target.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># precio del bitcoin rezagado como predictor del precio futuro de ethereum </span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">grangercausalitytests</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;open_eth&#39;</span><span class="p">,</span> <span class="s1">&#39;open_btc&#39;</span><span class="p">]],</span> <span class="n">maxlag</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Granger Causality
+number of lags (no zero) 1
+ssr based F test:         F=26.9842 , p=0.0000  , df_denom=2495, df_num=1
+ssr based chi2 test:   chi2=27.0167 , p=0.0000  , df=1
+likelihood ratio test: chi2=26.8716 , p=0.0000  , df=1
+parameter F test:         F=26.9842 , p=0.0000  , df_denom=2495, df_num=1
+
+Granger Causality
+number of lags (no zero) 2
+ssr based F test:         F=18.1432 , p=0.0000  , df_denom=2492, df_num=2
+ssr based chi2 test:   chi2=36.3593 , p=0.0000  , df=2
+likelihood ratio test: chi2=36.0971 , p=0.0000  , df=2
+parameter F test:         F=18.1432 , p=0.0000  , df_denom=2492, df_num=2
+
+Granger Causality
+number of lags (no zero) 3
+ssr based F test:         F=17.4294 , p=0.0000  , df_denom=2489, df_num=3
+ssr based chi2 test:   chi2=52.4352 , p=0.0000  , df=3
+likelihood ratio test: chi2=51.8921 , p=0.0000  , df=3
+parameter F test:         F=17.4294 , p=0.0000  , df_denom=2489, df_num=3
+
+Granger Causality
+number of lags (no zero) 4
+ssr based F test:         F=14.4700 , p=0.0000  , df_denom=2486, df_num=4
+ssr based chi2 test:   chi2=58.0894 , p=0.0000  , df=4
+likelihood ratio test: chi2=57.4235 , p=0.0000  , df=4
+parameter F test:         F=14.4700 , p=0.0000  , df_denom=2486, df_num=4
+
+Granger Causality
+number of lags (no zero) 5
+ssr based F test:         F=12.0637 , p=0.0000  , df_denom=2483, df_num=5
+ssr based chi2 test:   chi2=60.5855 , p=0.0000  , df=5
+likelihood ratio test: chi2=59.8613 , p=0.0000  , df=5
+parameter F test:         F=12.0637 , p=0.0000  , df_denom=2483, df_num=5
+
+Granger Causality
+number of lags (no zero) 6
+ssr based F test:         F=13.5090 , p=0.0000  , df_denom=2480, df_num=6
+ssr based chi2 test:   chi2=81.4786 , p=0.0000  , df=6
+likelihood ratio test: chi2=80.1755 , p=0.0000  , df=6
+parameter F test:         F=13.5090 , p=0.0000  , df_denom=2480, df_num=6
+
+Granger Causality
+number of lags (no zero) 7
+ssr based F test:         F=14.8829 , p=0.0000  , df_denom=2477, df_num=7
+ssr based chi2 test:   chi2=104.8115, p=0.0000  , df=7
+likelihood ratio test: chi2=102.6673, p=0.0000  , df=7
+parameter F test:         F=14.8829 , p=0.0000  , df_denom=2477, df_num=7
+</pre></div>
+</div>
+</div>
+</div>
+<p>Si bien el test es evaluado sobre el precio de apertura de ethereum y bitcoin, los resultados se mantienen tambien para el caso del precio de cierre:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># precio del bitcoin como predictor del precio futuro de ethereum </span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">grangercausalitytests</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;close_eth&#39;</span><span class="p">,</span> <span class="s1">&#39;close_btc&#39;</span><span class="p">]],</span> <span class="n">maxlag</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Granger Causality
+number of lags (no zero) 1
+ssr based F test:         F=27.0250 , p=0.0000  , df_denom=2495, df_num=1
+ssr based chi2 test:   chi2=27.0575 , p=0.0000  , df=1
+likelihood ratio test: chi2=26.9120 , p=0.0000  , df=1
+parameter F test:         F=27.0250 , p=0.0000  , df_denom=2495, df_num=1
+
+Granger Causality
+number of lags (no zero) 2
+ssr based F test:         F=18.5148 , p=0.0000  , df_denom=2492, df_num=2
+ssr based chi2 test:   chi2=37.1038 , p=0.0000  , df=2
+likelihood ratio test: chi2=36.8309 , p=0.0000  , df=2
+parameter F test:         F=18.5148 , p=0.0000  , df_denom=2492, df_num=2
+
+Granger Causality
+number of lags (no zero) 3
+ssr based F test:         F=17.8574 , p=0.0000  , df_denom=2489, df_num=3
+ssr based chi2 test:   chi2=53.7229 , p=0.0000  , df=3
+likelihood ratio test: chi2=53.1529 , p=0.0000  , df=3
+parameter F test:         F=17.8574 , p=0.0000  , df_denom=2489, df_num=3
+
+Granger Causality
+number of lags (no zero) 4
+ssr based F test:         F=14.8569 , p=0.0000  , df_denom=2486, df_num=4
+ssr based chi2 test:   chi2=59.6427 , p=0.0000  , df=4
+likelihood ratio test: chi2=58.9409 , p=0.0000  , df=4
+parameter F test:         F=14.8569 , p=0.0000  , df_denom=2486, df_num=4
+
+Granger Causality
+number of lags (no zero) 5
+ssr based F test:         F=12.4265 , p=0.0000  , df_denom=2483, df_num=5
+ssr based chi2 test:   chi2=62.4076 , p=0.0000  , df=5
+likelihood ratio test: chi2=61.6396 , p=0.0000  , df=5
+parameter F test:         F=12.4265 , p=0.0000  , df_denom=2483, df_num=5
+
+Granger Causality
+number of lags (no zero) 6
+ssr based F test:         F=13.8064 , p=0.0000  , df_denom=2480, df_num=6
+ssr based chi2 test:   chi2=83.2728 , p=0.0000  , df=6
+likelihood ratio test: chi2=81.9123 , p=0.0000  , df=6
+parameter F test:         F=13.8064 , p=0.0000  , df_denom=2480, df_num=6
+
+Granger Causality
+number of lags (no zero) 7
+ssr based F test:         F=15.1240 , p=0.0000  , df_denom=2477, df_num=7
+ssr based chi2 test:   chi2=106.5093, p=0.0000  , df=7
+likelihood ratio test: chi2=104.2961, p=0.0000  , df=7
+parameter F test:         F=15.1240 , p=0.0000  , df_denom=2477, df_num=7
+</pre></div>
+</div>
+</div>
+</div>
+<p>Debido a estos resultados, creemos conveniente agregar al dataset los primeros 7 rezagos del precio de bitcoin al dataframe utilizado para la predicción.</p>
+</section>
+</section>
+<section id="variables-predictoras-o-features">
+<h2><span class="section-number">2.1.2. </span>Variables predictoras o features<a class="headerlink" href="#variables-predictoras-o-features" title="Permalink to this headline">#</a></h2>
+<p>Para esta subsección seleccionamos las variables que consideramos más significativas para realizar el análisis. Por un lado, elegimos como primera variable el precio de bitcoin, considerando que es conocida su fuerte correlación con los movimientos del precio de ethereum, lo cual pretendemos observar en esta sección. Por otro lado, a partir de la tabla de estadísticas descriptivas mostrado antes, seleccionamos dos de las primeras variables y dos de las últimas que allí aparecen, es decir, dos de los términos de búsqueda que presentan el mayor promedio de búsquedas diario y dos de los de menor. Repasando la idea de los indicadores de palabras, las mismas se calculan asignando el número 100 al valor máximo de toda la serie, a partir de este se calcula la tasa de búsqueda de los demás días respecto a ese valor máximo, por lo que la interpretación de la proporción de búsqueda se realiza en base a ese valor pico. En primer lugar, graficamos las series de tiempo para ver su comportamiento. Las mismas pueden verse a continuación:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># seteamos nuevamente el tamaño de las labels</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;font.size&#39;</span><span class="p">:</span> <span class="mi">12</span><span class="p">})</span> 
+
+<span class="c1"># defino el tamaño del gráfico</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">varList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;open_eth&#39;</span><span class="p">,</span> <span class="s1">&#39;open_btc&#39;</span><span class="p">,</span> <span class="s1">&#39;banking_adjusted&#39;</span><span class="p">,</span> 
+           <span class="s1">&#39;investment_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">,</span> 
+           <span class="s1">&#39;elon musk_adjusted&#39;</span><span class="p">]</span>
+<span class="n">labelList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Precio de apertura de ethereum&#39;</span><span class="p">,</span> <span class="s1">&#39;Precio de apertura de bictoin&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;Palabra banking&#39;</span><span class="p">,</span> <span class="s1">&#39;Tópico investment&#39;</span><span class="p">,</span> <span class="s1">&#39;Palbra covid-19&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;Palabra elon musk&#39;</span><span class="p">]</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Variables seleccionadas&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">varList</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>    
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">labelList</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_1_analisis_univariado_26_0.png" src="../_images/2_1_analisis_univariado_26_0.png" />
+</div>
+</div>
+<p>Para el caso de bitcoin y ethereum, tomamos únicamente su valor de apertura diario, aunque optar por el precio de clausura generaría resultados similares. Ambas series parecieran estar muy correlacionadas, debido a que ambos siguen movimientos similares, con un primer pico en 2018 y una tendencia positiva durante el 2020. Por otra parte, variables constantes como <em>banking</em> e <em>investment</em> no parecen tener cambios abruptos que puedan tener una asociación con las grandes fluctuaciones de ethereum, mientras que la búsqueda de <em>covid_19</em> lógicamente comienza a aparecer masivamente recién en 2020, teniendo movimientos que parecen coincidir con momentos de cambios en nuestro target. De igual forma, el término de búsqueda <em>elon musk</em> aparece con mayor frecuencia durante el año 2020, aunque también tiene picos de menor nivel durante el 2018.</p>
+<p>Las palabras como <em>banking</em> o <em>investment</em> presentan características que lo vuelven más estacionarias en comparación con <em>features</em> “de momentos” como <em>covid-19</em>, que presentan saltos abruptos en períodos cortos de tiempo. De las primeras, podría ser más interesante separar los componentes de tendencia y ciclo para utilizar como <em>inputs</em> para la predicción, más que la serie original. Ambas componentes pueden verse en el siguiente gráfico:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Aplicando el filtro H-P para separar en tendencia y ciclo.</span>
+<span class="n">train_banking_ciclo</span><span class="p">,</span> <span class="n">train_banking_tend</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">tsa</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">hpfilter</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="s1">&#39;banking_adjusted&#39;</span><span class="p">])</span>
+<span class="c1"># graficando la variacion del precio real con la tendencia.</span>
+<span class="n">train_banking_ciclo</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">train_banking_ciclo</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">train_banking_tend</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">train_banking_tend</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_banking_ciclo</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Componente ciclo variable banking&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_banking_tend</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Componente tendencia variable banking&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;tiempo&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2_1_analisis_univariado_28_0.png" src="../_images/2_1_analisis_univariado_28_0.png" />
+</div>
+</div>
 </section>
 <section id="histogramas-y-densidad">
-<h2><span class="section-number">2.1.4. </span>Histogramas y densidad<a class="headerlink" href="#histogramas-y-densidad" title="Permalink to this headline">#</a></h2>
+<h2><span class="section-number">2.1.3. </span>Histogramas y densidad<a class="headerlink" href="#histogramas-y-densidad" title="Permalink to this headline">#</a></h2>
+<p>En esta sección dejamos de lado la cuestión del tiempo y miramos cómo se distribuyen alguna de las variables predictoras y el precio de apertura de ethereum (input para nuestro target). Por un lado, seguimos la lógica de la separación entre variables “de momento” y aquellas que mantienen frecuencias positivas de búsqueda todo el período de estudio, por lo que en la siguiente grilla de gráficos se encuentran las variables “estables” <em>banking</em> e <em>investment</em> junto con los términos de búsqueda <em>covid-19</em> y <em>elon musk</em>. En el caso de los dos últimos solamente nos quedamos con las frecuencias no nulas, debido a que gran parte de los primeros años no tuvieron búsquedas en google. Por otra parte, graficamos la distribución del precio de apertura de bitcoin y ethereum.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">high_btc</span><span class="p">);</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># graficamos hsitogramas con sus densidades</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Distribución de variables&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">varList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;open_eth&#39;</span><span class="p">,</span> <span class="s1">&#39;open_btc&#39;</span><span class="p">,</span> <span class="s1">&#39;banking_adjusted&#39;</span><span class="p">,</span> 
+           <span class="s1">&#39;investment_top_adjusted&#39;</span><span class="p">,</span> <span class="s1">&#39;covid19_adjusted&#39;</span><span class="p">,</span> 
+           <span class="s1">&#39;elon musk_adjusted&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">):</span>
+       <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">varList</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="n">train</span><span class="p">[</span><span class="n">varList</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+       <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Densidad&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">distplot</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="n">varList</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Densidad&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/seaborn/distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-  warnings.warn(msg, FutureWarning)
-</pre></div>
-</div>
-<img alt="../_images/2_1_analisis_univariado_19_1.png" src="../_images/2_1_analisis_univariado_19_1.png" />
+<img alt="../_images/2_1_analisis_univariado_31_0.png" src="../_images/2_1_analisis_univariado_31_0.png" />
 </div>
 </div>
-<p>El precio de bitcoin se concentra en valores menores a 20.000 USD.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">banking_adjusted</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/seaborn/distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-  warnings.warn(msg, FutureWarning)
-</pre></div>
-</div>
-<img alt="../_images/2_1_analisis_univariado_21_1.png" src="../_images/2_1_analisis_univariado_21_1.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">investment_top_adjusted</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/seaborn/distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-  warnings.warn(msg, FutureWarning)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f74ae908a90&gt;
-</pre></div>
-</div>
-<img alt="../_images/2_1_analisis_univariado_22_2.png" src="../_images/2_1_analisis_univariado_22_2.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">covid19_adjusted</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/seaborn/distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-  warnings.warn(msg, FutureWarning)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f74aadd5250&gt;
-</pre></div>
-</div>
-<img alt="../_images/2_1_analisis_univariado_23_2.png" src="../_images/2_1_analisis_univariado_23_2.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">distplot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;elon musk_adjusted&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/local/lib/python3.7/dist-packages/seaborn/distributions.py:2619: FutureWarning: `distplot` is a deprecated function and will be removed in a future version. Please adapt your code to use either `displot` (a figure-level function with similar flexibility) or `histplot` (an axes-level function for histograms).
-  warnings.warn(msg, FutureWarning)
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f74aac3bb50&gt;
-</pre></div>
-</div>
-<img alt="../_images/2_1_analisis_univariado_24_2.png" src="../_images/2_1_analisis_univariado_24_2.png" />
-</div>
-</div>
-<p>Un histograma con mayor extensión en el eje x, en este caso nos indicaría que es una palabra cuya frecuencia de búsqueda se da en manera más uniforme a lo largo del período de tiempo seleccionado, como es el caso de <em>banking_adjusted</em> e <em>investment_top_adjusted</em>.</p>
-<p>Por el contrario, un histograma más concentrado, con menor extensión en el eje x, nos indicaría una palabra cuya frecuencia de búsqueda se da con mayor fuerza durante un corto período.</p>
-<p>Como es esperable en el caso de <em>covid 19</em> y <em>elon musk</em> sus distribuciones son altamente sesgadas a derecha, debido a que al ser búsquedas “de momento” tendría muchos valores cercanos a cero y pocas frecuencias positivas. En cambio, las variables <em>investment</em> y <em>banking</em> tienen valores que se acumulan más cerca del valor 100, presentando ambos una distribución bimodal.</p>
+<p>Como se puede observar arriba, las series constantes como las cotizaciones presentan distribuciones parecidas, con dos picos en el primer y segundo tramo de la distribución. En el caso de ethereum y bitcoin, las mismas presentan el primer pico en valores positivos cercanos a cero y el segundo alrededor del segundo cuarto de la distribución. Por supuesto, ambas series se encuentran sesgadas a izquierda, de hecho, al llegar aproximadamente a la mediana de la distribución de las cotizaciones acumularíamos casi a todas las observaciones.
+En el caso de las variables “de momento” y las más constantes podría radicar en cómo se acumulan sus frecuencias. Las observaciones en palabras como <em>banking</em> o <em>investment</em> se acumulan en valores altos de las frecuencias, reflejando lo que vimos antes: sus frecuencias se mantienen relativamente constantes en todo el período. En contaste, <em>covid-19</em> y <em>elon musk</em> tienen muchas observaciones en frecuencias bajas, y pocas en valores altos del indicador de búsquedas, lo que refleja el comportamiento opuesto, es decir, las búsquedas positivas son pocas en relación al rango de tiempo bajo análisis pero en períodos cortos de tiempo se acumulan considerablemente.</p>
+<p>Hasta ahora analizamos el comportamiento individual de las variables, intentando identificar características particulares de ciertos grupos de series de las variables predictoras como estudiar el comportamiento de nuestro output. En la siguiente sección ampliaremos el análisis a la búsqueda de patrones entre dos variables, conocido como análisis bivariado.</p>
 </section>
 </section>
 

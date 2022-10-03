@@ -50,6 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Anexo" href="../intro_anexo.html" />
@@ -423,25 +425,43 @@ title="Print to PDF"
                 
   <section class="tex2jax_ignore mathjax_ignore" id="preparacion-de-base-google-trends">
 <h1>Preparación de base google trends<a class="headerlink" href="#preparacion-de-base-google-trends" title="Permalink to this headline">#</a></h1>
-<p>Para armar la solicitud de términos de búsqueda se utiliza la librería <code class="docutils literal notranslate"><span class="pre">pytrends</span></code>, cuya forma de utilización se puede encontrar en <a class="reference external" href="https://hackernoon.com/how-to-use-google-trends-api-with-python"><em><strong>hackernoon</strong></em></a>.</p>
+<p>Google permite a todos los usuarios acceder y procesar datos anonimizados sobre volúmenes de búsquedas con google trends. Los datos representan tendencias de búsqueda y volumen o interés de búsqueda en el tiempo. Los mismos pueden ser filtrados por varios criterios, tales como ubicación geográfica (países, regiones, continentes, etc.), temáticas o temas (deportes, finanzas, multimedia, salud, etc) y diferentes unidades de tiempo (anuales, mensuales, semanales y diarios).</p>
+<p>Google provee el volumen de búsqueda para una palabra indexado entre 0 y 100, donde cero indica el interés de búsqueda relativo más bajo y 100 el más alto dentro del rango de tiempo seleccionado. Esto último es importante remarcar porque el valor del índice de una palabra puede cambiar dependiendo del rango de tiempo utilizado, es decir, dado un intervalo de tiempo, google fija el máximo valor de la serie en 100, y los demás datos se calculan como una tasa respecto a ese valor máximo. Adicionalmente, Google tiene una restricción de unidad de tiempo para intervalos de tiempo específicos. Por ejemplo, una solicitud de una palabra para un mes específico de un año devolverá datos diarios; todo un año retornará datos semanales; mientras que un pedido de más de cinco años de intervalo arrojará datos mensuales. Esto trae una complicación adicional, debido a que intentamos obtener información de frecuencias de búsqueda diarias para un período mayor a 5 años.</p>
+<p>Para resolver estos problemas relacionado al intervalo de tiempo, seguimos el método de ajuste de datos históricos explicados en <a class="reference external" href="https://medium.com/&#64;bewerunge.franz/google-trends-how-to-acquire-daily-data-for-broad-time-frames-b6c6dfe200e6"><strong>medium</strong></a>. La idea detrás de ésta técnica es armar primero una serie diaria de una palabra, realizando solicitudes con el intervalo de tiempo máximo para que google arroje valores diarios (pedidos de un rango de 90 días). En paralelo importar la serie histórica de esa misma palabra, es decir, los valores de todo el período bajo análisis, lo cual hará que google nos brinde frecuencias mensuales. Con ambos inputs, los datos ajustados se calculan de la siguiente manera:</p>
+<div class="math notranslate nohighlight">
+\[
+gtd_{d-m}*(gtd_{m}/100)
+\]</div>
+<p>Donde <span class="math notranslate nohighlight">\(gtd\)</span> representa el valor de google trends de un término de búsqueda o tópico específico, que puede ser diario (<span class="math notranslate nohighlight">\(d-m\)</span>) o mensual (<span class="math notranslate nohighlight">\(m\)</span>). De esta manera, el valor diario es multiplicado por el valor del mismo mes en cuestión pasado previamente a tasa (dividiendo por 100). Esto genera que el valor máximo local, es decir, de cada intervalo de tiempo diario importado se ajuste por su valor histórico y así obtendríamos los valores diarios ajustados a su frecuencia histórica.</p>
+<p>Para armar la solicitud de términos de búsqueda se utiliza la librería <code class="docutils literal notranslate"><span class="pre">pytrends</span></code>, cuya forma de utilización se puede encontrar en <a class="reference external" href="https://hackernoon.com/how-to-use-google-trends-api-with-python"><em><strong>hackernoon</strong></em></a>. Con esta función creamos nuestra propia función custom <code class="docutils literal notranslate"><span class="pre">daily_gt()</span></code> que sigue la lógica de normalización explicada antes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pip install pytrends 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># instalamos pytrends e importamos algunas librerías que nos serán de utilidad</span>
+<span class="o">!</span>pip install pytrends 
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span> <span class="c1"># to transform variable dic in a dataframe  </span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
+<span class="kn">from</span> <span class="nn">pytrends.request</span> <span class="kn">import</span> <span class="n">TrendReq</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pytrends in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (4.8.0)
-Requirement already satisfied: requests&gt;=2.0 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pytrends) (2.27.1)
 Requirement already satisfied: lxml in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pytrends) (4.9.1)
 Requirement already satisfied: pandas&gt;=0.25 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pytrends) (1.4.1)
-Requirement already satisfied: numpy&gt;=1.18.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.25-&gt;pytrends) (1.22.3)
+Requirement already satisfied: requests&gt;=2.0 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pytrends) (2.27.1)
 Requirement already satisfied: python-dateutil&gt;=2.8.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.25-&gt;pytrends) (2.8.2)
 Requirement already satisfied: pytz&gt;=2020.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.25-&gt;pytrends) (2021.3)
+Requirement already satisfied: numpy&gt;=1.18.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from pandas&gt;=0.25-&gt;pytrends) (1.22.3)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: idna&lt;4,&gt;=2.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.0-&gt;pytrends) (3.3)
 Requirement already satisfied: charset-normalizer~=2.0.0 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.0-&gt;pytrends) (2.0.4)
-Requirement already satisfied: certifi&gt;=2017.4.17 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.0-&gt;pytrends) (2021.10.8)
 Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.0-&gt;pytrends) (1.26.7)
-Requirement already satisfied: idna&lt;4,&gt;=2.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.0-&gt;pytrends) (3.3)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from requests&gt;=2.0-&gt;pytrends) (2021.10.8)
 Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/miniconda3/lib/python3.9/site-packages (from python-dateutil&gt;=2.8.1-&gt;pandas&gt;=0.25-&gt;pytrends) (1.16.0)
 </pre></div>
 </div>
@@ -453,20 +473,7 @@ Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/minicond
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span> <span class="c1"># to transform variable dic in a dataframe  </span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">daily_gt</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">inputCategories</span> <span class="p">,</span><span class="n">inputCategoriesNames</span> <span class="p">,</span> <span class="n">hl</span><span class="o">=</span><span class="s1">&#39;en-US&#39;</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="mi">360</span><span class="p">):</span>
-  <span class="kn">import</span> <span class="nn">time</span>
-  <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
-  <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># numpy y pandas to data wrangling </span>
-  <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span> <span class="c1"># to work w date</span>
-  <span class="kn">from</span> <span class="nn">pytrends.request</span> <span class="kn">import</span> <span class="n">TrendReq</span>
   <span class="c1"># función para dividir rango de fechas en segmentos </span>
   <span class="k">def</span> <span class="nf">date_range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">intv</span><span class="p">):</span>
       <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -553,6 +560,7 @@ Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/minicond
 </div>
 </div>
 </div>
+<p>Una vez elaborada la función <code class="docutils literal notranslate"><span class="pre">daily_gt()</span></code> pasamos a armar las listas de palabras según categoría de búsqueda. Las mismas son agrupadas en la lista final <code class="docutils literal notranslate"><span class="pre">kw_list</span></code> que servirá como input para importar los términos de búsqueda y tópicos elegidos.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">crypto</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cryptocurrency&#39;</span><span class="p">,</span> <span class="s1">&#39;crypto&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin price&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum&#39;</span><span class="p">,</span> <span class="s1">&#39;ethereum price&#39;</span><span class="p">]</span>
@@ -565,7 +573,7 @@ Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/minicond
 <span class="n">topicsNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;cryptocurrency_top&#39;</span><span class="p">,</span> <span class="s1">&#39;bitcoin_top&#39;</span><span class="p">,</span> <span class="s1">&#39;investment_top&#39;</span><span class="p">,</span> 
                <span class="s1">&#39;ethereum_top&#39;</span><span class="p">,</span><span class="s1">&#39;exchange_top&#39;</span><span class="p">,</span> <span class="s1">&#39;bankrup_top&#39;</span><span class="p">,</span> 
                <span class="s1">&#39;stock_market_top&#39;</span><span class="p">,</span> <span class="s1">&#39;inflation&#39;</span><span class="p">,</span> <span class="s1">&#39;taxes&#39;</span><span class="p">,</span> <span class="s1">&#39;digital_wallet_top&#39;</span><span class="p">,</span> <span class="s1">&#39;covid19&#39;</span><span class="p">,</span> <span class="s1">&#39;pandemic&#39;</span><span class="p">]</span>
-<span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="mi">904</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">814</span><span class="p">]</span>
+<span class="n">categories</span> <span class="o">=</span> <span class="p">[</span><span class="mi">904</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">814</span><span class="p">]</span> <span class="c1"># tópicos</span>
 <span class="n">categoriesNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;future_commodities&#39;</span><span class="p">,</span> <span class="s1">&#39;banking&#39;</span><span class="p">,</span> <span class="s1">&#39;foreign_currency&#39;</span><span class="p">]</span> 
 <span class="n">kw_list</span> <span class="o">=</span> <span class="n">crypto</span> <span class="o">+</span> <span class="n">monetary</span> <span class="o">+</span> <span class="n">policy</span> <span class="o">+</span> <span class="n">topics</span> <span class="o">+</span> <span class="n">influencers</span> <span class="o">+</span> <span class="n">categories</span>
 <span class="n">kw_list</span>
@@ -611,9 +619,11 @@ Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/minicond
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;2015-08-01&#39;</span> <span class="c1"># parece ser el límite inferior de precios de bitcoin en yahoo finance</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fijamos el intervalo de tiempo e importamos la lista de palabras armada antes </span>
+<span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;2015-08-01&#39;</span> <span class="c1"># parece ser el límite inferior de precios de bitcoin en yahoo finance</span>
 <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;2022-06-15&#39;</span>
-<span class="n">var_dict</span> <span class="o">=</span> <span class="n">daily_gt</span><span class="p">(</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">kw_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="p">,</span> <span class="n">inputCategories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span> <span class="n">inputCategoriesNames</span><span class="o">=</span><span class="n">categoriesNames</span><span class="p">)</span>
+<span class="n">var_dict</span> <span class="o">=</span> <span class="n">daily_gt</span><span class="p">(</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">kw_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="p">,</span> 
+                    <span class="n">inputCategories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span> <span class="n">inputCategoriesNames</span><span class="o">=</span><span class="n">categoriesNames</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -622,49 +632,49 @@ Requirement already satisfied: six&gt;=1.5 in /Users/antonellabulla/opt/minicond
 Iteration from 2015-08-01 to 2015-11-01
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2015-11-02 to 2016-02-02
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-02-03 to 2016-05-05
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-05-06 to 2016-08-06
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-08-07 to 2016-11-07
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2016-11-08 to 2017-02-08
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Iteration from 2017-02-09 to 2017-05-12
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_10575/1947064764.py:64: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/dz/lr2v3wcs73x5vp_ttqq0b7hw0000gn/T/ipykernel_25888/2260073335.py:59: FutureWarning: The frame.append method is deprecated and will be removed from pandas in a future version. Use pandas.concat instead.
   dataset = dataset.append(data)
 </pre></div>
 </div>
@@ -673,34 +683,36 @@ Iteration from 2015-08-01 to 2015-11-01
 </div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="nn">Input In [5],</span> in <span class="ni">&lt;cell line: 3&gt;</span><span class="nt">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;2015-08-01&#39;</span> <span class="c1"># parece ser el límite inferior de precios de bitcoin en yahoo finance</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;2022-06-15&#39;</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">var_dict</span> <span class="o">=</span> <span class="n">daily_gt</span><span class="p">(</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">kw_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="p">,</span> <span class="n">inputCategories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span> <span class="n">inputCategoriesNames</span><span class="o">=</span><span class="n">categoriesNames</span><span class="p">)</span>
+<span class="nn">Input In [4],</span> in <span class="ni">&lt;cell line: 4&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">start</span> <span class="o">=</span> <span class="s1">&#39;2015-08-01&#39;</span> <span class="c1"># parece ser el límite inferior de precios de bitcoin en yahoo finance</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">end</span> <span class="o">=</span> <span class="s1">&#39;2022-06-15&#39;</span>
+<span class="ne">----&gt; </span><span class="mi">4</span> <span class="n">var_dict</span> <span class="o">=</span> <span class="n">daily_gt</span><span class="p">(</span><span class="n">keyword</span> <span class="o">=</span> <span class="n">kw_list</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="p">,</span> 
+<span class="g g-Whitespace">      </span><span class="mi">5</span>                     <span class="n">inputCategories</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span> <span class="n">inputCategoriesNames</span><span class="o">=</span><span class="n">categoriesNames</span><span class="p">)</span>
 
-<span class="nn">Input In [3],</span> in <span class="ni">daily_gt</span><span class="nt">(keyword, start, end, inputCategories, inputCategoriesNames, hl, tz)</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">56</span>   <span class="n">pytrends</span><span class="o">.</span><span class="n">build_payload</span><span class="p">(</span><span class="n">kw_list</span><span class="o">=</span><span class="p">[</span><span class="n">varName</span><span class="p">],</span> <span class="n">cat</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">startNew</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> 
-<span class="ne">---&gt; </span><span class="mi">57</span>   <span class="n">data</span> <span class="o">=</span> <span class="n">pytrends</span><span class="o">.</span><span class="n">interest_over_time</span><span class="p">()</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span> <span class="c1"># chequear que la base importada no esté vacía antes de trabajarla, sino pasar a la prox palabra</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span>   <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;isPartial&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">))</span>
+<span class="nn">Input In [2],</span> in <span class="ni">daily_gt</span><span class="nt">(keyword, start, end, inputCategories, inputCategoriesNames, hl, tz)</span>
+<span class="g g-Whitespace">     </span><span class="mi">48</span>   <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s1">&#39;&#39;</span><span class="p">:</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">catName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">},</span> <span class="n">inplace</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">50</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">51</span>   <span class="n">pytrends</span><span class="o">.</span><span class="n">build_payload</span><span class="p">(</span><span class="n">kw_list</span><span class="o">=</span><span class="p">[</span><span class="n">varName</span><span class="p">],</span> <span class="n">cat</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">timeframe</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">startNew</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">timelist</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> 
+<span class="g g-Whitespace">     </span><span class="mi">52</span>   <span class="n">data</span> <span class="o">=</span> <span class="n">pytrends</span><span class="o">.</span><span class="n">interest_over_time</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span> <span class="c1"># chequear que la base importada no esté vacía antes de trabajarla, sino pasar a la prox palabra</span>
 
-<span class="nn">File ~/opt/miniconda3/lib/python3.9/site-packages/pytrends/request.py:226,</span> in <span class="ni">TrendReq.interest_over_time</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">218</span> <span class="n">over_time_payload</span> <span class="o">=</span> <span class="p">{</span>
-<span class="g g-Whitespace">    </span><span class="mi">219</span>     <span class="c1"># convert to string as requests will mangle</span>
-<span class="g g-Whitespace">    </span><span class="mi">220</span>     <span class="s1">&#39;req&#39;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interest_over_time_widget</span><span class="p">[</span><span class="s1">&#39;request&#39;</span><span class="p">]),</span>
-<span class="g g-Whitespace">    </span><span class="mi">221</span>     <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">interest_over_time_widget</span><span class="p">[</span><span class="s1">&#39;token&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">222</span>     <span class="s1">&#39;tz&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tz</span>
-<span class="g g-Whitespace">    </span><span class="mi">223</span> <span class="p">}</span>
-<span class="g g-Whitespace">    </span><span class="mi">225</span> <span class="c1"># make the request and parse the returned json</span>
-<span class="ne">--&gt; </span><span class="mi">226</span> <span class="n">req_json</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">227</span>     <span class="n">url</span><span class="o">=</span><span class="n">TrendReq</span><span class="o">.</span><span class="n">INTEREST_OVER_TIME_URL</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">228</span>     <span class="n">method</span><span class="o">=</span><span class="n">TrendReq</span><span class="o">.</span><span class="n">GET_METHOD</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">229</span>     <span class="n">trim_chars</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">230</span>     <span class="n">params</span><span class="o">=</span><span class="n">over_time_payload</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">231</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">233</span> <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">req_json</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="s1">&#39;timelineData&#39;</span><span class="p">])</span>
-<span class="g g-Whitespace">    </span><span class="mi">234</span> <span class="k">if</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">):</span>
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/site-packages/pytrends/request.py:183,</span> in <span class="ni">TrendReq.build_payload</span><span class="nt">(self, kw_list, cat, timeframe, geo, gprop)</span>
+<span class="g g-Whitespace">    </span><span class="mi">181</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_payload</span><span class="p">[</span><span class="s1">&#39;req&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">token_payload</span><span class="p">[</span><span class="s1">&#39;req&#39;</span><span class="p">])</span>
+<span class="g g-Whitespace">    </span><span class="mi">182</span> <span class="c1"># get tokens</span>
+<span class="ne">--&gt; </span><span class="mi">183</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokens</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">184</span> <span class="k">return</span>
+
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/site-packages/pytrends/request.py:189,</span> in <span class="ni">TrendReq._tokens</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">187</span> <span class="sd">&quot;&quot;&quot;Makes request to Google to get API tokens for interest over time, interest by region and related queries&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">188</span> <span class="c1"># make the request and parse the returned json</span>
+<span class="ne">--&gt; </span><span class="mi">189</span> <span class="n">widget_dicts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">190</span>     <span class="n">url</span><span class="o">=</span><span class="n">TrendReq</span><span class="o">.</span><span class="n">GENERAL_URL</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">191</span>     <span class="n">method</span><span class="o">=</span><span class="n">TrendReq</span><span class="o">.</span><span class="n">GET_METHOD</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">192</span>     <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">token_payload</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">193</span>     <span class="n">trim_chars</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">194</span> <span class="p">)[</span><span class="s1">&#39;widgets&#39;</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">195</span> <span class="c1"># order of the json matters...</span>
+<span class="g g-Whitespace">    </span><span class="mi">196</span> <span class="n">first_region_token</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="nn">File ~/opt/miniconda3/lib/python3.9/site-packages/pytrends/request.py:138,</span> in <span class="ni">TrendReq._get_data</span><span class="nt">(self, url, method, trim_chars, **kwargs)</span>
 <span class="g g-Whitespace">    </span><span class="mi">134</span>     <span class="n">response</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
@@ -813,41 +825,55 @@ Iteration from 2015-08-01 to 2015-11-01
 <span class="g g-Whitespace">   </span><span class="mi">1372</span>     <span class="k">except</span> <span class="ne">ConnectionError</span><span class="p">:</span>
 <span class="g g-Whitespace">   </span><span class="mi">1373</span>         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="nn">File ~/opt/miniconda3/lib/python3.9/http/client.py:319,</span> in <span class="ni">HTTPResponse.begin</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">317</span> <span class="c1"># read until we get a non-100 response</span>
-<span class="g g-Whitespace">    </span><span class="mi">318</span> <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">319</span>     <span class="n">version</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_status</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">320</span>     <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="n">CONTINUE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">321</span>         <span class="k">break</span>
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/http/client.py:338,</span> in <span class="ni">HTTPResponse.begin</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">335</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">336</span>     <span class="k">raise</span> <span class="n">UnknownProtocol</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">338</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">parse_headers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">340</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debuglevel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">341</span>     <span class="k">for</span> <span class="n">hdr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
-<span class="nn">File ~/opt/miniconda3/lib/python3.9/http/client.py:280,</span> in <span class="ni">HTTPResponse._read_status</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">279</span> <span class="k">def</span> <span class="nf">_read_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">280</span>     <span class="n">line</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fp</span><span class="o">.</span><span class="n">readline</span><span class="p">(</span><span class="n">_MAXLINE</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;iso-8859-1&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">281</span>     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAXLINE</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">282</span>         <span class="k">raise</span> <span class="n">LineTooLong</span><span class="p">(</span><span class="s2">&quot;status line&quot;</span><span class="p">)</span>
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/http/client.py:237,</span> in <span class="ni">parse_headers</span><span class="nt">(fp, _class)</span>
+<span class="g g-Whitespace">    </span><span class="mi">235</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">_read_headers</span><span class="p">(</span><span class="n">fp</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">236</span> <span class="n">hstring</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;iso-8859-1&#39;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">237</span> <span class="k">return</span> <span class="n">email</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">Parser</span><span class="p">(</span><span class="n">_class</span><span class="o">=</span><span class="n">_class</span><span class="p">)</span><span class="o">.</span><span class="n">parsestr</span><span class="p">(</span><span class="n">hstring</span><span class="p">)</span>
 
-<span class="nn">File ~/opt/miniconda3/lib/python3.9/socket.py:704,</span> in <span class="ni">SocketIO.readinto</span><span class="nt">(self, b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">702</span> <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">703</span>     <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">704</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sock</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">705</span>     <span class="k">except</span> <span class="n">timeout</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">706</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_timeout_occurred</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/email/parser.py:67,</span> in <span class="ni">Parser.parsestr</span><span class="nt">(self, text, headersonly)</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="k">def</span> <span class="nf">parsestr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">headersonly</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">60</span>     <span class="sd">&quot;&quot;&quot;Create a message structure from a string.</span>
+<span class="g g-Whitespace">     </span><span class="mi">61</span><span class="sd"> </span>
+<span class="g g-Whitespace">     </span><span class="mi">62</span><span class="sd">     Returns the root of the message structure.  Optional headersonly is a</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span><span class="sd">     the file.</span>
+<span class="g g-Whitespace">     </span><span class="mi">66</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="ne">---&gt; </span><span class="mi">67</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">text</span><span class="p">),</span> <span class="n">headersonly</span><span class="o">=</span><span class="n">headersonly</span><span class="p">)</span>
 
-<span class="nn">File ~/opt/miniconda3/lib/python3.9/ssl.py:1241,</span> in <span class="ni">SSLSocket.recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1237</span>     <span class="k">if</span> <span class="n">flags</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1238</span>         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">1239</span>           <span class="s2">&quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span>
-<span class="g g-Whitespace">   </span><span class="mi">1240</span>           <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1241</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">nbytes</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1242</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1243</span>     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">recv_into</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">flags</span><span class="p">)</span>
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/email/parser.py:56,</span> in <span class="ni">Parser.parse</span><span class="nt">(self, fp, headersonly)</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">55</span>         <span class="k">break</span>
+<span class="ne">---&gt; </span><span class="mi">56</span>     <span class="n">feedparser</span><span class="o">.</span><span class="n">feed</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span> <span class="k">return</span> <span class="n">feedparser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="nn">File ~/opt/miniconda3/lib/python3.9/ssl.py:1099,</span> in <span class="ni">SSLSocket.read</span><span class="nt">(self, len, buffer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1097</span> <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1098</span>     <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1099</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1100</span>     <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1101</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sslobj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">)</span>
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/email/feedparser.py:176,</span> in <span class="ni">FeedParser.feed</span><span class="nt">(self, data)</span>
+<span class="g g-Whitespace">    </span><span class="mi">174</span> <span class="sd">&quot;&quot;&quot;Push more data into the parser.&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">175</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">176</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call_parse</span><span class="p">()</span>
+
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/email/feedparser.py:180,</span> in <span class="ni">FeedParser._call_parse</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">178</span> <span class="k">def</span> <span class="nf">_call_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">179</span>     <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">180</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">181</span>     <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">182</span>         <span class="k">pass</span>
+
+<span class="nn">File ~/opt/miniconda3/lib/python3.9/email/feedparser.py:228,</span> in <span class="ni">FeedParser._parsegen</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">226</span>     <span class="k">yield</span> <span class="n">NeedMoreData</span>
+<span class="g g-Whitespace">    </span><span class="mi">227</span>     <span class="k">continue</span>
+<span class="ne">--&gt; </span><span class="mi">228</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">headerRE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">229</span>     <span class="c1"># If we saw the RFC defined header/body separator</span>
+<span class="g g-Whitespace">    </span><span class="mi">230</span>     <span class="c1"># (i.e. newline), just throw it away. Otherwise the line is</span>
+<span class="g g-Whitespace">    </span><span class="mi">231</span>     <span class="c1"># part of the body so push it back.</span>
+<span class="g g-Whitespace">    </span><span class="mi">232</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">NLCRE</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">233</span>         <span class="n">defect</span> <span class="o">=</span> <span class="n">errors</span><span class="o">.</span><span class="n">MissingHeaderBodySeparatorDefect</span><span class="p">()</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
@@ -1477,6 +1503,7 @@ Iteration from 2015-08-01 to 2015-11-01
 </div>
 </div>
 </div>
+<p>Las series importadas de google trends están en un diccionario, por lo que transformamos cada una de esas frecuencias en un mismo dataframe con la fecha como índice.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">reduce</span> <span class="c1"># to transform variable dic in a dataframe  </span>
