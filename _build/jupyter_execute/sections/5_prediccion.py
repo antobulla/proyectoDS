@@ -18,6 +18,7 @@ import statsmodels.api as sm
 import math
 from random import sample
 from random import choices
+import multiprocessing
 
 # visualización
 import matplotlib as mpl
@@ -28,14 +29,22 @@ from sklearn.metrics import mean_squared_error
 
 # preprocesamiento
 from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_boston
+from sklearn.ensemble import RandomForestRegressor
 
 # modelos
 import xgboost as xgb
 from sklearn.decomposition import PCA
 import statsmodels.api as sm
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import RepeatedKFold
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import ParameterGrid
+from sklearn.inspection import permutation_importance
 
 
-# In[103]:
+# In[2]:
 
 
 # creamos la clase style para poner colores a los prints
@@ -48,14 +57,14 @@ class style():
     endc = '\033[0m'
 
 
-# In[104]:
+# In[3]:
 
 
 # estilo de gráficos ggplot
 plt.style.use('ggplot')
 
 
-# In[105]:
+# In[4]:
 
 
 ### Importamos bases y seteamos la variable Date como índice
@@ -129,6 +138,63 @@ y_test = y_test.set_index('Date')
 # 
 # La variable que genera el menor error de predicción es seleccionado. Para dicha evaluación se separa un subconjunto dentro de entrenamiento, denominado *validación*, el cual corresponde a los datos del año 2020 y no son utilizados para ajustar el modelo. Una vez incluido el predictor, el proceso de selección se repite condicionado en que la variable elegida antes se mantiene dentro del modelo. Como se mencionó antes, este proceso finaliza cuando se incluyen todos los predictores en el modelo. 
 
+# ### Principal Component Analysis (PCA)
+# Al momento de realizar una predicción, es posible que cuanta más y mejor información tengamos, más acertada sea. Sin embargo, el tiempo de ejecución del algoritmo que se esté utilizando (como regresión lineal) empezará a ser cada vez mayor y se utilizarán más recursos computacionales. 
+# 
+# Algo que hemos visto es que hay variables que son menos importantes que otras y que no aportan valor significativo a la predicción.
+# 
+# Si se quitan esas variables, se están reduciendo las dimensiones a trabajar, lo que implica menor cantidad de relaciones entre variables a considerar. 
+# 
+# De todos modos, no sería la mejor estrategia eliminar directamente las columnas del dataframe con las variables que consideremos menos importantes, porque podríamos estar equivocándonos. Si tenemos N variables, lo ideal es generar N nuevas variables que sean una combinación de las N variables antiguas y ordenarlas de mayor importancia a menor. De esta forma, podremos quedarnos con las variables con mayor importancia y descartar las de menor importancia. Así, estamos teniendo en cuenta a todas las variables antiguas sin tener que eliminar alguna, ya que las variables nuevas, como se explicó antes, son una combinación de las antiguas.
+# 
+# Sin ser por la parte de seleccionar cuántas variables utilizar de las mejores rankeadas, PCA se encarga de realizar la tarea.
+# 
+# Para la selección, lo mejor es graficar la "proporción de variación explicada" en formato scree plot y observar en qué parte del gráfico se ve una caída. Hasta esa variable será la que se tendrá en cuenta para la predicción.
+# 
+# PCA entonces arma una nueva base con las componentes principales más significativas. Si con las componentes principales obtengo 85%, me quedo con esas.
+# 
+# Sin embargo, no siempre PCA junto con regresión lineal, como se utilizará en este caso, tiene buenos resultados. Puede suceder que la regresión lineal por sí sola prediga mejor el comportamiento que agregando PCA.
+
+# ### Random Forest
+# 
+# Un modelo Random Forest está formado por un conjunto de árboles de decisión individuales, cada uno entrenado con una muestra ligeramente distinta de los datos de entrenamiento generada mediante bootstrapping). La predicción de una nueva observación se obtiene agregando las predicciones de todos los árboles individuales que forman el modelo.
+# 
+# Muchos métodos predictivos generan modelos globales en los que una única ecuación se aplica a todo el espacio muestral. Cuando el caso de uso implica múltiples predictores, que interaccionan entre ellos de forma compleja y no lineal, es muy difícil encontrar un único modelo global que sea capaz de reflejar la relación entre las variables. Los métodos estadísticos y de machine learning basados en árboles engloban a un conjunto de técnicas supervisadas no paramétricas que consiguen segmentar el espacio de los predictores en regiones simples, dentro de las cuales es más sencillo manejar las interacciones. Es esta característica la que les proporciona gran parte de su potencial.
+# 
+# Los métodos basados en árboles se han convertido en uno de los referentes dentro del ámbito predictivo debido a los buenos resultados que generan en problemas muy diversos. A lo largo de este documento se explora la forma en que se construyen y predicen los modelos Random Forest. Dado que el elemento fundamental de un modelo Random Forest son los árboles de decisión, es fundamental entender cómo funcionan estos últimos.
+# 
+# Ventajas
+# 
+# Son capaces de seleccionar predictores de forma automática.
+# 
+# Pueden aplicarse a problemas de regresión y clasificación.
+# 
+# Los árboles pueden, en teoría, manejar tanto predictores numéricos como categóricos sin tener que crear variables dummy o one-hot-encoding. En la práctica, esto depende de la implementación del algoritmo que tenga cada librería.
+# 
+# Al tratarse de métodos no paramétricos, no es necesario que se cumpla ningún tipo de distribución específica.
+# 
+# Por lo general, requieren mucha menos limpieza y pre procesado de los datos en comparación a otros métodos de aprendizaje estadístico (por ejemplo, no requieren estandarización).
+# 
+# No se ven muy influenciados por outliers.
+# 
+# Si para alguna observación, el valor de un predictor no está disponible, a pesar de no poder llegar a ningún nodo terminal, se puede conseguir una predicción empleando todas las observaciones que pertenecen al último nodo alcanzado. La precisión de la predicción se verá reducida pero al menos podrá obtenerse.
+# 
+# Son muy útiles en la exploración de datos, permiten identificar de forma rápida y eficiente las variables (predictores) más importantes.
+# 
+# Gracias al Out-of-Bag Error puede estimarse su error de validación sin necesidad de recurrir a estrategias computacionalmente costosas como la validación cruzada. Esto no aplica en el caso de series temporales.
+# 
+# Tienen buena escalabilidad, pueden aplicarse a conjuntos de datos con un elevado número de observaciones.
+# 
+# Desventajas
+# 
+# Al combinar múltiples árboles, se pierde la interpretabilidad que tienen los modelos basados en un único árbol.
+# 
+# Cuando tratan con predictores continuos, pierden parte de su información al categorizarlas en el momento de la división de los nodos.
+# 
+# Tal y como se describe más adelante, la creación de las ramificaciones de los árboles se consigue mediante el algoritmo de recursive binary splitting. Este algoritmo identifica y evalúa las posibles divisiones de cada predictor acorde a una determinada medida (RSS, Gini, entropía…). Los predictores continuos o predictores cualitativos con muchos niveles tienen mayor probabilidad de contener, solo por azar, algún punto de corte óptimo, por lo que suelen verse favorecidos en la creación de los árboles.
+# 
+# No son capaces de extrapolar fuera del rango de los predictores observado en los datos de entrenamiento.
+
 # ### Extreme gradient boosting (xgboost)
 # La técnica de *Boosting* es una de las ideas de aprendizaje más eficaces de los últimos 20 años, cuya motivación ha sido la búsqueda de un procedimiento que combine *outputs* de muchos clasificadores "débiles" para producir un potente estimador agregado. Dentro de este enfoque predictivo, Extreme Gradient Boosting (XGBoost) es reconocido como un algoritmo de amplio uso por su capacidad predictiva excepcional. La idea principal de este algoritmo es que el mismo construye *D* árboles de clasificación (CART) uno por uno, tal que el modelo subsecuente es entrenado utilizando el residual del árbol previo (*decision tree ensembles*). Esto es, el nuevo árbol corrige los errores hechos por el árbol previamente entrenado y predice nuevamente el *outcome*. 
 # Así, en XGBoost cada modelo ensamblado utiliza la suma de las *D* funciones para predecir el output.
@@ -170,7 +236,7 @@ y_test = y_test.set_index('Date')
 # 
 # En primer lugar, entrenamos un modelo de regresión lineal para cada uno de los rezagos bajo estudio y computamos la bonda de ajuste a través del $R^2$. 
 
-# In[106]:
+# In[5]:
 
 
 # agregamos el término constante al dataset de train y test
@@ -187,7 +253,7 @@ print(f'R2_lag5: {style.green}{r_squaredAdj[4]}{style.endc} R2_lag6: {style.gree
 
 # Como se puede ver arriba, el ajuste es casi 1, y disminuye a medida que nos alejamos en el tiempo, lo cual podría ser indicio de que la verdadera relación entre el target y los predictores se acerca a una asociación lineal, pero la dificultad en la predicción aumenta a medida que nos alejamos en el tiempo. A continuación, visualizamos la salida de regresión sólo para el caso del ajuste en el primer rezago. 
 
-# In[107]:
+# In[6]:
 
 
 # ajuste lineal para el primer rezago
@@ -207,7 +273,7 @@ print(model.summary())
 # 
 # Primero evaluamos la performance predictiva en el grupo de entrenamiento para cada rezago utilizado como target, siendo conscientes del probable sobreajuste que esta evaluación genere. Para realizar la evaluación de desempeño del modelo utilizamos la métrica antes mencionada ($\frac{RECM}{\overline{y}}$). Los resultados se pueden ver en el siguiente `print()`:
 
-# In[108]:
+# In[7]:
 
 
 # computamos el predicho para cada uno de los rezagos de la dependiente
@@ -230,7 +296,7 @@ for i in range(1,len(y_train.columns)+1):
 #  
 # Pasamos a evaluar la performance en el grupo test. La misma se muestra en el siguiente `print()`: 
 
-# In[109]:
+# In[8]:
 
 
 # computamos la performance de la regresión lineal en test
@@ -249,7 +315,7 @@ for i in range(1,len(y_test.columns)+1):
 
 # Curiosamente, la performance predictiva tiene mejoras en el grupo test respecto a la evaluación en el grupo de entrenamiento. A continuación, pasamos a graficar el observado versus el predicho para cada target estimado en plots de nubes de puntos.
 
-# In[110]:
+# In[9]:
 
 
 fig=plt.figure(figsize=(25,25))
@@ -265,7 +331,7 @@ for i in range(0,7):
 
 # La disminución en el poder predictivo del modelo se puede ver en el aumento de dispersión de los gráficos mostrados arriba. A medida que el target a predecir es más lejano en el tiempo el error de predicción aumenta, también lo podemos ver al considerar el tiempo en gráficos de línea como se muestra debajo:
 
-# In[111]:
+# In[10]:
 
 
 ## graficamos el predicho versus el observado en cotizaciones
@@ -293,7 +359,7 @@ for i in range(0,7):
 # ##### Time Series Split Cross-Validation
 # Pasamos a realizar el análisis de validación cruzada con todos los rezagos bajo estudio. 
 
-# In[112]:
+# In[11]:
 
 
 # función para fragmentar intervalo de tiempo en grupos de aproximadamente el mismo rango
@@ -306,7 +372,7 @@ def date_range(start, end, intv):
     yield end.strftime("%Y-%m-%d")
 
 
-# In[113]:
+# In[12]:
 
 
 # fragmentamos el grupo train
@@ -316,7 +382,7 @@ timelist = list(date_range(lower, upper, 11))
 timelist
 
 
-# In[114]:
+# In[13]:
 
 
 # realizamos la rutina de cross-validation para cada uno de los rezagos
@@ -365,7 +431,7 @@ for j in range(1,len(y_train.columns)+1):
   
 
 
-# In[115]:
+# In[14]:
 
 
 # vemos los resultados de la predicción en cada grupo dejado como validación para cada rezago
@@ -376,7 +442,7 @@ for j in range(1,len(y_train.columns)+1):
 
 # Como se puede ver a partir de los resultados de arriba, hay una mejora a medida que nos acercamos a períodos actuales. Esto podría deberse a dos cuestiones: en primer lugar, la técnica de acumular observaciones al grupo de entrenamiento va generando un mejor aprendizaje por parte del modelo lineal, por lo que el error de predicción disminuye a medida que más observaciones forman parte del input para ajustar la regresión; en segundo lugar, períodos cercanos a los inicios de la cotización de ethereum poco están relacionados a su popularidad y por tanto a las decisiones de la oferta y demanda masiva que se intenta captar a partir de los datos de búsquedas en google, por lo que a medida que nos acercamos a períodos actuales los términos de búsquedas se asocian en mayor medida a los movimientos del precio de la criptomoneda, lo cual se ve reflejado en mejores resultados de predicción en fechas cercanas al momento actual. De todas formas, el patrón de mejor predicción en validación se sigue cumpliendo, por lo que se descarta de que la misma este condicionada en el corte de tiempo para dividir el conjunto de datos. A continuación, pasamos a promediar los resultados mostrados antes:
 
-# In[116]:
+# In[15]:
 
 
 # función para promediar listas
@@ -393,7 +459,7 @@ for j in range(1,len(y_train.columns)+1):
 
 # ##### Forward stepwise selection
 
-# In[117]:
+# In[16]:
 
 
 # realizamos la rutina de selección para cada rezago
@@ -450,7 +516,7 @@ for j in range(1,len(y_train.columns)+1):
   output_dict[f'log_y_lag{j}'] = output_df
 
 
-# In[118]:
+# In[17]:
 
 
 mpl.rcParams.update({'font.size': 10}) # set tamaño de ticks
@@ -466,7 +532,7 @@ for i in range(0,7):
 
 # Como se puede observar en los gráficos de arriba, la selección muestra que el error de predicción según número de variables (sacando la constante) tiene una leve forma de U, donde las primeras variables seleccionadas disminuyen el error de predicción en validación, pero a medida que agregamos más variables el desempeño comienza a caer. Debido a esto, sería deseable quedarnos con un modelo con el primer subconjunto de variables, debido a que no sólo aumentaría la performance predictiva, sino también reduciríamos la complejidad del modelo. De esta forma, tomamos la lista de variables seleccionadas que genera el menor error de predicción en cada uno de los targets bajo estudio y evaluamos la performance en test.
 
-# In[119]:
+# In[18]:
 
 
 # lista donde guardamos los resultados de cada modelo óptimo
@@ -494,7 +560,7 @@ for i in range(0,7):
     results_reg_test_df = results_reg_test_df + [rmse_mean]
 
 
-# In[120]:
+# In[19]:
 
 
 reg_result_best = pd.DataFrame(results_reg_test_df , columns=['reg_error']) 
@@ -503,26 +569,9 @@ reg_result_best
 
 # #### Regresión lineal con PCA
 
-# ##### Principal Component Analysis (PCA)
-# Al momento de realizar una predicción, es posible que cuanta más y mejor información tengamos, más acertada sea. Sin embargo, el tiempo de ejecución del algoritmo que se esté utilizando (como regresión lineal) empezará a ser cada vez mayor y se utilizarán más recursos computacionales. 
-# 
-# Algo que hemos visto es que hay variables que son menos importantes que otras y que no aportan valor significativo a la predicción.
-# 
-# Si se quitan esas variables, se están reduciendo las dimensiones a trabajar, lo que implica menor cantidad de relaciones entre variables a considerar. 
-# 
-# De todos modos, no sería la mejor estrategia eliminar directamente las columnas del dataframe con las variables que consideremos menos importantes, porque podríamos estar equivocándonos. Si tenemos N variables, lo ideal es generar N nuevas variables que sean una combinación de las N variables antiguas y ordenarlas de mayor importancia a menor. De esta forma, podremos quedarnos con las variables con mayor importancia y descartar las de menor importancia. Así, estamos teniendo en cuenta a todas las variables antiguas sin tener que eliminar alguna, ya que las variables nuevas, como se explicó antes, son una combinación de las antiguas.
-# 
-# Sin ser por la parte de seleccionar cuántas variables utilizar de las mejores rankeadas, PCA se encarga de realizar la tarea.
-# 
-# Para la selección, lo mejor es graficar la "proporción de variación explicada" en formato scree plot y observar en qué parte del gráfico se ve una caída. Hasta esa variable será la que se tendrá en cuenta para la predicción.
-# 
-# PCA entonces arma una nueva base con las componentes principales más significativas. Si con las componentes principales obtengo 85%, me quedo con esas.
-# 
-# Sin embargo, no siempre PCA junto con regresión lineal, como se utilizará en este caso, tiene buenos resultados. Puede suceder que la regresión lineal por sí sola prediga mejor el comportamiento que agregando PCA.
-# 
 # A continuación se estudiará la regresión lineal con PCA y se analizarán los resultados.
 
-# In[121]:
+# In[20]:
 
 
 # quitamos algunas variable que tienen alta correlación con otras variables para mejorar la predicción
@@ -530,7 +579,7 @@ train_aux = train.drop(['cryptocurrency_adjusted_log', 'ethereum_adjusted_log', 
 test_aux = test.drop(['cryptocurrency_adjusted_log', 'ethereum_adjusted_log', 'bitcoin_adjusted_log', 'var_price_btc', 'cryptocurrency_top_adjusted_log', 'ethereum_top_adjusted_log', 'exchange_top_adjusted_log', 'bitcoin_top_adjusted_log'], axis = 1)
 
 
-# In[123]:
+# In[21]:
 
 
 #normalizamos los datos
@@ -541,7 +590,7 @@ X_scaled_train=scaler.transform(train_aux)# escalo los datos y los normalizo
 X_scaled_test=scaler.transform(test_aux)
 
 
-# In[124]:
+# In[22]:
 
 
 #Instanciamos objeto PCA y aplicamos
@@ -564,13 +613,13 @@ print('suma:',sum(expl[0:9]))
 #cercana a 85%
 
 
-# In[125]:
+# In[23]:
 
 
 X_pca_train.shape #este es el nuevo dataset
 
 
-# In[126]:
+# In[24]:
 
 
 #graficamos el acumulado de varianza explicada en las nuevas dimensiones
@@ -580,7 +629,7 @@ plt.ylabel('cumulative explained variance')
 plt.show()
 
 
-# In[127]:
+# In[25]:
 
 
 #Reducimos la cantidad de columnas para quedarnos con las primeras 9
@@ -588,7 +637,7 @@ df_pca_train = pd.DataFrame(X_pca_train).iloc[:,0:9]
 df_pca_test = pd.DataFrame(X_pca_test).iloc[:,0:9]
 
 
-# In[128]:
+# In[26]:
 
 
 X_pca_train
@@ -596,13 +645,13 @@ X_pca_train
 
 # ##### Entrenamiento del modelo con Regresión Lineal
 
-# In[129]:
+# In[27]:
 
 
 df_pca_train.info()
 
 
-# In[130]:
+# In[28]:
 
 
 #agregar constante
@@ -610,7 +659,7 @@ x_train_pca = sm.add_constant(df_pca_train)
 x_test_pca = sm.add_constant(df_pca_test)
 
 
-# In[131]:
+# In[29]:
 
 
 # ajuste lineal
@@ -620,7 +669,7 @@ model = sm.OLS(y_train.iloc[:,0], x_train_pca).fit()
 print(model.summary())
 
 
-# In[132]:
+# In[30]:
 
 
 r_squaredAdj = []
@@ -629,7 +678,7 @@ for i in range(1,len(y_train.columns)+1):
   r_squaredAdj = r_squaredAdj + [round(model.rsquared, 4)] 
 
 
-# In[133]:
+# In[31]:
 
 
 r_squaredAdj
@@ -637,7 +686,7 @@ r_squaredAdj
 
 # ##### Evaluación de performance
 
-# In[134]:
+# In[32]:
 
 
 # computamos el predicho para cada uno de los rezagos de la dependiente
@@ -648,7 +697,7 @@ for i in range(1,len(y_train.columns)+1):
   predictions_dict[f'pred_y_lag{i}'] = predictions
 
 
-# In[135]:
+# In[33]:
 
 
 #calculamos error de predicción para el conjunto train
@@ -662,7 +711,7 @@ for i in range(1,len(y_train.columns)+1):
 
 # Se observa que para el conjunto train el error de predicción no sobrepasa el 3%, incluso para una predicción de 7 días hacia adelante. El menor error de predicción lo tiene para la target 'log_y_lag1', como es de esperarse. De todos modos, estos errores son mayores a los obtenidos al aplicar simplemente regresión lineal.
 
-# In[136]:
+# In[34]:
 
 
 # computamos el predicho para cada uno de los rezagos de la dependiente, en este 
@@ -674,7 +723,7 @@ for i in range(1,len(y_test.columns)+1):
   predictions_test_dict[f'pred_y_lag{i}'] = predictions
 
 
-# In[137]:
+# In[35]:
 
 
 #calculamos error de predicción para el conjunto test
@@ -706,12 +755,307 @@ for i in range(0,7):
     plt.ylabel("observado")
 
 
+# ### Random Forest
+
+# In[37]:
+
+
+modelo = RandomForestRegressor(
+            n_estimators = 10,
+            criterion    = 'mse',
+            max_depth    = None,
+            max_features = 'auto',
+            oob_score    = False,
+            n_jobs       = -1,
+            random_state = 123
+         )
+
+
+# In[38]:
+
+
+modelo.fit(train, y_train)
+
+
+# In[39]:
+
+
+# Error de test del modelo inicial
+# ==============================================================================
+predicciones = modelo.predict(X = test)
+
+rmse = mean_squared_error(
+        y_true  = y_test,
+        y_pred  = predicciones,
+        squared = False
+       )
+print(f"El error (rmse) de test es: {rmse}")
+
+
+# In[40]:
+
+
+# Validación empleando el Out-of-Bag error
+# ==============================================================================
+train_scores = []
+oob_scores   = []
+
+# Valores evaluados
+estimator_range = range(1, 150, 5)
+
+# Bucle para entrenar un modelo con cada valor de n_estimators y extraer su error
+# de entrenamiento y de Out-of-Bag.
+for n_estimators in estimator_range:
+    modelo = RandomForestRegressor(
+                n_estimators = n_estimators,
+                criterion    = 'squared_error',
+                max_depth    = None,
+                max_features = 'auto',
+                oob_score    = True,
+                n_jobs       = -1,
+                random_state = 123
+             )
+    modelo.fit(train, y_train)
+    train_scores.append(modelo.score(train, y_train))
+    oob_scores.append(modelo.oob_score_)
+    
+# Gráfico con la evolución de los errores
+fig, ax = plt.subplots(figsize=(6, 3.84))
+ax.plot(estimator_range, train_scores, label="train scores")
+ax.plot(estimator_range, oob_scores, label="out-of-bag scores")
+ax.plot(estimator_range[np.argmax(oob_scores)], max(oob_scores),
+        marker='o', color = "red", label="max score")
+ax.set_ylabel("R^2")
+ax.set_xlabel("n_estimators")
+ax.set_title("Evolución del out-of-bag-error vs número árboles")
+plt.legend();
+print(f"Valor óptimo de n_estimators: {estimator_range[np.argmax(oob_scores)]}")
+
+
+# In[41]:
+
+
+# Validación empleando k-cross-validation y neg_root_mean_squared_error
+# ==============================================================================
+train_scores = []
+cv_scores    = []
+
+# Valores evaluados
+estimator_range = range(1, 150, 5)
+
+# Bucle para entrenar un modelo con cada valor de n_estimators y extraer su error
+# de entrenamiento y de k-cross-validation.
+for n_estimators in estimator_range:
+    
+    modelo = RandomForestRegressor(
+                n_estimators = n_estimators,
+                criterion    = 'squared_error',
+                max_depth    = None,
+                max_features = 'auto',
+                oob_score    = False,
+                n_jobs       = -1,
+                random_state = 123
+             )
+    
+    # Error de train
+    modelo.fit(train, y_train)
+    predicciones = modelo.predict(X = train)
+    rmse = mean_squared_error(
+            y_true  = y_train,
+            y_pred  = predicciones,
+            squared = False
+           )
+    train_scores.append(rmse)
+    
+    # Error de validación cruzada
+    scores = cross_val_score(
+                estimator = modelo,
+                X         = train,
+                y         = y_train,
+                scoring   = 'neg_root_mean_squared_error',
+                cv        = 5
+             )
+    # Se agregan los scores de cross_val_score() y se pasa a positivo
+    cv_scores.append(-1*scores.mean())
+    
+# Gráfico con la evolución de los errores
+fig, ax = plt.subplots(figsize=(6, 3.84))
+ax.plot(estimator_range, train_scores, label="train scores")
+ax.plot(estimator_range, cv_scores, label="cv scores")
+ax.plot(estimator_range[np.argmin(cv_scores)], min(cv_scores),
+        marker='o', color = "red", label="min score")
+ax.set_ylabel("root_mean_squared_error")
+ax.set_xlabel("n_estimators")
+ax.set_title("Evolución del cv-error vs número árboles")
+plt.legend();
+print(f"Valor óptimo de n_estimators: {estimator_range[np.argmin(cv_scores)]}")
+
+
+# Max features El valor de máx_features es uno de los hiperparámetros más importantes de random forest, ya que es el que permite controlar cuánto se decorrelacionan los árboles entre sí.
+
+# In[42]:
+
+
+# Validación empleando el Out-of-Bag error
+# ==============================================================================
+train_scores = []
+oob_scores   = []
+
+# Valores evaluados
+max_features_range = range(1, train.shape[1] + 1, 1)
+
+# Bucle para entrenar un modelo con cada valor de max_features y extraer su error
+# de entrenamiento y de Out-of-Bag.
+for max_features in max_features_range:
+    modelo = RandomForestRegressor(
+                n_estimators = 100,
+                criterion    = 'squared_error',
+                max_depth    = None,
+                max_features = max_features,
+                oob_score    = True,
+                n_jobs       = -1,
+                random_state = 123
+             )
+    modelo.fit(train, y_train)
+    train_scores.append(modelo.score(train, y_train))
+    oob_scores.append(modelo.oob_score_)
+    
+# Gráfico con la evolución de los errores
+fig, ax = plt.subplots(figsize=(6, 3.84))
+ax.plot(max_features_range, train_scores, label="train scores")
+ax.plot(max_features_range, oob_scores, label="out-of-bag scores")
+ax.plot(max_features_range[np.argmax(oob_scores)], max(oob_scores),
+        marker='o', color = "red")
+ax.set_ylabel("R^2")
+ax.set_xlabel("max_features")
+ax.set_title("Evolución del out-of-bag-error vs número de predictores")
+plt.legend();
+print(f"Valor óptimo de max_features: {max_features_range[np.argmax(oob_scores)]}")
+
+
+# Grid search
+# 
+# Aunque el análisis individual de los hiperparámetros es útil para entender su impacto en el modelo e identificar rangos de interés, la búsqueda final no debe hacerse de forma secuencial, ya que cada hiperparámetro interacciona con los demás. Es preferible recurrir a grid search o random search para analizar varias combinaciones de hiperparámetros.
+
+# In[43]:
+
+
+# Grid de hiperparámetros evaluados
+# ==============================================================================
+param_grid = ParameterGrid(
+                {'n_estimators': [150],
+                 'max_features': [5, 7, 9],
+                 'max_depth'   : [None, 3, 10, 20]
+                }
+             )
+
+# Loop para ajustar un modelo con cada combinación de hiperparámetros
+# ==============================================================================
+resultados = {'params': [], 'oob_r2': []}
+
+for params in param_grid:
+    
+    modelo = RandomForestRegressor(
+                oob_score    = True,
+                n_jobs       = -1,
+                random_state = 123,
+                ** params
+             )
+    
+    modelo.fit(train, y_train)
+    
+    resultados['params'].append(params)
+    resultados['oob_r2'].append(modelo.oob_score_)
+    print(f"Modelo: {params} \u2713")
+
+# Resultados
+# ==============================================================================
+resultados = pd.DataFrame(resultados)
+resultados = pd.concat([resultados, resultados['params'].apply(pd.Series)], axis=1)
+resultados = resultados.drop(columns = 'params')
+resultados = resultados.sort_values('oob_r2', ascending=False)
+resultados.head(4)
+
+
+# In[44]:
+
+
+# Mejores hiperparámetros por out-of-bag error
+# ==============================================================================
+print("--------------------------------------------")
+print("Mejores hiperparámetros encontrados (oob-r2)")
+print("--------------------------------------------")
+print(resultados.iloc[0,0], ":", resultados.iloc[0,:]['oob_r2'], "R2")
+
+
+# Grid Search basado en validación cruzada
+
+# In[45]:
+
+
+# Grid de hiperparámetros evaluados
+# ==============================================================================
+param_grid = {'n_estimators': [150],
+              'max_features': [5, 7, 9],
+              'max_depth'   : [None, 3, 10, 20]
+             }
+
+# Búsqueda por grid search con validación cruzada
+# ==============================================================================
+grid = GridSearchCV(
+        estimator  = RandomForestRegressor(random_state = 123),
+        param_grid = param_grid,
+        scoring    = 'neg_root_mean_squared_error',
+        n_jobs     = multiprocessing.cpu_count() - 1,
+        cv         = RepeatedKFold(n_splits=5, n_repeats=3, random_state=123), 
+        refit      = True,
+        verbose    = 0,
+        return_train_score = True
+       )
+
+grid.fit(X = train, y = y_train)
+
+# Resultados
+# ==============================================================================
+resultados = pd.DataFrame(grid.cv_results_)
+resultados.filter(regex = '(param.*|mean_t|std_t)') \
+    .drop(columns = 'params') \
+    .sort_values('mean_test_score', ascending = False) \
+    .head(4)
+
+
+# In[46]:
+
+
+# Mejores hiperparámetros por validación cruzada
+# ==============================================================================
+print("----------------------------------------")
+print("Mejores hiperparámetros encontrados (cv)")
+print("----------------------------------------")
+print(grid.best_params_, ":", grid.best_score_, grid.scoring)
+
+
+# In[47]:
+
+
+# Error de test del modelo final
+# ==============================================================================
+modelo_final = grid.best_estimator_
+predicciones = modelo.predict(X = test)
+rmse = mean_squared_error(
+        y_true  = y_test,
+        y_pred  = predicciones,
+        squared = False
+       )
+print(f"El error (rmse) de test es: {rmse}")
+
+
 # ### Xgboost
 
 # #### Random search
 # Para realizar las estimaciones con xgboost creamos la función custom `xgb_ts()` utilizando como inputs las funciones de la librería `xgboost` para poder encontrar el mejor modelo para cada target a través de una búsqueda aleatoria de hiperparámetros combinado con la técnica de time series cross-validation. La idea detrás de `xgb_ts()` es realizar el mismo ejercicio de validación cruzada realizado en la regresión lineal pero para cada combinación de hiperparámetros establecida previamente. La función arrojará como output la performance los modelos de cada combinación de hiperparámetros generada, y con esa tabla podremos encontrar aquel de mejor performance con el que podremos evaluarlo en el grupo test. 
 
-# In[ ]:
+# In[48]:
 
 
 #### XGBOOST time series function
@@ -813,7 +1157,7 @@ def xgb_ts(train, y_train, n_estimator = [300, 500],
     return result_table_splitCV 
 
 
-# In[ ]:
+# In[49]:
 
 
 xgb_results_dict = {}
@@ -827,7 +1171,7 @@ del x
 
 # Una vez realizado la búsqueda de hiperparámetros guardamos los mejores resultados para predecir cada precio futuro.
 
-# In[ ]:
+# In[54]:
 
 
 # guardamos solo los mejores resultados para cada lag
@@ -838,14 +1182,14 @@ xgb_results_df = xgb_results_df.reset_index(drop=True)
 xgb_results_df
 
 
-# In[ ]:
+# In[55]:
 
 
 xgb_results_df[['max_depth', 'min_child_weight', 'n_estimators']] = xgb_results_df[['max_depth', 'min_child_weight', 'n_estimators']].astype(int)
 xgb_results_df
 
 
-# In[ ]:
+# In[56]:
 
 
 ## evaluamos en test ajustando el mejor modelo en todo el subconjunto de train
@@ -868,7 +1212,7 @@ for i in range(0,len(y_train.columns)):
     results_xgb_test_df = results_xgb_test_df + [rmse_mean_best]
 
 
-# In[ ]:
+# In[57]:
 
 
 # computamos el error de predicción para cada rezago
